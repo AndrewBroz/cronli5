@@ -111,10 +111,12 @@ const rows = [
   ['*/15 9,17 * * 1-5',
     'setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai ' +
     '09.45 dan dari pukul 17.00 sampai 17.45'],
+  // Three single hours: the hours once and the minutes in each (answers
+  // 4.1 E; three stretches that differ only in their hour until
+  // 2026-11-20).
   ['*/15 8,12,18 * * 1-5',
-    'setiap Senin sampai Jumat, setiap 15 menit dari pukul 08.00 sampai ' +
-    '08.45, dari pukul 12.00 sampai 12.45, dan dari pukul 18.00 sampai ' +
-    '18.45'],
+    'setiap Senin sampai Jumat, mulai pukul 08.00, 12.00, dan 18.00, tiap ' +
+    'kali setiap 15 menit sampai menit ke-45'],
   ['*/15 */2 * * 1-5',
     'setiap Senin sampai Jumat, pada jam genap, setiap 15 menit'],
   // A step of hours with several minutes names the hours once and then
@@ -296,9 +298,11 @@ const rows = [
 
   // open / hour
   ['* 12 * * *', 'setiap hari, setiap menit dari pukul 12.00 sampai 12.59'],
+  // Three single hours: the hours once and the whole hour in each
+  // (answers 4.1 E; three stretches until 2026-11-20).
   ['* 8,12,18 * * *',
-    'setiap hari, setiap menit dari pukul 08.00 sampai 08.59, dari pukul ' +
-    '12.00 sampai 12.59, dan dari pukul 18.00 sampai 18.59'],
+    'setiap hari, mulai pukul 08.00, 12.00, dan 18.00, tiap kali setiap ' +
+    'menit selama 1 jam'],
   ['* 9-17 * * *', 'setiap hari, setiap menit dari pukul 09.00 sampai 17.59'],
   ['* */2 * * *',
     'pada jam genap, setiap menit'],

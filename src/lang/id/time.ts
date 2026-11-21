@@ -8,17 +8,17 @@ import type {
 import {isCadence, isValues} from './forms.js';
 import {hoursLeftOut, minutesLeftOut} from './left-out.js';
 import lexicon from './lexicon.js';
-import {hoursNamed} from './named-hours.js';
+import {hourByHour, hoursNamed} from './named-hours.js';
 import type {IndonesianStyle} from './options.js';
 import {phrase} from './say.js';
 import type {Clockwork, Shaped, Tick} from './ticks.js';
 import {
   at, between, clockworkOf, firstSecond, isLength, lastSecond,
-  minutesInside, moments, perMinute, secondsLeftOut, series, spans, tickFor,
+  minutesInside, moments, secondsLeftOut, series, spans, tickFor,
   times
 } from './ticks.js';
 import {
-  alone, closesAfter, eachTime, everyHour, everyUnit, inside, minuteTier,
+  alone, closesAfter, everyHour, everyUnit, inside, minuteTier,
   nth, points, secondTier, under
 } from './within.js';
 
@@ -146,49 +146,6 @@ function firstTimes(work: Clockwork, hour: number): Shaped {
   };
 }
 
-// «, terakhir pukul 23.45»: the last firing of a rhythm of hours that
-// stops before the day does.
-function lastTime(work: Clockwork, hour: number, tick: Tick): string {
-  const {values} = work.minutes;
-  const seconds = work.seconds.values;
-  // The last firing has its second even where the seconds are said
-  // after «tiap kali».
-  const second = tick.suffix ? seconds[seconds.length - 1] : lastSecond(tick);
-
-  return `, ${phrase(words.lastAt, words.oClock,
-    at(work, hour, values[values.length - 1], second))}`;
-}
-
-// Whether a rhythm of hours is said by its first times: while they are
-// two or fewer, two series a reader can follow; more are four series to
-// add the step to, and the hours are said once instead.
-function fewFirstTimes(work: Clockwork, first: Shaped): boolean {
-  return work.minutes.values.length * perMinute(first.tick) <= 2;
-}
-
-// A rhythm of hours and what happens in each of them, after «tiap kali».
-// Hours that tile the day from its first hour are said bare. A rhythm of
-// two minutes is named («tepat pada jam itu serta pada menit ke-30»), not
-// said as a rhythm with its end.
-function hourByHour(work: Clockwork, beat: CadenceDescription, bare = false):
-  Shaped {
-  const {minutes} = work;
-  const found = minutesInside(minutes.values.length > 2 ? work : {
-    ...work,
-    minutes: {...minutes, base: {kind: 'values', values: minutes.values}}
-  }, eachTime);
-  const start = !bare &&
-    phrase(words.startingAt, words.oClock, at(work, beat.start, 0));
-
-  return {
-    clause: true,
-    each: true,
-    text: `${phrase(everyUnit(units.hour, beat.interval), start)}, ${
-      phrase(words.eachTime, found.text)}`,
-    tick: found.tick
-  };
-}
-
 // Every second hour: «pada jam genap,» or «pada jam ganjil,» and what
 // happens inside each of them.
 function evenOrOddHours(work: Clockwork, beat: CadenceDescription): Shaped {
@@ -221,8 +178,8 @@ function hoursRoundTheClock(work: Clockwork): Shaped {
     // bare hours directly: «setiap 4 jam pada menit ke-5 dan ke-50».
     beat.start === 0 && isValues(minutes.base) && minutes.values[0] > 0 &&
       {...within, text: phrase(every, within.text)},
-    fewFirstTimes(work, first) && fromFirst,
-    hourByHour(work, beat, beat.start === 0)
+    hourByHour(work, phrase(every, beat.start > 0 &&
+      phrase(words.startingAt, words.oClock, at(work, beat.start, 0))))
   ];
 
   return {
@@ -232,32 +189,24 @@ function hoursRoundTheClock(work: Clockwork): Shaped {
   };
 }
 
-// Hours at a step that does not tile the day: said with their ends.
+// Hours at a step that does not tile the day: said with their ends, the
+// first and last hour, and with one minute the first and last firing.
 function hoursInSteps(work: Clockwork): Shaped {
   const {minutes} = work;
   const beat = work.hours.base as CadenceDescription;
   const every = everyUnit(units.hour, beat.interval);
-  const count = minutes.values.length;
   const one = tickFor(work, {one: true});
-  const first = firstTimes(work, beat.start);
-  const each = hourByHour(work, beat);
-  const options: Array<Shaped | false> = [
-    count === 1 && {
+  const shaped = minutes.values.length === 1 ?
+    {
       text: phrase(every, between(
         at(work, beat.start, minutes.values[0], firstSecond(one)),
         at(work, beat.last, minutes.values[0], lastSecond(one)))),
       tick: one
-    },
-    fewFirstTimes(work, first) && {
-      clause: true,
-      last: lastTime(work, beat.last, first.tick),
-      text: phrase(every, first.text),
-      tick: first.tick
-    },
-    {...each, last: lastTime(work, beat.last, each.tick)}
-  ];
+    } :
+    hourByHour(work, phrase(every,
+      between(at(work, beat.start, 0), at(work, beat.last, 0))));
 
-  return {...options.find(Boolean) as Shaped, closes: true};
+  return {closes: true, ...shaped};
 }
 
 // Whether the pattern fires at four moments a day or fewer that are not
@@ -315,8 +264,7 @@ function timeOf(facts: ScheduleFacts, style: IndonesianStyle): Time {
   ];
 
   // The seconds no clock time carries follow «tiap kali»; after a time
-  // that holds «tiap kali» already they follow «masing-masing». The last
-  // firing of a rhythm of hours comes after them.
+  // that holds «tiap kali» already they follow «masing-masing».
   const lead = shaped.each ? words.eachOne : words.eachTime;
   const seconds = shaped.tick.suffix && `, ${lead} ${shaped.tick.suffix}`;
 
@@ -324,7 +272,7 @@ function timeOf(facts: ScheduleFacts, style: IndonesianStyle): Time {
     clause: Boolean(shaped.clause) || shaped.tick.suffix.length > 0,
     left,
     round: Boolean(shaped.round),
-    text: shaped.text + seconds + (shaped.last || '')
+    text: shaped.text + seconds
   };
 }
 

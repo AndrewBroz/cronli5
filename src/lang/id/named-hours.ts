@@ -1,6 +1,7 @@
 // Hours that are runs and single hours (answers 4.1 E): one rhythm
-// through each run where the minutes allow it, and otherwise what happens
-// in each hour with the first and last firing of every run.
+// through each run where the minutes allow it, single hours once with
+// what happens in each of them, and otherwise what happens in each hour
+// with the first and last firing of every run.
 
 import type {CadenceDescription} from '../../core/schedule.js';
 import type {Member} from './forms.js';
@@ -13,7 +14,7 @@ import {
   spans, stretch, tickFor, times
 } from './ticks.js';
 import {
-  alone, everyHour, everyUnit, minuteTier, points
+  alone, eachTime, everyHour, everyUnit, minuteTier
 } from './within.js';
 
 const {units, words} = lexicon;
@@ -65,24 +66,37 @@ function insideThenRuns(work: Clockwork, runs: Array<[number, number]>):
   };
 }
 
-// Positions counted after the hours named: «pada menit ke-5 dan ke-20
-// setelah pukul 08.00 dan 12.00».
-function afterTheHours(work: Clockwork): Shaped {
-  const {values} = work.minutes;
-  const named = times(work.hours.values.map(function sharp(hour) {
-    return at(work, hour, 0);
-  }));
-  const later = points(values.filter(Boolean), minuteTier, '');
+// Hours said once, and what happens in each of them after «tiap kali»,
+// the same for every kind of minutes. A rhythm of two minutes is named
+// («tepat pada jam itu serta pada menit ke-30»), not said as a rhythm
+// with its end.
+function hourByHour(work: Clockwork, hours: string): Shaped {
+  const {minutes} = work;
+  const found = minutesInside(minutes.values.length > 2 ? work : {
+    ...work,
+    minutes: {...minutes, base: {kind: 'values', values: minutes.values}}
+  }, eachTime);
 
   return {
-    text: values[0] === 0 ?
-      phrase(named, words.aswell, later, words.afterThem) :
-      phrase(later, words.afterTime, named),
-    tick: tickFor(work, {})
+    clause: true,
+    // Under «tiap kali» a position left out needs no «setiap jam».
+    closes: false,
+    each: true,
+    text: `${hours}, ${phrase(words.eachTime, found.text)}`,
+    tick: found.tick
   };
 }
 
-// The minutes of each hour named, hour after hour, with clock times.
+// Single hours, each the start of what happens in it: «mulai pukul
+// 01.00, 04.00, dan 09.00, tiap kali …».
+function eachNamedHour(work: Clockwork): Shaped {
+  return hourByHour(work, phrase(words.startingAt, times(
+    work.hours.values.map(function sharp(hour) {
+      return at(work, hour, 0);
+    }))));
+}
+
+// The minutes of one hour, with clock times.
 function hourAfterHour(work: Clockwork): Shaped {
   const tick = tickFor(work, {one: true});
 
@@ -125,27 +139,43 @@ function runsAndRhythms(work: Clockwork, parts: Member[]): Shaped {
   };
 }
 
+// Whether several single hours are said once, with what happens in each:
+// always where the minutes are more than one moment, except two
+// stretches of one rhythm, four ends a reader holds.
+function saidOnce(work: Clockwork, runs: Array<[number, number]>,
+  lone: boolean, oneRhythm: boolean): boolean {
+  return lone && runs.length > 1 && work.minutes.values.length > 1 &&
+    !(runs.length === 2 && oneRhythm);
+}
+
+// Whether the minutes run through hours in a row as one unbroken rhythm:
+// every minute, one minute, or a rhythm that tiles the hour.
+function isSteady(work: Clockwork): boolean {
+  const {base, tiling, values} = work.minutes;
+
+  return base.kind === 'all' || values.length === 1 || Boolean(tiling);
+}
+
 // Hours that are runs and single hours.
 function hoursNamed(work: Clockwork): Shaped {
-  const {base, tiling, values} = work.minutes;
+  const {base, values} = work.minutes;
   const runs = hourRuns(work);
   const lone = runs.every(function single([from, to]) {
     return from === to;
   });
-  const steady = base.kind === 'all' || values.length === 1 ||
-    Boolean(tiling);
+  const steady = isSteady(work);
   const oneStretch = isRange(base) || isCadence(base);
   const mixed = work.hours.base.kind === 'cadencePieces' &&
     values.length === 1 && work.hours.base.parts;
   const options: Array<Shaped | false> = [
     mixed && runsAndRhythms(work, mixed),
+    saidOnce(work, runs, lone, steady || oneStretch) && eachNamedHour(work),
     (steady || lone && oneStretch) && stretches(work, runs),
     !lone && insideThenRuns(work, runs),
-    isValues(base) && afterTheHours(work),
     hourAfterHour(work)
   ];
 
-  return {...options.find(Boolean) as Shaped, closes: true};
+  return {closes: true, ...options.find(Boolean) as Shaped};
 }
 
-export {hoursNamed};
+export {hourByHour, hoursNamed};
