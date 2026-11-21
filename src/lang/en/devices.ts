@@ -828,12 +828,14 @@ function hoursAsNouns(
  * `close` gives within the last hour: "every minute from 9 a.m. through
  * 5:59 p.m.", "every 15 minutes from 9 a.m. through 5:45 p.m.", "every
  * second from 9 a.m. through 5:59:59 p.m." ("Until 6 p.m." was read both
- * as stopping before 6 and as firing at it.) Any cadence of hours
- * but every other hour runs "for one hour" at each of the moments it
- * names: "for one hour every 6 hours". One with a named end names each
- * end as an hour, since "for one hour ... through 6 p.m." is heard as
- * stopping at 6: "during every other hour from the 8 a.m. hour through
- * the 6 p.m. hour".
+ * as stopping before 6 and as firing at it.) Under any cadence of hours
+ * but every other hour the finer cadence runs "for the whole hour", and
+ * the cadence follows as it does after any other minutes: "every 15
+ * minutes for the whole hour, every 6 hours", as "every minute for the
+ * first 30 minutes of the hour, every 6 hours". One with a named end
+ * names each end as an hour, since "every 2 hours through 6 p.m." is
+ * heard as stopping at 6: "during every other hour from the 8 a.m. hour
+ * through the 6 p.m. hour".
  */
 function hoursAsStretches(close: Omit<Moment, 'hour'>,
   opts: EnglishOptions): Voice {
@@ -850,8 +852,8 @@ function hoursAsStretches(close: Omit<Moment, 'hour'>,
         const nth = `${during} ${every} ${lexicon.ordinal(cadence.interval)} ` +
           units.hour.one;
 
-        // With both ends named, each is named as an hour: "for one hour
-        // every 2 hours through 6 p.m." is heard as stopping at 6.
+        // With both ends named, each is named as an hour: "every 2 hours
+        // from 2 a.m. through 6 p.m." is heard as stopping at 6.
         if (ends.length === 2) {
           return join(cadence.interval === 2 ? everyOther : nth,
             span(ends.map(function asHour(hour) {
@@ -862,7 +864,7 @@ function hoursAsStretches(close: Omit<Moment, 'hour'>,
         return cadence.interval === 2 ?
           join(everyOther,
             span(hourNames(ends, onTheHour, asTime(opts)), opts)) :
-          `${words.forOneHour} ${strides.say(cadence, ends)}`;
+          `${words.forTheWholeHour}, ${strides.say(cadence, ends)}`;
       }
     },
     exception(removed, base) {

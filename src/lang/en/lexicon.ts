@@ -83,7 +83,7 @@ const words = {
   except: 'except',
   first: 'first',
   for: 'for',
-  forOneHour: 'for one hour',
+  forTheWholeHour: 'for the whole hour',
   forOneMinute: 'for one minute',
   from: 'from',
   in: 'in',

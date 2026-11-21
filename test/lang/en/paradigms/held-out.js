@@ -109,7 +109,10 @@ const rows = [
   ['*/15 8,12,18 * * 1-5',
     'every 15 minutes during the 8 a.m., noon, and 6 p.m. hours on weekdays'],
   ['*/15 */2 * * 1-5', 'every 15 minutes during every other hour on weekdays'],
-  ['*/15 */6 * * 1-5', 'every 15 minutes for one hour every 6 hours on weekdays'],
+  // Was "for one hour every 6 hours": three rhythms stacked, unlike the
+  // step under any other minutes ("the hour, every 6 hours"); 2026-11-21.
+  ['*/15 */6 * * 1-5',
+    'every 15 minutes for the whole hour, every 6 hours on weekdays'],
   [`*/15 ${EVEN_HOURS_BUT_8} * * 1-5`,
     'every 15 minutes during every other hour except the 8 a.m. hour, on ' +
     'weekdays'],
@@ -277,7 +280,8 @@ const rows = [
     'every minute during the 8 a.m., noon, and 6 p.m. hours every day'],
   ['* 9-17 * * *', 'every minute from 9 a.m. through 5:59 p.m. every day'],
   ['* */2 * * *', 'every minute during every other hour'],
-  ['* */6 * * *', 'every minute for one hour every 6 hours'],
+  // Was "for one hour every 6 hours" (see window / hour); 2026-11-21.
+  ['* */6 * * *', 'every minute for the whole hour, every 6 hours'],
   [`* ${EVEN_HOURS_BUT_8} * * *`,
     'every minute during every other hour except the 8 a.m. hour'],
   ['* 22-2 * * *', 'every minute from 10 p.m. through 2:59 a.m. every day'],
