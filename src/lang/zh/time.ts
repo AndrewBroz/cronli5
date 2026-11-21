@@ -24,9 +24,9 @@ const WINDOW = 5;
 // more than this still fire.
 const GLANCED = 4;
 
-// How many separate hours are each a window of clock times; more are
+// How many separate hours may each be a window of clock times; more are
 // named once, before their minutes.
-const WINDOWED = 2;
+const WINDOWED = 1;
 
 // How many beats may be missing from a rhythm said with an exception.
 const MISSED = 2;
@@ -345,27 +345,14 @@ function isCrowded(hours: Run[]): boolean {
     hours.length > WINDOWED;
 }
 
-// Whether the minutes are one window, minute by minute or with stray
-// minutes beside it.
-function isOneWindow(shape: Shape): boolean {
-  return shape.windows.length === 1 &&
-    (shape.step === 1 || shape.strays.length > 0);
-}
-
 // Whether restricted hours are each a window of clock times: under
-// minutes that flow, any minutes inside one hour, or one window (with or
-// without strays) under separate hours. Hours too many to be a window
-// each are named instead, where the minutes after them are every minute
-// or few enough to list;
-// a run or a longer cadence after named hours reads as one stretch, so
-// those stay windows however many.
+// minutes that flow, a stretch of hours; and one hour under any minutes.
+// Separate hours, two or more, are named once instead, and their minutes
+// said once after them.
 function isClocked(H: Level, M: Level): boolean {
-  const lone = H.runs.every((run) => run.length === 1);
-  const named = isCrowded(H.runs) && M.flows &&
-    (M.every || M.values.length <= LISTED);
-
-  return !named && (M.flows ||
-    lone && (H.values.length === 1 || isOneWindow(M.shape)));
+  return isCrowded(H.runs) ?
+    false :
+    M.flows || H.values.length === 1;
 }
 
 // Whether a cadence starts again on the next day where it started on
@@ -387,12 +374,12 @@ function isAnchored(H: Level): boolean {
 }
 
 // Whether the clock times can be counted: eight or fewer, with no run of
-// five hours or minutes, and either one minute or no more hours than are
-// each a window (more hours with several minutes are named once).
+// five hours or minutes, naming no more things than the hours and the
+// minutes would said once each (one hour, one minute, or two of each).
 function isCounted(H: Level, M: Level): boolean {
-  const few = H.values.length <= WINDOWED || M.values.length === 1;
+  const times = H.values.length * M.values.length;
 
-  return H.values.length * M.values.length <= LISTED && few &&
+  return times <= LISTED && times <= H.values.length + M.values.length &&
     H.shape.windows.length === 0 && !M.runs.some(isWindow);
 }
 
@@ -663,12 +650,13 @@ function rhythmOf(beat: Beat, voice: Voice): string {
 // Windows, then their rhythm, then the stray moments after 以及; or the
 // moments alone as a list. Windows whose steps differ are each followed
 // directly by their own rhythm, and parted by commas. Under rounds a
-// list ends in 各一轮, and a single moment in 一轮.
+// list ends in 各一轮, and a single moment in 一轮; a minute after the hours
+// said again is one in each of them, so 各一轮.
 function phrase(grid: Grid, beat: Beat, voice: Voice): string {
   const strays = when(grid.strays.length > 0, grid.of) +
     series(grid.strays.map((moment) => say(moment, voice)));
   const each = [words.oneRound, words.eachOneRound][
-    Number(grid.strays.length > 1)];
+    Number(grid.strays.length > 1 || grid.of !== '')];
   const mixed = new Set(grid.steps).size > 1;
   const windows = grid.windows.map((span, at) => between(span, voice) +
     when(mixed, rhythmOf({...beat, step: grid.steps[at]}, voice)));
@@ -765,21 +753,13 @@ function spelledBody(scene: Scene, voice: Voice): string {
 // What stray minutes after a rhythm say again of the hours, so that none
 // is left without its hour after 以及. After the even or odd hours, the
 // idiom again, which the ends before it still bound; after hours named one
-// by one, the hours again; after a window or windows of hours, 其中每小时
-// 的. After windows of clock times the strays are clock times, unless
-// those would name more than the hours and the minutes do together, when
-// the hours are named. Under every hour, nothing.
-function hoursAgain(scene: Scene, voice: Voice): string {
-  const {H, M} = scene;
-  const lone = H.runs.every((run) => run.length === 1);
-  const {length} = M.shape.strays;
-  const crossed = H.values.length * length > H.values.length + length;
-  const named = scene.kind === 'named' && !H.every && !scene.rhythm;
+// by one, or a window or windows of hours, 其中每小时的, which points back
+// to them without naming them twice. Under every hour, nothing.
+function hoursAgain(scene: Scene): string {
+  const named = scene.kind === 'named' && !scene.H.every && !scene.rhythm;
 
   return first([
-    [scene.kind === 'clocked' && crossed, namesOf(H, voice) + words.of],
-    [scene.kind === 'named' && scene.parity, parityOf(H.base) + words.of],
-    [named && lone, namesOf(H, voice) + words.of],
+    [named && scene.parity, parityOf(scene.H.base) + words.of],
     [named, words.within + words.eachHourOf],
     [true, '']
   ]);
@@ -806,7 +786,7 @@ function pacedBody(scene: Scene, voice: Voice): string {
     {step: M.shape.step, unit: units.minute};
 
   const grid = cross(anchors[scene.kind], minutes, 'm');
-  const again = hoursAgain(scene, voice);
+  const again = hoursAgain(scene);
   const said = again === '' || !grid.paced ?
     grid :
     {...grid, of: again, strays: minutes.strays.map((value) => ({m: value}))};
