@@ -103,6 +103,20 @@ was chosen because some editors call «з … по …» a calque, which is a
 preference. The usage notes write «з понеділка по п'ятницю о 9:00» as a
 finished line, with no recurrence word.
 
+Amended 2026-11-20, by Claude Opus 5.5: **the same minutes in several
+hours are said once, and the hours once** (4.1, "Several named hours").
+Before, three hours or more under the same minutes were said hour by
+hour or as a rhythm: five windows that differ only in their hour
+(«кожні 15 хвилин з 1:00 до 1:45, із 4:00 до 4:45, …»), a cadence of
+hours with the minutes fused into its ends («кожні 3 години через 5 та
+35 хвилин після початку години, із 6:05 до 18:35»), or two rhythms
+stacked with «включно» to repair the first («кожні 3 години з 0:00 до
+12:00 включно, щоразу кожні 2 хвилини з 2 до 18 хвилин після початку
+години», which the maintainer, who reads Ukrainian, found the most
+awkward sentence of any language for its pattern). The language already
+had the frame for a list of counts, «через 5 та 35 хвилин після 1:00,
+4:00, 9:00, 14:00 та 18:00»; it now holds every kind of minutes.
+
 Shorthand: **M** is the set of minutes, **H** the set of hours, **S** the
 set of seconds. "Said" means the phrase a writer uses; "silent" means the
 field contributes no words.
@@ -126,9 +140,11 @@ Six rules run through everything:
   ordinal: the first minute is minute zero, so «на 30-й хвилині» is the
   minute that ends at :30. A stretch from the start or to the end is a
   duration, «протягом перших 30 хвилин кожної години». Where the hours
-  are a range, pieces or a
-  cadence that does not tile the day, a window of clock times says which
-  hours («…, з 9:05 до 17:45», 4.5). No bracket of clock times follows
+  are a range or pieces, a window of clock times says which hours («…, з
+  9:05 до 17:45», 4.5); where they are three or more separate hours, or
+  a cadence that does not tile the day, they are named once after
+  «після» («через 5 та 35 хвилин після 6:00, 9:00, 12:00, 15:00 та
+  18:00», 4.1). No bracket of clock times follows
   any of these.
 * **Every «з … до …» of clock times names the first and the last moment
   that fires.** A range or a cadence of whole units (hours on the hour,
@@ -731,9 +747,11 @@ while of eight clock times the first judge said they cannot be held.
   `15,45 9-17 * * *` is «щогодини через 15 та 45 хвилин після початку
   години, з 9:15 до 17:45». Two places named leave nothing to add up; «кожні 30
   хвилин з 0:15 до 23:45» was weighed and makes the reader find the
-  second place by adding. **After a cadence of hours even
-  0 and 30 are a list**: `0,30 */2 * * *` is «кожні 2 години рівно й
-  через 30 хвилин після початку години». («…щоразу кожні 30 хвилин протягом години» was the same
+  second place by adding. **After a cadence of hours, and
+  before three or more named hours, even 0 and 30 are a list**: `0,30 */2 * * *` is «кожні 2 години рівно й
+  через 30 хвилин після початку години»; `0,30 1,4,9,14,18 * * *` is «о
+  1:00, 4:00, 9:00, 14:00 та 18:00 і через 30 хвилин після кожної з цих
+  годин». («…щоразу кожні 30 хвилин протягом години» was the same
   phrase that two readers counted to three firings when it was said of
   seconds, 4.2.)
 * A cadence of minutes that starts again each hour (the interval does not
@@ -847,8 +865,9 @@ both judges' grades:
   to hold: «кожні 6 годин» is one rhythm (3.7), and `23 */6 * * *` is
   «кожні 6 годин через 23 хвилини після початку години» (4.1).
 * **An irregular list has no shorter form and is said whole.**
-* **Clock times made of several minutes in several hours are listed up to
-  six** (4.1).
+* **Clock times made of several minutes in two hours are listed up to
+  six** (4.1). **Three hours or more are named once**, with the minutes
+  said once beside them, whatever the count of clock times (4.1).
 * **An exception is worth its subtraction only above four items.**
 * **Six names of months are easy; they are words, not numbers.**
 
@@ -969,10 +988,11 @@ windows, each from its first firing to its last.
 | one hour | «щохвилини з 9:00 до 9:59»; «кожні 10 хвилин з 9:00 до 9:50» |
 | a range | «щохвилини з 9:00 до 17:59»; «кожні 15 хвилин з 9:00 до 17:45»; «кожні 10 хвилин з 9:05 до 17:55» |
 | two windows | joined by «і»: «щохвилини з 9:00 до 9:59 і з 17:00 до 17:59»; «кожні 15 хвилин з 9:00 до 17:45 і з 22:00 до 22:45» |
-| three or more windows | commas and a final «і»: «кожні 15 хвилин з 8:00 до 8:45, з 12:00 до 12:45 і з 18:00 до 18:45» |
-| a cadence of four hours or fewer that is listed | its windows, each named: «щохвилини з 0:00 до 0:59 і з 12:00 до 12:59»; «щохвилини з 1:00 до 1:59, із 7:00 до 7:59, з 13:00 до 13:59 і з 19:00 до 19:59» |
+| pieces with three or more windows | commas and a final «і»: «щохвилини з 9:00 до 17:59, з 20:00 до 20:59 і з 22:00 до 22:59» |
+| a cadence of two hours that is listed | its windows, each named: «щохвилини з 0:00 до 0:59 і з 12:00 до 12:59» |
+| three or more separate hours, listed or a cadence that does not tile the day | named once (below): «кожні 15 хвилин протягом години після 8:00, 12:00 та 18:00»; «щохвилини протягом години після 1:00, 7:00, 13:00 та 19:00»; «щохвилини протягом години після 5:00, 7:00, 9:00 і так далі до 23:00 включно» |
 | every other hour, tiling the day | the parity of the hours in place of «протягом години»: «щохвилини в парні години»; «кожні 15 хвилин у непарні години» (below) |
-| another cadence of hours said with words of its own | not a lead: the hours are said first, as they are for minute 0, then «, щоразу» and the minutes «протягом години»: «кожні 6 годин, щоразу щохвилини протягом години»; «кожні 3 години, починаючи з 1:00, щоразу кожні 15 хвилин протягом години»; «кожні 2 години з 5:00 до 23:00 включно, щоразу щохвилини протягом години» |
+| another cadence of hours said with words of its own | not a lead: the hours are said first, as they are for minute 0, then «, щоразу» and the minutes «протягом години»: «кожні 6 годин, щоразу щохвилини протягом години»; «кожні 3 години, починаючи з 1:00, щоразу кожні 15 хвилин протягом години». Only a cadence that tiles the day: one that does not is named (above) |
 | every hour with exceptions | «кожні 10 хвилин, крім проміжку з 3:00 до 3:50 включно» |
 | a cadence of hours with exceptions | the exception stays with the hours: «кожні 3 години, крім 9:00, щоразу кожні 15 хвилин протягом години»; for every other hour it is the stretch left out, «кожні 15 хвилин у парні години, крім проміжку з 8:00 до 8:45 включно» |
 
@@ -1011,16 +1031,95 @@ nothing.
 | --- | --- |
 | one hour | no ordinals, only clock times: a list, however long («о 9:05, 9:20 та 9:45»; counts «після кожної з цих годин» need more than one hour to count from); a window («щохвилини з 9:00 до 9:29», «з 9:10 до 9:40», «з 9:30 до 9:59»); a window and a stray time («щохвилини з 9:00 до 9:29 і о 9:45»); a cadence («кожні 7 хвилин з 9:00 до 9:56»); with an exception («кожні 10 хвилин з 9:00 до 9:50, крім 9:30») |
 | a list of minutes, six clock times or fewer | the clock times are listed, «о 9:05, 9:20, 9:45, 17:05, 17:20 та 17:45». Only a list: a run, pieces or a cadence of minutes in named hours is windows however few its clock times, «щохвилини з 9:01 до 9:05», «щохвилини з 9:00 до 9:02 і з 17:00 до 17:02», «кожні 10 хвилин з 9:10 до 9:50» (five or six consecutive minutes written out one by one were the renderer's first reading of this row) |
-| two or three separate hours, M not a list | each hour as one hour is said, joined as pieces, with any excepted times gathered at the end: «щохвилини з 9:00 до 9:29 і з 17:00 до 17:29»; «щохвилини з 9:00 до 9:59 і з 17:00 до 17:59, крім 9:29 та 17:29» |
+| two separate hours, M not a list | each hour as one hour is said, joined as pieces, with any excepted times gathered at the end: «щохвилини з 9:00 до 9:29 і з 17:00 до 17:29»; «щохвилини з 9:00 до 9:59 і з 17:00 до 17:59, крім 9:29 та 17:29» |
 | every hour | a list after «щогодини», anything else as it is: «щогодини через 5, 20 та 45 хвилин після початку години»; «щохвилини протягом перших 30 хвилин кожної години» |
 | a range of hours | the same words, and the pin is a window from the first firing to the last, after a comma: «щогодини через 5, 20 та 45 хвилин після початку години, з 9:05 до 17:45»; «щохвилини протягом перших 30 хвилин кожної години, з 9:00 до 17:29» |
-| a cadence of hours | a list after the hours' words, with the window where the cadence does not tile the day: «кожні 4 години через 15 та 45 хвилин після початку години»; «кожні 2 години через 15 та 45 хвилин після початку години, з 5:15 до 23:45». Anything else follows the hours after «щоразу», without «кожної години», «кожні 3 години, щоразу щохвилини протягом перших 30 хвилин»; under every other hour it closes with «кожної парної години», «щохвилини протягом перших 30 хвилин кожної парної години» |
+| a cadence of hours that tiles the day | a list after the hours' words: «кожні 4 години через 15 та 45 хвилин після початку години». A cadence that does not tile the day is named, as other separate hours are: «через 15 та 45 хвилин після 5:00, 7:00, 9:00 і так далі до 23:00 включно». Anything else follows the hours after «щоразу», without «кожної години», «кожні 3 години, щоразу щохвилини протягом перших 30 хвилин»; under every other hour it closes with «кожної парної години», «щохвилини протягом перших 30 хвилин кожної парної години» |
 | pieces of hours | as a range, with a window for each piece joined by «і»: «щогодини через 5, 20 та 45 хвилин після початку години, з 9:05 до 17:45 і з 22:05 до 22:45» |
-| other separate hours | M as a list of counts, then «після» and the hours: «через 5, 20 та 45 хвилин після 8:00, 9:00, 12:00, 15:00 та 18:00». If minute 0 is in the list, the hours are said first as clock times and the other minutes follow after each of them: «о 8:00, 10:00, 12:00, 15:00 та 18:00 і через 15 та 45 хвилин після кожної з цих годин» (said hour by hour this was fifteen clock times in a row, past the six of 3.10). If M is not a list, each hour is said as one hour is |
+| three or more separate hours | named once (below): M as a list of counts, then «після» and the hours: «через 5, 20 та 45 хвилин після 8:00, 9:00, 12:00, 15:00 та 18:00». If minute 0 is in the list, the hours are said first as clock times and the other minutes follow after each of them: «о 8:00, 10:00, 12:00, 15:00 та 18:00 і через 15 та 45 хвилин після кожної з цих годин» (said hour by hour this was fifteen clock times in a row, past the six of 3.10). Any other M is its words, then «після» and the hours: «щохвилини з 10 до 20 хвилин після 1:00, 4:00, 9:00, 14:00 та 18:00» |
 | every hour with exceptions | as every hour, then the stretch left out: «щогодини через 5, 20 та 45 хвилин після початку години, крім проміжку з 3:05 до 3:45 включно» |
 
 The minute phrase is settled before the hours are considered: a
 continuous M is always its lead, whatever the hours are.
+
+**Several named hours** (2026-11-20). Where the hours are three or more
+separate hours (a list, or a cadence of hours said by its values), or a
+cadence of hours that does not tile the day (`6-18/3`, `8-18/2`,
+`5/2`), and the minutes are more than one, the hours are named once,
+after «після», and the minutes are said once, before them, in the words
+section 3 gives them inside one hour. Only the close changes: where
+under every hour a phrase ends «після початку кожної години» or «кожної
+години», here it ends «після» and the hours.
+
+| M | `1,4,9,14,18` | `6-18/3` |
+| --- | --- | --- |
+| two minutes | «щодня через 5 та 35 хвилин після 1:00, 4:00, 9:00, 14:00 та 18:00» | «щодня через 5 та 35 хвилин після 6:00, 9:00, 12:00, 15:00 та 18:00» |
+| a cadence through the hour | «щодня кожні 15 хвилин протягом години після 1:00, …» | «щодня кожні 15 хвилин протягом години після 6:00, …» |
+| every minute | «щохвилини протягом години після 1:00, …» | «щохвилини протягом години після 6:00, …» |
+| a stretch | «щохвилини з 10 до 20 хвилин після 1:00, …»; «щохвилини протягом перших 30 хвилин після 1:00, …» | «щохвилини з 10 до 20 хвилин після 6:00, …» |
+| a cadence over a stretch | «щодня кожні 2 хвилини з 2 до 18 хвилин після 1:00, …» | «щодня кожні 2 хвилини з 2 до 18 хвилин після 6:00, …» |
+| a list with minute 0 | «щодня о 1:00, 4:00, 9:00, 14:00 та 18:00 і через 30 хвилин після кожної з цих годин» | the same, with 6:00 … 18:00 |
+
+* **Why.** A reader holds about four things and reads once. Ten clock
+  times, or five windows that differ only in their hour, are the same
+  minutes said five times, and the reader has to find for himself the
+  pattern the sentence did not state. A rhythm of hours with the
+  minutes fused into its ends («кожні 3 години через 5 та 35 хвилин
+  після початку години, із 6:05 до 18:35») gives ends that are not
+  hours of the rhythm, and leaves the reader to work out 9:05, 9:35 and
+  the rest. Two rhythms stacked («кожні 3 години з 0:00 до 12:00
+  включно, щоразу кожні 2 хвилини з 2 до 18 хвилин після початку
+  години») make the reader multiply them, and needed «включно» and
+  «щоразу» to hold together, devices no other language needs here.
+  Named hours are recognised at a glance, as clock times are; what
+  happens inside each is said once.
+* **Continuity.** Under every kind of minutes the hours are the same
+  words, «після» and the clock times. One minute is still fused into
+  them, as clock times («о 1:30, 4:30, …») or, for a cadence that does
+  not tile the day, into its ends («кожні 3 години з 6:30 до 18:30
+  включно»), and a list with minute 0 names the hours first with «о»
+  and counts the rest «після кожної з цих годин»: «рівно» cannot be
+  said with «після». A pair of minutes is a list here, never «кожні 30
+  хвилин протягом години після …»: «кожні 30 хвилин протягом години»
+  is the phrase readers counted to three firings (3.8, 4.2).
+* **The threshold** is three hours. Two hours are said as one hour is,
+  each on its own: up to six clock times (`5,20,45 9,17` is «о 9:05,
+  9:20, 9:45, 17:05, 17:20 та 17:45») or two windows («щохвилини з 9:00
+  до 9:59 і з 17:00 до 17:59»). Two windows are two pictures on the
+  clock face, each held as one thing; from three on, the windows repeat
+  the minutes more than they name hours.
+* **Past five hours a cadence is a series**: its first three hours and
+  «і так далі до» its last, «включно», as days of the month are (3.7):
+  «щохвилини протягом години після 5:00, 7:00, 9:00 і так далі до 23:00
+  включно». The step is read off three clock times. An irregular list is
+  named whole (3.10).
+* **A stretch to the end of the hour** is counted, «з 30 до 59 хвилин
+  після 1:00, …», not «протягом останніх 30 хвилин після 1:00»: the
+  last minutes "after" a moment have no end to be last before.
+* **«Протягом години після»** is the ordinary Ukrainian «протягом
+  [строку] після [події]», the hour counted from the named clock time.
+  It is not the ordinal «протягом дев'ятої години» the usage notes warn
+  against (read as 8:00 to 9:00); the hour is named by its clock time.
+  A wish to see the window «з 1:00 до 1:59» is not a second reading.
+* **Evidence.** The frame «через 5, 20 та 45 хвилин після 8:00, 9:00,
+  …» was already the language's own (it replaced fifteen clock times on
+  2026-11-13). Web searches on 2026-11-20: «протягом … після …» is the
+  everyday construction of administrative and news Ukrainian («протягом
+  трьох місяців після їх надходження на рахунок», a pension news item;
+  «протягом року з дня закінчення виконання стягнення», КУпАП ст. 39,
+  quoted on sud.ua); exact searches for «протягом години після»
+  in timetables, and for five windows differing only in their hour,
+  found nothing either way. The usage notes say a long list of hours is
+  not held and timetables fold it (§5). The 24 new and changed rows were
+  read on 2026-11-20 by three Sonnet 5.5 and three Opus 5.5 readers
+  briefed only in Ukrainian (`tooling/scripts/reading/run.mjs`, 214
+  questions each, among them the first moment past each hour, «19:00»
+  after «протягом години після … 18:00»): no answer was wrong, so
+  nothing was left to recheck.
+
+A cadence of hours that tiles the day (`*/3`, `1/3`, `*/6`) keeps its
+own words, said as «щогодини» is (above); runs and cadences of hours
+together, and a cadence with hours left out, keep «щоразу».
 
 Writing a time: hours without a leading zero, always with minutes, a
 colon between: «9:00», «17:30», «0:05». With seconds, «9:00:30». The
