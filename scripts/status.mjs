@@ -27,7 +27,7 @@ function languageStatuses() {
 // One markdown row of status and review evidence for a reviewed unit.
 function row(label, unit) {
   return '| ' + label + ' | ' + unit.status + ' | ' +
-    (unit.humanReview || '—') + ' | ' + (unit.modelReview || '—') + ' |';
+    (unit.review || '—') + ' |';
 }
 
 // Non-default sub-units of a language whose status diverges from it: dialect
@@ -54,8 +54,8 @@ function statusTable() {
     }
   }
 
-  return ['| Language | Status | Human review | Model review |',
-    '| --- | --- | --- | --- |', ...rows].join('\n');
+  return ['| Language | Status | Review |',
+    '| --- | --- | --- |', ...rows].join('\n');
 }
 
 // A concise at-a-glance table — just each language's status tier — for the

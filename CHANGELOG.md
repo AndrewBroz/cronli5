@@ -4,6 +4,18 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). This project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.2]
+
+### Changed
+
+- **Docs: review is recorded as evidence, not as a missing human.** The
+  pipeline is built to reach quality without human review, so the
+  language guides, notes and changelog no longer present its absence as a
+  caveat. Lists of the choices resting on the least evidence are kept,
+  under "Where the evidence is thinnest". The language status table loses
+  its "Human review" column: each language's `status.json` now has one
+  `review` record, where a maintainer's ruling is evidence like any other.
+
 ## [1.3.1]
 
 ### Changed
