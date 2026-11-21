@@ -105,9 +105,11 @@ const rows = [
   ['*/15 9,17 * * 1-5',
     'dal lunedì al venerdì, ogni 15 minuti dalle 9:00 alle 9:45 e dalle ' +
     '17:00 alle 17:45'],
+  // Three hours or more, none next to another: the hours are named once
+  // and the rate fills each of them, not one window per hour (answers 4.1
+  // "Hours named once").
   ['*/15 8,12,18 * * 1-5',
-    'dal lunedì al venerdì, ogni 15 minuti dalle 8:00 alle 8:45, dalle ' +
-    '12:00 alle 12:45 e dalle 18:00 alle 18:45'],
+    'dal lunedì al venerdì, ogni 15 minuti nelle ore 8, 12 e 18'],
   ['*/15 */2 * * 1-5',
     'dal lunedì al venerdì, ogni 15 minuti nelle ore pari'],
   ['*/15 */6 * * 1-5',
@@ -272,9 +274,9 @@ const rows = [
 
   // open / hour
   ['* 12 * * *', 'tutti i giorni, ogni minuto dalle 12:00 alle 12:59'],
-  ['* 8,12,18 * * *',
-    'tutti i giorni, ogni minuto dalle 8:00 alle 8:59, dalle 12:00 alle ' +
-    '12:59 e dalle 18:00 alle 18:59'],
+  // Three hours apart are named once, not three windows (answers 4.1
+  // "Hours named once").
+  ['* 8,12,18 * * *', 'tutti i giorni, ogni minuto nelle ore 8, 12 e 18'],
   ['* 9-17 * * *', 'tutti i giorni, ogni minuto dalle 9:00 alle 17:59'],
   ['* */2 * * *', 'ogni minuto nelle ore pari'],
   ['* */6 * * *', 'ogni minuto per un\'ora ogni 6 ore'],

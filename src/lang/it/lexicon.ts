@@ -179,6 +179,8 @@ const words = {
   secondsAfter: 'dopo',
   evenHours: 'nelle ore pari',
   oddHours: 'nelle ore dispari',
+  // Hours named once, that a rate fills: «nelle ore 1, 4 e 9».
+  inHours: 'nelle ore',
   once: 'una volta',
   inThatMinute: 'e in quel minuto',
   only: 'solo',
