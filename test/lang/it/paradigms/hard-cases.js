@@ -346,16 +346,17 @@ const rows = [
     'tutti i giorni, ogni 10 minuti dalle 9:05 alle 9:55 e dalle 17:05 ' +
     'alle 17:55'],
   ['0,20,40 9 * * *', 'tutti i giorni alle 9:00, alle 9:20 e alle 9:40'],
+  // Two minutes over three hours or more apart: the hours are named once,
+  // as under every other kind of minutes, not six or eight clock times
+  // (answers 4.1 "Hours named once").
   ['0,30 8,12,18 * * *',
-    'tutti i giorni alle 8:00, alle 8:30, alle 12:00, alle 12:30, alle ' +
-    '18:00 e alle 18:30'],
+    'tutti i giorni, ai minuti 0 e 30 delle ore 8, 12 e 18'],
   ['*/20 9,17 * * *',
     'tutti i giorni alle 9:00, alle 9:20, alle 9:40, alle 17:00, alle ' +
     '17:20 e alle 17:40'],
   ['0,30 9-11 * * *', 'tutti i giorni, ogni 30 minuti dalle 9:00 alle 11:30'],
   ['0,30 8,12,16,20 * * *',
-    'tutti i giorni alle 8:00, alle 8:30, alle 12:00, alle 12:30, alle ' +
-    '16:00, alle 16:30, alle 20:00 e alle 20:30'],
+    'tutti i giorni, ai minuti 0 e 30 delle ore 8, 12, 16 e 20'],
   ['5,20,45 9-10 * * *',
     'tutti i giorni alle 9:05, alle 9:20, alle 9:45, alle 10:05, alle ' +
     '10:20 e alle 10:45'],
@@ -507,7 +508,9 @@ const rows = [
   // A cadence that tiles the day less an hour or two is the same
   // cadence: said bare, and the hours left out follow (answers 4.1 "Hours
   // that tile the day"). One that does not tile keeps its windows, and
-  // never names the window the exception removes.
+  // never names the window the exception removes; with no two hours
+  // together its hours are named once, the one left out simply absent
+  // (answers 4.1 "Hours named once").
   ['*/15 0,4,6,8,10,12,14,16,18,20,22 * * *',
     'ogni 15 minuti nelle ore pari, tranne dalle 2:00 alle 2:59'],
   ['*/15 1,3,5,9,11,13,15,17,19,21,23 * * *',
@@ -522,13 +525,16 @@ const rows = [
     'ogni minuto dal minuto 0 al 29, ogni 2 ore, tranne dalle 8:00 alle ' +
     '8:59'],
   ['*/15 0,4,6,8,10,12,14,16,18,20 * * *',
-    'tutti i giorni, ogni 15 minuti dalle 0:00 alle 0:45 e così via ogni 2 ' +
-    'ore fino alle 20:45, tranne dalle 2:00 alle 2:59'],
+    'tutti i giorni, ogni 15 minuti nelle ore 0, 4, 6, 8, 10, 12, 14, 16, ' +
+    '18 e 20'],
 
-  // Hours as what confines a cadence or anchored minutes: windows up to three, then the hours named.
+  // Hours as what confines a cadence or anchored minutes: one window for
+  // each run of hours, but hours of which none touches another, three or
+  // more, are named once, whatever the minutes are (answers 4.1 "Hours
+  // named once"): a series of windows said the same minutes again for
+  // each hour.
   ['*/15 8-18/2 * * *',
-    'tutti i giorni, ogni 15 minuti dalle 8:00 alle 8:45, dalle 10:00 alle ' +
-    '10:45 e così via ogni 2 ore fino alle 18:45'],
+    'tutti i giorni, ogni 15 minuti nelle ore 8, 10, 12, 14, 16 e 18'],
   ['0 9-17,20,22 * * *',
     'tutti i giorni, ogni ora dalle 9:00 alle 17:00, poi alle 20:00 e alle ' +
     '22:00'],
@@ -547,12 +553,9 @@ const rows = [
     'tutti i giorni, ai minuti 5, 20 e 45 di ogni ora, dalle 9:05 alle ' +
     '17:45 e dalle 22:05 alle 22:45'],
   ['0-29 8,12,18 * * *',
-    'tutti i giorni, ogni minuto dalle 8:00 alle 8:29, dalle 12:00 alle ' +
-    '12:29 e dalle 18:00 alle 18:29'],
+    'tutti i giorni, ogni minuto dal minuto 0 al 29 delle ore 8, 12 e 18'],
   ['* 6,8,12,18,20 * * *',
-    'tutti i giorni, ogni minuto dalle 6:00 alle 6:59, dalle 8:00 alle ' +
-    '8:59, dalle 12:00 alle 12:59, dalle 18:00 alle 18:59 e dalle 20:00 ' +
-    'alle 20:59'],
+    'tutti i giorni, ogni minuto nelle ore 6, 8, 12, 18 e 20'],
   // A unit that fills each hour of hours that tile the day is a stretch
   // of one hour, with no windows (answers 4.1 "Hours that tile the day"):
   // every other hour is the even or the odd hours.
@@ -568,12 +571,13 @@ const rows = [
     'ogni minuto per un\'ora ogni 6 ore, tranne al minuto 29'],
   ['* * */2 * * *', 'ogni secondo nelle ore pari'],
   ['30 * */2 * * *', 'al secondo 30 di ogni minuto nelle ore pari'],
+  // A cadence of hours that does not tile the day is named once, as the
+  // hours of «ai minuti 15 e 45 delle ore 0, 2, 4 e così via fino a 16»
+  // are (answers 4.1 "Hours named once"), not two windows «e così via».
   ['*/15 5/2 * * *',
-    'tutti i giorni, ogni 15 minuti dalle 5:00 alle 5:45, dalle 7:00 alle ' +
-    '7:45 e così via ogni 2 ore fino alle 23:45'],
+    'tutti i giorni, ogni 15 minuti nelle ore 5, 7, 9 e così via fino a 23'],
   ['*/15 0-20/2 * * *',
-    'tutti i giorni, ogni 15 minuti dalle 0:00 alle 0:45, dalle 2:00 alle ' +
-    '2:45 e così via ogni 2 ore fino alle 20:45'],
+    'tutti i giorni, ogni 15 minuti nelle ore 0, 2, 4 e così via fino a 20'],
   ['5/10 */2 * * *', 'ogni 10 minuti a partire dal minuto 5, ogni 2 ore'],
   ['5/15 */2 * * *', 'ai minuti 5, 20, 35 e 50, ogni 2 ore'],
   ['5,20,45 8-10,14,20 * * *',
@@ -611,9 +615,69 @@ const rows = [
   ['1/2 * * * *', 'ogni 2 minuti a partire dal minuto 1 di ogni ora'],
   ['1/2 9-17 * * *', 'tutti i giorni, ogni 2 minuti dalle 9:01 alle 17:59'],
   ['0-29 */2 * * *', 'ogni minuto dal minuto 0 al 29, ogni 2 ore'],
+  // The same hours under a run of minutes (answers 4.1 "Hours named
+  // once").
   ['0-29 5/2 * * *',
-    'tutti i giorni, ogni minuto dalle 5:00 alle 5:29, dalle 7:00 alle ' +
-    '7:29 e così via ogni 2 ore fino alle 23:29'],
+    'tutti i giorni, ogni minuto dal minuto 0 al 29 delle ore 5, 7, 9 e ' +
+    'così via fino a 23'],
+
+  // Each kind of minutes under five irregular hours and under a stepped
+  // range of five: the hours are said the same way every time, «delle
+  // ore» after minutes named or bounded inside the hour, «nelle ore» after
+  // a rate that fills the hour, as «nelle ore pari» (answers 4.1 "Hours
+  // named once"). Editing the minutes changes only the words before the
+  // hours.
+  ['5,35 1,4,9,14,18 * * *',
+    'tutti i giorni, ai minuti 5 e 35 delle ore 1, 4, 9, 14 e 18'],
+  ['5,20,35 1,4,9,14,18 * * *',
+    'tutti i giorni, ai minuti 5, 20 e 35 delle ore 1, 4, 9, 14 e 18'],
+  ['*/15 1,4,9,14,18 * * *',
+    'tutti i giorni, ogni 15 minuti nelle ore 1, 4, 9, 14 e 18'],
+  ['10-20 1,4,9,14,18 * * *',
+    'tutti i giorni, ogni minuto dal minuto 10 al 20 delle ore 1, 4, 9, 14 ' +
+    'e 18'],
+  ['10-20/2 1,4,9,14,18 * * *',
+    'tutti i giorni, ogni 2 minuti dal minuto 10 al 20 delle ore 1, 4, 9, ' +
+    '14 e 18'],
+  ['* 1,4,9,14,18 * * *',
+    'tutti i giorni, ogni minuto nelle ore 1, 4, 9, 14 e 18'],
+  ['*/7 1,4,9,14,18 * * *',
+    'tutti i giorni, ogni 7 minuti dal minuto 0 al 56 delle ore 1, 4, 9, 14 ' +
+    'e 18'],
+  ['5/10 1,4,9,14,18 * * *',
+    'tutti i giorni, ogni 10 minuti dal minuto 5 al 55 delle ore 1, 4, 9, ' +
+    '14 e 18'],
+  ['0-28,30-59 1,4,9,14,18 * * *',
+    'tutti i giorni, ogni minuto nelle ore 1, 4, 9, 14 e 18, tranne al ' +
+    'minuto 29'],
+  ['5,35 6-18/3 * * *',
+    'tutti i giorni, ai minuti 5 e 35 delle ore 6, 9, 12, 15 e 18'],
+  ['*/15 6-18/3 * * *',
+    'tutti i giorni, ogni 15 minuti nelle ore 6, 9, 12, 15 e 18'],
+  ['10-20 6-18/3 * * *',
+    'tutti i giorni, ogni minuto dal minuto 10 al 20 delle ore 6, 9, 12, 15 ' +
+    'e 18'],
+  ['10-20/2 6-18/3 * * *',
+    'tutti i giorni, ogni 2 minuti dal minuto 10 al 20 delle ore 6, 9, 12, ' +
+    '15 e 18'],
+  ['* 6-18/3 * * *', 'tutti i giorni, ogni minuto nelle ore 6, 9, 12, 15 e 18'],
+  ['*/7 6-18/3 * * *',
+    'tutti i giorni, ogni 7 minuti dal minuto 0 al 56 delle ore 6, 9, 12, 15 ' +
+    'e 18'],
+  // Seconds under the same hours keep them: a second beside a rate of
+  // minutes follows it, as it does over the even hours.
+  ['30 */15 1,4,9,14,18 * * *',
+    'tutti i giorni, ogni 15 minuti nelle ore 1, 4, 9, 14 e 18, al secondo ' +
+    '30'],
+  ['30 * 1,4,9,14,18 * * *',
+    'tutti i giorni, al secondo 30 di ogni minuto nelle ore 1, 4, 9, 14 e 18'],
+  ['*/10 * 1,4,9,14,18 * * *',
+    'tutti i giorni, ogni 10 secondi nelle ore 1, 4, 9, 14 e 18'],
+  // Two hours apart are few enough to say as clock times or windows: four
+  // ends, each read at a glance (answers 4.1 "Hours named once").
+  ['*/15 9,17 * * *',
+    'tutti i giorni, ogni 15 minuti dalle 9:00 alle 9:45 e dalle 17:00 alle ' +
+    '17:45'],
 
   // Seconds.
   ['15 30 9 * * *', 'tutti i giorni alle 9:30:15'],

@@ -63,6 +63,13 @@ And a cadence of months is never said with an exception: the months left
 are listed, «a gennaio, marzo, luglio, settembre e novembre», not «ogni 2
 mesi a partire da gennaio tranne a maggio» (rule 6, 3.7).
 
+**Amended 2026-11-20, by Claude Opus 5.5.** Three hours or more of which
+none touches another are named once under every kind of minutes, «ogni
+15 minuti nelle ore 1, 4, 9, 14 e 18», «ogni minuto dal minuto 10 al 20
+delle ore 6, 9, 12, 15 e 18», where a rate or a run of minutes had been
+one window per hour, or two windows «e così via ogni 3 ore» (4.1 "Hours
+named once").
+
 What Italian does its own way, and the rest of this file relies on:
 
 * **The habitual article.** «Il lunedì» is every Monday; «lunedì» alone is
@@ -600,9 +607,13 @@ after another and from the reads of the rows:
   where minutes named inside the hour are said of them («di ciascuna ora
   dalle 9 alle 17», «delle ore 4, 8, 12, 16 e 20»): the first judge
   called it tabular and read it at once, and every clock-window wording
-  tried there was reread. They are never used after a rate: a rate
-  takes windows, however many, or «e così via ogni 2 ore fino alle…»,
-  read rightly and called stiff by two judges. The one named set of
+  tried there was reread. They were never used after a rate: a rate
+  took windows, however many, or «e così via ogni 2 ore fino alle…»,
+  read rightly and called stiff by two judges. Since 2026-11-20 three
+  hours or more of which none touches another are named once after a
+  rate too, «ogni 15 minuti nelle ore 1, 4, 9, 14 e 18» (4.1 "Hours named
+  once"): read rightly is not easy to hold, and the windows said the
+  same minutes once per hour. Another named set of
   hours after a rate is the even or odd hours of the whole day (4.1,
   "Hours that tile the day", amended 2026-11-14); «ogni minuto nelle ore
   pari» made the first judge stop, and that pause is overruled (the
@@ -726,6 +737,93 @@ tranne dalle 8:00 alle 8:59»; `0-29` over the same hours — «ogni
 minuto dal minuto 0 al 29, ogni 2 ore, tranne dalle 8:00 alle 8:59»). A
 stretch that is left out is a stretch, so it is said as one.
 
+**Hours named once** (amended 2026-11-20, Claude Opus 5.5). Hours of
+which **none touches another, three or more**, that do not tile the day
+(a list such as `1,4,9,14,18`, a stepped range such as `6-18/3` or
+`8-18/2`, an offset step such as `5/2`, a cadence less an hour), under
+**more than one minute** of each hour, come after case A and before
+every other case: the hours are named once, as numbers, and the minutes
+are said once for all of them. The hours are said the same way under
+every kind of minutes, so an edit to the minutes changes only the words
+before the hours:
+
+* minutes named or bounded inside the hour (a list, a run, a cadence,
+  pieces) are said as in the table of case D and take **«delle ore»**:
+  `5,35 1,4,9,14,18` — «ai minuti 5 e 35 delle ore 1, 4, 9, 14 e 18»;
+  `10-20 6-18/3` — «ogni minuto dal minuto 10 al 20 delle ore 6, 9, 12, 15
+  e 18»; `10-20/2 1,4,9,14,18` — «ogni 2 minuti dal minuto 10 al 20 delle
+  ore 1, 4, 9, 14 e 18»; `*/7 6-18/3` — «ogni 7 minuti dal minuto 0 al 56
+  delle ore 6, 9, 12, 15 e 18»; `5/10 1,4,9,14,18` — «ogni 10 minuti dal
+  minuto 5 al 55 delle ore 1, 4, 9, 14 e 18»;
+* a rate that fills the hour from its top (every minute, or minutes that
+  tile the hour from 0, four or more, case C) takes **«nelle ore»**, as it
+  takes «nelle ore pari» over every other hour: `* 1,4,9,14,18` — «ogni
+  minuto nelle ore 1, 4, 9, 14 e 18»; `*/15 6-18/3` — «ogni 15 minuti
+  nelle ore 6, 9, 12, 15 e 18»; a minute left out closes the time,
+  «ogni minuto nelle ore 1, 4, 9, 14 e 18, tranne al minuto 29». A
+  second follows as it does over the even hours: «ogni 15 minuti nelle
+  ore 1, 4, 9, 14 e 18, al secondo 30»; «al secondo 30 di ogni minuto
+  nelle ore 1, 4, 9, 14 e 18»; «ogni 10 secondi nelle ore 1, 4, 9, 14 e
+  18».
+
+A cadence of more than eight hours is its first three and «e così via
+fino a» the last, as in case D.6: `*/15 5/2` — «ogni 15 minuti nelle ore
+5, 7, 9 e così via fino a 23»; `0-29 5/2` — «ogni minuto dal minuto 0 al
+29 delle ore 5, 7, 9 e così via fino a 23». A cadence less an hour is
+named one by one, the hour left out simply absent: `*/15
+0,4,6,…,20` — «ogni 15 minuti nelle ore 0, 4, 6, 8, 10, 12, 14, 16, 18 e
+20».
+
+Why. A person reads once and holds about four things. The windows this
+replaces said the same minutes once for every hour: `*/15 1,4,9,14,18`
+was «ogni 15 minuti dall'1:00 all'1:45, dalle 4:00 alle 4:45, dalle 9:00
+alle 9:45, dalle 14:00 alle 14:45 e dalle 18:00 alle 18:45», ten clock
+times in which the reader has to find that only the hour changes; a
+stepped range was two windows «e così via ogni 3 ore fino alle 18:45»,
+a series the reader has to continue and whose last time (18:45) is an
+end of the minutes fused onto the hours; and `0,30 8,12,16,20` was eight
+clock times. And it broke continuity: `5,35 1,4,9,14,18` already said
+«delle ore 1, 4, 9, 14 e 18», so editing only the minutes from `5,35` to
+`*/15` rewrote how the hours were said. Named once, the hours are five
+numbers read at a glance (D.6: «read at once by two judges and called
+tabular»), and the minutes are one phrase.
+
+Why two prepositions. «Delle ore» belongs to minutes that are points or
+bounded pieces of the hour: «i minuti 5 e 35 delle ore…», the timetable's
+«ai minuti 15 e 45 di ogni ora» (usage §6) with the hours named. A rate
+that fills the hour is a stretch, and Italian puts a stretch «nelle»
+hours: «nelle ore di punta», «nelle ore notturne», and this rule book's
+own «ogni 15 minuti nelle ore pari» (5.1). «Ogni 15 minuti delle ore 1,
+4…» reads as a genitive with nothing to hang on. The hours themselves,
+the numbers and their order, are the same under both; the preposition
+goes with the minute phrase, as the comma of «al minuto 30, ogni 2 ore»
+against «ogni minuto nelle ore pari» does over hours that tile the day.
+A web search for the two phrase fragments on 2026-11-20 found neither
+in running text with hour numbers (the search engine did not honour
+exact phrases); «nelle ore» before a span of the day is the ordinary
+form in Italian schedules (ARERA's «ore di punta» bands, transport
+notices). The call is the orchestrating model's, recorded here to be
+tested again.
+
+The threshold is three hours. Two hours are said as before: clock times
+when they are few (`5,20,45 9,17` — six times, D.2), and a window each
+(`*/15 9,17` — «ogni 15 minuti dalle 9:00 alle 9:45 e dalle 17:00 alle
+17:45»): four ends, each a clock time a reader recognises, and nothing
+repeated that a reader must factor out. From three hours the windows are
+six ends or more and the clock times six or more, past what a reader
+holds, while the frame stays one phrase and three numbers. Hours that
+touch (`9-17,22`, `8-10,14,20`) keep their windows and «di ciascuna ora
+dalle… alle…» (case C.5, D.6): a run is a stretch said by its ends, not
+a set of numbers. A single minute stays clock times, one an hour
+(`30 1,4,9,14,18` — «all'1:30, alle 4:30, …», case B): each time is one
+thing, and there is nothing to say once.
+
+This replaces, for such hours, the windows of C.4 and C.5 and D.4 and
+the clock times of D.2 (each case below now says so). Those cases chose
+windows because a window after a rate was read rightly; being read
+rightly is not the same as being easy to hold, and five windows that
+differ only in their hour are the same minutes said five times.
+
 **A. T is four or fewer: the times are listed**, in clock order, whatever
 the fields look like: «alle 9:00 e alle 17:00»; `*/15 9 * * *` — «alle
 9:00, alle 9:15, alle 9:30 e alle 9:45»; `0 9-12 * * *` — «alle 9:00, alle
@@ -767,8 +865,12 @@ alle 9:50».
    17:45», «ogni minuto dalle 9:00 alle 17:59», «ogni 15
    minuti dalle 9:05 alle 17:50», «ogni 30 minuti dalle 9:15 alle
    17:45».
-4. The hours are a cadence of five or more, none consecutive, that does
-   not tile the day: the first two windows, then **«e così via ogni N
+4. (Superseded 2026-11-20 by "Hours named once" above, which takes
+   every such cadence first: `*/15 5/2` is «ogni 15 minuti nelle ore 5,
+   7, 9 e così via fino a 23». What follows is the record of the old
+   form, which no longer applies.) The hours are a cadence of five or
+   more, none consecutive, that does not tile the day: the first two
+   windows, then **«e così via ogni N
    ore fino alle»** and the last time that fires: `*/15 5/2` — «ogni 15
    minuti dalle 5:00 alle 5:45, dalle 7:00 alle 7:45 e così via ogni 2
    ore fino alle 23:45»; `* 0-20/2` — «ogni minuto dalle 0:00 alle 0:59,
@@ -788,7 +890,8 @@ alle 9:50».
    both read as a slip: where is 2? The exception says it. The same holds
    wherever a rule says "the windows of case C.4".
 5. Otherwise one window for each run of hours (an hour alone is a run),
-   however many, the rate said once: «ogni 15 minuti dalle 9:00 alle 9:45
+   the rate said once, unless the hours are three or more and none
+   touches another ("Hours named once"): «ogni 15 minuti dalle 9:00 alle 9:45
    e dalle 17:00 alle 17:45»; «ogni minuto dalle 9:00 alle 17:59,
    dalle 20:00 alle 20:59 e dalle 22:00 alle 22:59».
 
@@ -810,7 +913,9 @@ of the time. Then the hours:
    di ogni ora»; `0,7,14,21,35,…,56` — «ogni 7 minuti dal minuto 0 al 56,
    ripartendo a ogni ora, tranne al minuto 28».
 2. **A list of minutes and T is eight or fewer: the clock times are
-   listed**: «alle 9:05, alle 9:20, alle 9:45, alle 17:05, alle 17:20
+   listed**, unless the hours are three or more and none touches another
+   ("Hours named once": `0,30 8,12,16,20` — «ai minuti 0 e 30 delle ore
+   8, 12, 16 e 20»): «alle 9:05, alle 9:20, alle 9:45, alle 17:05, alle 17:20
    e alle 17:45».
 3. **An exception whose base is a smooth rate**: the base is said by case
    C with these hours; then the times left out, as clock times when they
@@ -822,12 +927,14 @@ of the time. Then the hours:
    are then pieces or a list: `1-29,31-59 9-17` — «ogni minuto dal minuto
    1 al 29 e dal minuto 31 al 59 di ciascuna ora dalle 9 alle 17 (prima
    volta alle 9:01, ultima alle 17:59)».
-4. Every hour is alone and the minutes are **one run or one cadence**:
-   each hour is a clock window, as in case C.4 and C.5: `0-29 9 * * *` —
+4. Every hour is alone, the hours are one or two, and the minutes are
+   **one run or one cadence** (three hours or more are "Hours named
+   once"): each hour is a clock window, as in case C.4 and C.5: `0-29 9 * * *` —
    «ogni minuto dalle 9:00 alle 9:29»; `*/7 9` — «ogni 7 minuti
-   dalle 9:00 alle 9:56»; `0-29 8,12,18` — «ogni minuto dalle
-   8:00 alle 8:29, dalle 12:00 alle 12:29 e dalle 18:00 alle 18:29»; `0-29 5/2` — «ogni minuto dalle 5:00 alle 5:29, dalle 7:00
-   alle 7:29 e così via ogni 2 ore fino alle 23:29». Pieces of
+   dalle 9:00 alle 9:56»; `0-29 9,17` — «ogni minuto dalle 9:00 alle
+   9:29 e dalle 17:00 alle 17:29». (`0-29 8,12,18` was three windows and
+   `0-29 5/2` two windows «e così via»; both are now "Hours named once":
+   «ogni minuto dal minuto 0 al 29 delle ore 8, 12 e 18».) Pieces of
    minutes do the same when the items inside the hour times the hours come
    to three or fewer: `0-29,45 9` — «ogni minuto dalle 9:00 alle 9:29 e una volta alle 9:45»; `50-10 9` — «ogni minuto dalle 9:00
    alle 9:10 e dalle 9:50 alle 9:59».
