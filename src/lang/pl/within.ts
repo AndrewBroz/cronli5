@@ -282,6 +282,14 @@ function fullHours(tone: Tone): Anchor {
   return hours(words.eachFullHour, words.eachFullHourGenitive, tone);
 }
 
+/** One hour, after «za każdym razem»: «pełnej godzinie». */
+function theHour(tone: Tone): Anchor {
+  return {
+    ...hours(words.fullHour, words.fullHourGenitive, tone),
+    whole: ` ${words.wholeHour}`
+  };
+}
+
 /** Every minute of the open hour, for the seconds inside it. */
 function eachMinute(short: boolean): Anchor {
   return {
@@ -311,4 +319,4 @@ function theMinute(short: boolean): Anchor {
 }
 
 export {butNot, eachMinute, except, fullHours, hours, lacks, momentsLacking,
-  theMinute, within};
+  theHour, theMinute, within};

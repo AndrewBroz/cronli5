@@ -3510,11 +3510,25 @@
    "pattern": "30 */2 * * *"
   },
   {
-   "expected": "codziennie co 3 godziny od 0:30 do 21:30",
+   "expected": "co 3 godziny, za każdym razem 30 minut po pełnej godzinie",
    "options": {
     "lang": "pl"
    },
    "pattern": "30 */3 * * *"
+  },
+  {
+   "expected": "co 4 godziny, za każdym razem 45 minut po pełnej godzinie",
+   "options": {
+    "lang": "pl"
+   },
+   "pattern": "45 */4 * * *"
+  },
+  {
+   "expected": "co 3 godziny, za każdym razem 15 sekund po pełnej godzinie",
+   "options": {
+    "lang": "pl"
+   },
+   "pattern": "15 0 */3 * * *"
   },
   {
    "expected": "codziennie co 5 godzin od 0:30 do 20:30",
@@ -3531,7 +3545,7 @@
    "pattern": "30 0,2,4,6,10,12,14,16,18,20,22 * * *"
   },
   {
-   "expected": "codziennie co 3 godziny od 0:30 do 21:30, oprócz 9:30",
+   "expected": "co 3 godziny, za każdym razem 30 minut po pełnej godzinie, oprócz 9:30",
    "options": {
     "lang": "pl"
    },
@@ -3559,11 +3573,74 @@
    "pattern": "15,45 */2 * * *"
   },
   {
-   "expected": "codziennie 15 i 45 minut po każdej z godzin 0:00, 4:00, 8:00, 12:00, 16:00 i 20:00",
+   "expected": "co 4 godziny, za każdym razem 15 i 45 minut po pełnej godzinie",
    "options": {
     "lang": "pl"
    },
    "pattern": "15,45 */4 * * *"
+  },
+  {
+   "expected": "co 3 godziny, za każdym razem 5 i 35 minut po pełnej godzinie",
+   "options": {
+    "lang": "pl"
+   },
+   "pattern": "5,35 */3 * * *"
+  },
+  {
+   "expected": "co 3 godziny, za każdym razem o pełnej godzinie oraz 15 i 45 minut później",
+   "options": {
+    "lang": "pl"
+   },
+   "pattern": "0,15,45 */3 * * *"
+  },
+  {
+   "expected": "co 3 godziny, za każdym razem 5 i 35 minut po pełnej godzinie, oprócz godziny 9",
+   "options": {
+    "lang": "pl"
+   },
+   "pattern": "5,35 0,3,6,12,15,18,21 * * *"
+  },
+  {
+   "expected": "co 3 godziny, za każdym razem co minutę od 10 do 20 minut po pełnej godzinie",
+   "options": {
+    "lang": "pl"
+   },
+   "pattern": "10-20 */3 * * *"
+  },
+  {
+   "expected": "co 4 godziny, za każdym razem co minutę od pełnej godziny do 29 minut po niej",
+   "options": {
+    "lang": "pl"
+   },
+   "pattern": "0-29 */4 * * *"
+  },
+  {
+   "expected": "co 3 godziny, za każdym razem co 10 minut od 10 do 50 minut po pełnej godzinie",
+   "options": {
+    "lang": "pl"
+   },
+   "pattern": "10-50/10 */3 * * *"
+  },
+  {
+   "expected": "co 4 godziny, za każdym razem co 5 minut od pełnej godziny do 30 minut po niej",
+   "options": {
+    "lang": "pl"
+   },
+   "pattern": "0-30/5 */4 * * *"
+  },
+  {
+   "expected": "co 3 godziny, za każdym razem co 10 minut, zaczynając 5 minut po pełnej godzinie",
+   "options": {
+    "lang": "pl"
+   },
+   "pattern": "5/10 */3 * * *"
+  },
+  {
+   "expected": "w poniedziałki co 3 godziny, za każdym razem 30 minut po pełnej godzinie",
+   "options": {
+    "lang": "pl"
+   },
+   "pattern": "30 */3 * * 1"
   },
   {
    "expected": "codziennie 15 i 45 minut po każdej z godzin 0:00, 6:00, 12:00 i 18:00",
@@ -3629,11 +3706,39 @@
    "pattern": "*/15 8-18/2 * * *"
   },
   {
-   "expected": "codziennie co 20 minut w godzinach rozpoczynających się o 0:00, 3:00, 6:00, 9:00, 12:00, 15:00, 18:00 i 21:00",
+   "expected": "co 3 godziny, za każdym razem co 20 minut przez całą godzinę",
    "options": {
     "lang": "pl"
    },
    "pattern": "*/20 */3 * * *"
+  },
+  {
+   "expected": "co 3 godziny, za każdym razem co 15 minut przez całą godzinę",
+   "options": {
+    "lang": "pl"
+   },
+   "pattern": "*/15 */3 * * *"
+  },
+  {
+   "expected": "co 4 godziny, za każdym razem co 10 minut przez całą godzinę",
+   "options": {
+    "lang": "pl"
+   },
+   "pattern": "*/10 */4 * * *"
+  },
+  {
+   "expected": "co 3 godziny, za każdym razem co minutę przez całą godzinę",
+   "options": {
+    "lang": "pl"
+   },
+   "pattern": "* */3 * * *"
+  },
+  {
+   "expected": "co 3 godziny, za każdym razem co sekundę przez całą godzinę",
+   "options": {
+    "lang": "pl"
+   },
+   "pattern": "* * */3 * * *"
   },
   {
    "expected": "codziennie o 0:00 i 12:00",
@@ -3965,7 +4070,7 @@
    "pattern": "0 * * * 1"
   },
   {
-   "expected": "w poniedziałki i wtorki, a także w dniach 23–25 każdego miesiąca, co 3 godziny od 0:24 do 21:24, za każdym razem co 10 sekund przez całą minutę",
+   "expected": "w poniedziałki i wtorki, a także w dniach 23–25 każdego miesiąca, co 3 godziny, za każdym razem 24 minuty po pełnej godzinie, za każdym razem co 10 sekund przez całą minutę",
    "options": {
     "lang": "pl"
    },
@@ -4630,7 +4735,7 @@
    "pattern": "0,30 */2 * * *"
   },
   {
-   "expected": "codziennie co minutę w godzinach rozpoczynających się o 0:00, 4:00, 8:00, 12:00, 16:00 i 20:00",
+   "expected": "co 4 godziny, za każdym razem co minutę przez całą godzinę",
    "options": {
     "lang": "pl"
    },

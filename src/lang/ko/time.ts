@@ -7,6 +7,7 @@ import {blocks, paren, rhythm, sayTime, sayTimes, span} from './clock.js';
 import lexicon from './lexicon.js';
 import type {Lead} from './phrases.js';
 import {inside, levelOf, progress, taken} from './phrases.js';
+import type {Domain} from '../../core/schedule.js';
 import type {Described, FieldSet} from './sets.js';
 import {
   baseOf, choose, endsOf, isOpen, ofKind, parityOf, removedOf, runsOf,
@@ -63,6 +64,10 @@ const listedTimes = 6;
 const hoursAtOneMinute = 6;
 const wholeHoursNamed = 12;
 
+// A step of hours that fills the day from midnight in this many hours or
+// more is said as the step at any minute, and the minutes after it.
+const steppedHours = 5;
+
 const hourParities = [words.evenHours, words.oddHours];
 const also = `, ${words.also} `;
 
@@ -102,6 +107,31 @@ function clockworkOf(
     one,
     ride,
     voice
+  };
+}
+
+/**
+ * The step of hours that fill the day from midnight in many hours (every
+ * third or fourth hour), or 0. Every second hour has its own words.
+ */
+function stepOfDay(form: Described, domain: Domain): number {
+  const step = stepOf(baseOf(form), domain);
+  const count = (domain.max - domain.min + 1) / step;
+
+  return step > 2 && count >= steppedHours && step || 0;
+}
+
+// A step of hours as the moment that recurs, and the minutes in each.
+function steppedLead(step: number, form: Described, voice: Voice): HourLead {
+  const text = rhythm(step, units.hours, voice);
+
+  return {
+    before: text,
+    gone: removedOf(form),
+    head: words.everyHour,
+    held: true,
+    named: null,
+    onto: text
   };
 }
 
@@ -205,7 +235,9 @@ function atMinute(hours: number[], work: Clockwork): Time[] {
 // some, the minutes inside the hour and the missing hours in the bracket.
 function inHours(work: Clockwork): Spoken {
   const {hourForm, minuteForm, voice} = work;
-  const lead = wholeHours(hourForm, work.hours, voice);
+  const step = stepOfDay(hourForm, work.hours.domain);
+  const lead = step && steppedLead(step, hourForm, voice) ||
+    wholeHours(hourForm, work.hours, voice);
   const level = levelOf('minute', {second: work.ride});
   const gone = work.one && isOpen(hourForm) &&
     sayTimes(atMinute(lead.gone, work), voice).join(', ') ||
@@ -220,7 +252,7 @@ function inHours(work: Clockwork): Spoken {
       ...taken(removedOf(minuteForm), level, {head: lead.head, under}, voice),
       gone
     ].filter(Boolean),
-    names: !isOpen(hourForm)
+    names: !isOpen(hourForm) && !step
   };
 }
 
@@ -341,15 +373,19 @@ const rules: TimeRule[] = [
     const base = baseOf(work.hourForm);
     const step = voice.bare && minute === 0 && stepOf(base, hours.domain);
     const parity = parityOf(base, hours.domain, hourParities);
+    const stepped = stepOfDay(base, hours.domain);
+    const at = sayTime({minute, second: ride}, '', voice);
 
     return work.one && {
       body: step && rhythm(step, units.hours, voice) ||
-        parity && `${parity} ${sayTime({minute, second: ride}, '', voice)}` ||
+        stepped &&
+          `${rhythm(stepped, units.hours, voice)} ${at}${words.at}` ||
+        parity && `${parity} ${at}` ||
         progress(base, levelOf('hour', {minute, second: ride}), voice),
       bracket: [
         sayTimes(atMinute(removedOf(work.hourForm), work), voice).join(', ')
       ].filter(Boolean),
-      names: !step
+      names: !step && !stepped
     };
   },
   // One hour: its minutes as spans, pieces and the times between them.

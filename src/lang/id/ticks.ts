@@ -59,8 +59,6 @@ export interface Shaped {
   clause?: boolean;
   // Whether it holds «tiap kali» already.
   each?: boolean;
-  // «, terakhir pukul …», said after everything else.
-  last?: string;
   // Whether a position left out of the minutes still has to say «setiap
   // jam».
   closes?: boolean;

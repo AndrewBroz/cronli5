@@ -50,7 +50,7 @@ interface Clockwork {
 type Anchor =
   | {kind: 'all'}
   | {kind: 'allBut'; removed: number[]}
-  | {kind: 'everyOther'; ends: Span[]; odd: number; removed: number[]}
+  | {kind: 'everyOther'; ends: Span[]; lead: string; removed: number[]}
   | {kind: 'named'}
   | {kind: 'stretches'; spans: Span[]};
 
@@ -83,9 +83,24 @@ function isEveryOther(form: Form): form is CadenceForm {
   return form.kind === 'cadence' && form.interval === 2;
 }
 
+// Every third or fourth hour from the first hour of the day: more than
+// four hours, held as their step, which counts from midnight.
+function isLongStep(form: Form): boolean {
+  return form.kind === 'cadence' && form.tiles && form.fromFirst &&
+    form.values.length > 4;
+}
+
 const everyHourOf = words.everyHour + words.of;
 // Every second hour, from the first hour of the day and from the next.
 const parities = [words.evenHours, words.oddHours];
+
+// What stands before the minutes of hours held whole: the even or the
+// odd hours, or the step of hours.
+function beatOf(form: CadenceForm): string {
+  return form.interval === 2 ?
+    words.whenever + parities[form.start % 2] :
+    rate('hour', form.interval, '');
+}
 const inTheWholeHour = words.comma + words.withinWholeHour;
 
 function at(hour: number, work: Clockwork): string {
@@ -135,11 +150,11 @@ function hourlyCadence(form: CadenceForm, work: Clockwork): Said {
     return {anchored: false, clock: false, text: every, whole: true};
   }
 
-  if (form.tiles && form.interval === 2) {
+  if (form.tiles && form.interval === 2 || isLongStep(form)) {
     return {
       anchored: false,
       clock: false,
-      text: words.whenever + parities[form.start] +
+      text: beatOf(form) +
         (onTheHour ? words.onTheHour : words.of + position),
       whole: true
     };
@@ -246,10 +261,13 @@ const anchorings: Sayers<Form, Anchor> = {
 
 // Every second hour is the even or the odd hours: all of them, with or
 // without an hour or two missing; or, where that cannot be said, those
-// between two ends.
+// between two ends. Every third or fourth hour from midnight is its step.
 function anchorOf(work: Clockwork): Anchor {
   const {alternate} = work;
-  const [beat] = [coreOf(alternate), work.hours].filter(isEveryOther);
+  const fields = [coreOf(alternate), work.hours];
+  const [beat] = fields.filter(function whole(form): form is CadenceForm {
+    return isEveryOther(form) || isLongStep(form);
+  });
 
   return beat ?
     {
@@ -259,7 +277,7 @@ function anchorOf(work: Clockwork): Anchor {
         return {from: step.start, to: step.last};
       }),
       kind: 'everyOther',
-      odd: beat.start % 2,
+      lead: beatOf(beat),
       removed: removedOf(alternate)
     } :
     sayBy(anchorings, work.hours, work.minutes);
@@ -321,8 +339,7 @@ function placeEveryOther(
   return {
     anchored: bounded,
     clock: bounded,
-    text: (window && window + words.comma) + words.whenever +
-      parities[anchor.odd] +
+    text: (window && window + words.comma) + anchor.lead +
       told(placing.saying, inTheWholeHour, words.of) + excepting(gone)
   };
 }

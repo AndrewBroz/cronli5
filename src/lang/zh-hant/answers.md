@@ -112,13 +112,13 @@ only `frame`, `day` and `closing`. The declared exceptions:
 1. **每天** (2.5): 每天 closes the day part when the time is anchored to
    the day, and is absent when the time runs round the clock. Each of the
    three time fields can make the time name a clock time or stop naming
-   one (`0 */3` 每3小時一次 and `30 */3` 每天 00:30 起每3小時一次;
+   one (`0 */6` 每6小時一次 and `30 */6` 每天 00:30、06:30、12:30、18:30;
    `0 *` 每小時整點 and `0 9` 每天 09:00; `0 0 */3` and `30 0 */3`), so
    an edit to the second, the minute or the hour may add or remove
    exactly 每天 at the end of the day part, and nothing else outside
    `time`. It is kept because the alternative is worse for a reader who
-   compares two schedules: 每天每3小時一次 says 每 twice for one rhythm,
-   and 00:30 起每3小時一次 without 每天 does not say that the count starts
+   compares two schedules: 每天每6小時一次 says 每 twice for one rhythm,
+   and 03:00 起每4小時一次 without 每天 does not say that the count starts
    again each day.
 2. **Hours past midnight** (3.5): hours that run past midnight are one
    stretch with 翌日 only when no date, weekday, month or year is
@@ -332,10 +332,12 @@ None. Usage §一.5: 這個順序沒有例外.
 The time is **anchored to the day** when it names clock times, a stretch
 with ～, a start with 起, or hours as N時. It **runs round the clock**
 when it is a rhythm with none of those: 每分鐘一次, 每N分鐘一次,
-每小時整點, 每小時的…, 每N小時一次, 每逢雙數時…, 每逢單數時…,
+每小時整點, 每小時的…, 每N小時一次, 每N小時的… and 每N小時，…,
+每逢雙數時…, 每逢單數時…,
 每逢…分…, and the seconds forms that begin 每秒, 每N秒, 每分鐘的.
 (Equivalently: the time is anchored exactly when the hour set is not all
-hours, not a tiling cadence from 0, and not every second hour of the
+hours, not a tiling cadence from 0 of five hours or more (or of any
+number on the hour), and not every second hour of the
 whole day, with or without an hour or two missing. 雙數時 or 單數時
 between two ends follows a stretch, and is anchored: 每天 00:15～16:45，
 每逢雙數時的15、45分. A rhythm with a time
@@ -544,8 +546,8 @@ pieces, 3.3.)
   (the notice word: 例假日亦同):
   - `15,45 */2,13 * * *` 每逢雙數時的15、45分，13時亦同
   - `*/15 */2,13 * * *` 每逢雙數時，整個小時內每15分鐘一次，13時亦同
-  - `5,20,45 */4,13,14 * * *` 每天0、4、8、12、16、20時的05、20、45分，
-    13、14時亦同
+  - `5,20,45 */4,13,14 * * *` 每4小時的05、20、45分，13、14時亦同
+  - one minute: `30 */3,13 * * *` 每3小時的30分，另加 13:30
   (The first renderer said eleven stretches for the first of these:
   每天 00:15～00:45、02:15～02:45、…，每30分鐘一次.)
 
@@ -656,7 +658,7 @@ weekday side too.
 | --- | --- | --- | --- |
 | clock times listed | each time | nothing | six (four when one stretch with a plain rate says the same) |
 | stretches listed | two each | the moments between | three |
-| minutes named after 每小時的 or N時的 | each | nothing | four from a cadence that does not tile from 0; three from one that does, after N時 (4.1); any number from an irregular set |
+| minutes named after 每小時的, 每N小時的 or N時的 | each | nothing | four from a cadence that does not tile from 0; three from one that does, after N時 (4.1); any number from an irregular set |
 | minutes named after 每逢, holding seconds | each | nothing | six from a cadence; any number from an irregular set |
 | dates listed | each | nothing | none (eleven at most from a cadence) |
 | weekdays, months listed | each | nothing | none |
@@ -688,10 +690,11 @@ spelling. A count back from the end (`L-3`) is not part of this tie.
 ### 4.1 Clock times (seconds zero)
 
 **What an hour holds.** After 每小時的 (every hour), after 每逢雙數時 and
-每逢單數時, and after hours named (8、12、18時), a set of minutes is said
+每逢單數時, after 每3小時 and 每4小時 (D.1), and after hours named
+(8、12、18時), a set of minutes is said
 in one of these forms:
 
-| Minutes | After 每小時的 | After 時 (雙數時, N時) |
+| Minutes | After 每小時的 | After 時 (雙數時, N時) and after 每N小時 |
 | --- | --- | --- |
 | a list (one minute, any other cadence of four or fewer, any irregular set) | 每小時的05、20、45分; 每小時的整點、15、45分 | 的05、20、45分; 的05、20、35、50分 |
 | every minute | (每分鐘一次) | ，整個小時內每分鐘一次 |
@@ -744,11 +747,13 @@ minute m (every clock time below carries :m):
   `23 1/2 * * *` 每逢單數時的23分; with a second,
   `15 0 1/2 * * *` 每逢單數時的00分15秒). It is one kind with D.1: no
   start is said and nothing is added up;
-- any other hours that tile the day off the hour or from a later start:
-  the first time and 起 (`0 3/4 * * *` 每天 03:00 起每4小時一次;
-  `30 */3 * * *` 每天 00:30 起每3小時一次); four or fewer are listed
-  (`23 */6 * * *` 每天 00:23、06:23、12:23、18:23; `0 1/12 * * *`
-  每天 01:00、13:00);
+- hours that tile the day from 0, off the hour, five or more of them:
+  the step and the minute, as D.1 says (`30 */3 * * *` 每3小時的30分;
+  `30 */4 * * *` 每4小時的30分);
+- any other hours that tile the day from a later start: the first time
+  and 起 (`0 3/4 * * *` 每天 03:00 起每4小時一次); four or fewer are
+  listed, from 0 or not (`23 */6 * * *` 每天 00:23、06:23、12:23、18:23;
+  `0 1/12 * * *` 每天 01:00、13:00);
 - a cadence of hours that does not tile: both ends
   (`0 5/2 * * *` 每天 05:00～23:00，每2小時一次);
 - an exception from any of these or from every hour (3.9:
@@ -803,6 +808,52 @@ from the first firing to the last:
    With one minute they are the forms of B (`0 */2 * * *` 每2小時一次;
    `30 */2 * * *` 每逢雙數時的30分; `0 0-20/2 * * *` 每天 00:00～20:00，
    每2小時一次).
+
+   **Every third or fourth hour from 0時** (a step that tiles the day
+   from its first hour, with five hours or more: `*/3`, `*/4`) is held
+   the same way, with the step where the idiom stands: 每3小時, then
+   what those hours hold, in the right-hand column of the table, as
+   after 雙數時. No hour is named and no start is said.
+   - `30 */3 * * *` 每3小時的30分
+   - `5,35 */3 * * *` 每3小時的05、35分
+   - `*/15 */3 * * *` 每3小時，整個小時內每15分鐘一次
+   - `10-20 */3 * * *` 每3小時的10分至20分內每分鐘一次
+   - `5-55/10 */3 * * *` 每3小時的05分至55分內每10分鐘一次
+   - `* */4 * * *` 每4小時，整個小時內每分鐘一次
+   - beside a day: 每週一至週五，每3小時，整個小時內每15分鐘一次
+   With 整點 alone it is the bare rate of B (每3小時一次). Three, two or
+   four hours (`*/6`, `*/8`, `*/12`) keep their own forms: their times
+   are listed while they are six or fewer, and their hours are named
+   past that (`15,45 */6 * * *` 每天0、6、12、18時的15、45分), since four
+   hours are read off as easily as a step. A step from a later hour, or
+   one that does not divide the day, keeps where it starts and stops.
+
+   *Why (2026-11-20, orchestrated by Claude Opus 5.5).* The first
+   renderer named the eight hours (每天0、3、6、9、12、15、18、21時的
+   05、35分) or, for one minute, gave a first time to add to (每天 00:30
+   起每3小時一次). Eight hours are eight things to hold where the step is
+   one, and 00:30 起 is a start and an addition each time. The step is
+   counted from 0時 whatever the minutes are: the project's convention
+   says a rhythm that begins on the first hour of the day bare (README,
+   Description Accuracy), and 每3小時一次 is already said so here. So the
+   step is said once and the minutes once, as they are after 雙數時,
+   and an edit to the minutes changes only the minutes (`0 */3`
+   每3小時一次, `30 */3` 每3小時的30分, as `0 */2` and `30 */2`); the
+   每天 of the old one-minute form, a declared exception, is gone for
+   these. 每N小時的 is 每小時的 with its step: usage §三.2 gives
+   每小時的15分、45分 and the bus-stop 每小時05分、35分發車 as how
+   minutes inside a recurring hour are written. 整個小時內 after 每3小時
+   says that the rate runs through one hour in three. The earlier
+   rejection of 每2小時的15、45分 (the 雙數時 call below) does not reach
+   this: every second hour has a name a writer uses, and every third hour
+   has none, so the step is the shortest form a reader can hold.
+   *Evidence.* Four open-web searches on 2026-11-20 (每3小時的 with 分,
+   執行, 發車, 更新; 每三小時 with 整點 and 更新; 每兩小時的 with 分;
+   每三小時 with 的第, 分發車, 分整) found no timetable that states
+   minutes under a step of hours in any wording, only 每三小時執行一次
+   and 每3小時更新一次 for the bare rate; the search tool did not honour
+   quoted phrases. The form rests on the usage notes' 每小時的 and on
+   the reading check recorded in status.json.
 2. **Up to three stretches** (pieces of hours; or two or three separate
    hours under minutes said with a rate: every minute, a tiling cadence,
    a range, another cadence), joined by 、, then the tail of C:

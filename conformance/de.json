@@ -975,7 +975,7 @@
    "pattern": "*/15 9,17 * * 1-5"
   },
   {
-   "expected": "montags bis freitags von 8:00 bis 8:45, von 12:00 bis 12:45 und von 18:00 bis 18:45 Uhr alle 15 Minuten",
+   "expected": "montags bis freitags um 8, 12 und 18 Uhr, jeweils eine Stunde lang alle 15 Minuten",
    "options": {
     "lang": "de"
    },
@@ -1500,7 +1500,7 @@
    "pattern": "* 12 * * *"
   },
   {
-   "expected": "täglich von 8:00 bis 8:59, von 12:00 bis 12:59 und von 18:00 bis 18:59 Uhr jede Minute",
+   "expected": "täglich um 8, 12 und 18 Uhr, jeweils eine Stunde lang jede Minute",
    "options": {
     "lang": "de"
    },
@@ -3543,7 +3543,7 @@
    "pattern": "5,20 9,17 * * *"
   },
   {
-   "expected": "täglich um 9:05, 9:20, 9:45, 17:05, 17:20 und 17:45 Uhr",
+   "expected": "täglich um 9 und 17 Uhr, jeweils zu den Minuten 5, 20 und 45",
    "options": {
     "lang": "de"
    },
@@ -3578,7 +3578,7 @@
    "pattern": "5,20 9,13,17,21 * * *"
   },
   {
-   "expected": "täglich um 9:05, 9:20, 13:05, 13:20, 17:05 und 17:20 Uhr",
+   "expected": "täglich um 9, 13 und 17 Uhr, jeweils zu den Minuten 5 und 20",
    "options": {
     "lang": "de"
    },
@@ -3662,11 +3662,158 @@
    "pattern": "*/7 9,17 * * *"
   },
   {
-   "expected": "täglich von 9:00 bis 9:29, von 13:00 bis 13:29 und von 17:00 bis 17:29 Uhr jede Minute",
+   "expected": "täglich um 9, 13 und 17 Uhr, jeweils in den Minuten 0 bis 29 jede Minute",
    "options": {
     "lang": "de"
    },
    "pattern": "0-29 9,13,17 * * *"
+  },
+  {
+   "expected": "täglich um 1, 4, 9, 14 und 18 Uhr, jeweils zu den Minuten 5 und 35",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "5,35 1,4,9,14,18 * * *"
+  },
+  {
+   "expected": "täglich um 1, 4, 9, 14 und 18 Uhr, jeweils zu den Minuten 5, 20 und 45",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "5,20,45 1,4,9,14,18 * * *"
+  },
+  {
+   "expected": "täglich um 1, 4, 9, 14 und 18 Uhr, jeweils eine Stunde lang alle 15 Minuten",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "*/15 1,4,9,14,18 * * *"
+  },
+  {
+   "expected": "täglich um 1, 4, 9, 14 und 18 Uhr, jeweils eine Stunde lang jede Minute",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "* 1,4,9,14,18 * * *"
+  },
+  {
+   "expected": "täglich um 1, 4, 9, 14 und 18 Uhr, jeweils in den Minuten 10 bis 20 jede Minute",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "10-20 1,4,9,14,18 * * *"
+  },
+  {
+   "expected": "täglich um 1, 4, 9, 14 und 18 Uhr, jeweils in den Minuten 2 bis 18 alle 2 Minuten",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "2-18/2 1,4,9,14,18 * * *"
+  },
+  {
+   "expected": "täglich um 1, 4, 9, 14 und 18 Uhr, jeweils in den Minuten 0 bis 56 alle 7 Minuten",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "*/7 1,4,9,14,18 * * *"
+  },
+  {
+   "expected": "täglich um 1, 4, 9, 14 und 18 Uhr, jeweils in den Minuten 0 bis 29 und 45 jede Minute",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0-29,45 1,4,9,14,18 * * *"
+  },
+  {
+   "expected": "täglich um 6, 9, 12, 15 und 18 Uhr, jeweils zu den Minuten 5 und 35",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "5,35 6-18/3 * * *"
+  },
+  {
+   "expected": "täglich um 6, 9, 12, 15 und 18 Uhr, jeweils zu den Minuten 5, 20 und 45",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "5,20,45 6-18/3 * * *"
+  },
+  {
+   "expected": "täglich um 6, 9, 12, 15 und 18 Uhr, jeweils eine Stunde lang alle 15 Minuten",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "*/15 6-18/3 * * *"
+  },
+  {
+   "expected": "täglich um 6, 9, 12, 15 und 18 Uhr, jeweils eine Stunde lang jede Minute",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "* 6-18/3 * * *"
+  },
+  {
+   "expected": "täglich um 6, 9, 12, 15 und 18 Uhr, jeweils in den Minuten 10 bis 20 jede Minute",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "10-20 6-18/3 * * *"
+  },
+  {
+   "expected": "täglich um 6, 9, 12, 15 und 18 Uhr, jeweils in den Minuten 2 bis 18 alle 2 Minuten",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "2-18/2 6-18/3 * * *"
+  },
+  {
+   "expected": "täglich um 6, 9, 12, 15 und 18 Uhr, jeweils in den Minuten 0 bis 56 alle 7 Minuten",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "*/7 6-18/3 * * *"
+  },
+  {
+   "expected": "täglich um 6, 9, 12, 15 und 18 Uhr, jeweils in den Minuten 0 bis 29 und 45 jede Minute",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "0-29,45 6-18/3 * * *"
+  },
+  {
+   "expected": "täglich von 2 bis 20 Uhr alle 3 Stunden, jeweils zu den Minuten 5 und 35",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "5,35 2-20/3 * * *"
+  },
+  {
+   "expected": "täglich von 2 bis 20 Uhr alle 3 Stunden, jeweils eine Stunde lang alle 15 Minuten",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "*/15 2-20/3 * * *"
+  },
+  {
+   "expected": "täglich von 2 bis 20 Uhr alle 3 Stunden, jeweils eine Stunde lang jede Minute",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "* 2-20/3 * * *"
+  },
+  {
+   "expected": "täglich von 2 bis 20 Uhr alle 3 Stunden, jeweils in den Minuten 10 bis 20 jede Minute",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "10-20 2-20/3 * * *"
+  },
+  {
+   "expected": "täglich von 0 bis 10 Uhr alle 2 Stunden sowie von 11 bis 23 Uhr alle 3 Stunden, jeweils zu den Minuten 5 und 35",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "5,35 0-10/2,11-23/3 * * *"
   },
   {
    "expected": "täglich um 2, 8, 14 und 20 Uhr, jeweils in den Minuten 5, 20, 35 und 50 alle 15 Sekunden",
@@ -4218,63 +4365,63 @@
    "pattern": "0-28,30-59 0 9 * * *"
   },
   {
-   "expected": "täglich von 8:00 bis 18:45 Uhr in den geraden Stunden alle 15 Minuten",
+   "expected": "täglich um 8, 10, 12, 14, 16 und 18 Uhr, jeweils eine Stunde lang alle 15 Minuten",
    "options": {
     "lang": "de"
    },
    "pattern": "*/15 8-18/2 * * *"
   },
   {
-   "expected": "täglich von 9:00 bis 17:45 Uhr in den ungeraden Stunden alle 15 Minuten",
+   "expected": "täglich um 9, 11, 13, 15 und 17 Uhr, jeweils eine Stunde lang alle 15 Minuten",
    "options": {
     "lang": "de"
    },
    "pattern": "*/15 9-17/2 * * *"
   },
   {
-   "expected": "täglich von 0:00 bis 20:45 Uhr alle 5 Stunden eine Stunde lang alle 15 Minuten",
+   "expected": "täglich um 0, 5, 10, 15 und 20 Uhr, jeweils eine Stunde lang alle 15 Minuten",
    "options": {
     "lang": "de"
    },
    "pattern": "*/15 */5 * * *"
   },
   {
-   "expected": "täglich von 9:00 bis 17:30 Uhr alle 2 Stunden in den Minuten 0 bis 30 jede Minute",
+   "expected": "täglich um 9, 11, 13, 15 und 17 Uhr, jeweils in den Minuten 0 bis 30 jede Minute",
    "options": {
     "lang": "de"
    },
    "pattern": "0-30 9-17/2 * * *"
   },
   {
-   "expected": "täglich von 9:00:00 bis 17:30:59 Uhr alle 2 Stunden in den Minuten 0 bis 30 jede Sekunde",
+   "expected": "täglich um 9, 11, 13, 15 und 17 Uhr, jeweils in den Minuten 0 bis 30 jede Sekunde",
    "options": {
     "lang": "de"
    },
    "pattern": "* 0-30 9-17/2 * * *"
   },
   {
-   "expected": "täglich von 8:00 bis 20:45 Uhr in den geraden Stunden alle 15 Minuten, außer von 10:00 bis 10:45 Uhr",
+   "expected": "täglich von 8 bis 20 Uhr alle 2 Stunden, jeweils eine Stunde lang alle 15 Minuten, außer in der Stunde 10",
    "options": {
     "lang": "de"
    },
    "pattern": "*/15 8,12-20/2 * * *"
   },
   {
-   "expected": "täglich von 8:00 bis 8:45, von 12:00 bis 12:45, von 16:00 bis 16:45 und von 20:00 bis 20:45 Uhr alle 15 Minuten",
+   "expected": "täglich um 8, 12, 16 und 20 Uhr, jeweils eine Stunde lang alle 15 Minuten",
    "options": {
     "lang": "de"
    },
    "pattern": "*/15 8-20/4 * * *"
   },
   {
-   "expected": "täglich von 2:05 bis 20:45 Uhr alle 3 Stunden zu den Minuten 5, 20 und 45",
+   "expected": "täglich von 2 bis 20 Uhr alle 3 Stunden, jeweils zu den Minuten 5, 20 und 45",
    "options": {
     "lang": "de"
    },
    "pattern": "5,20,45 2-20/3 * * *"
   },
   {
-   "expected": "täglich von 0:15 bis 20:45 Uhr alle 2 Stunden zu den Minuten 15 und 45",
+   "expected": "täglich von 0 bis 20 Uhr alle 2 Stunden, jeweils zu den Minuten 15 und 45",
    "options": {
     "lang": "de"
    },
@@ -4701,7 +4848,7 @@
    "pattern": "* 30 * * * *"
   },
   {
-   "expected": "täglich von 8:00 bis 8:45, von 12:00 bis 12:45 und von 18:00 bis 18:45 Uhr alle 15 Minuten, jeweils eine Minute lang jede Sekunde",
+   "expected": "täglich um 8, 12 und 18 Uhr, jeweils eine Stunde lang alle 15 Minuten, jeweils eine Minute lang jede Sekunde",
    "options": {
     "lang": "de"
    },
@@ -4976,7 +5123,14 @@
    "pattern": "0 0-10/2,11-23/3 * * *"
   },
   {
-   "expected": "täglich von 0:00 bis 10:59 Uhr in den geraden Stunden sowie von 11:00 bis 23:59 Uhr alle 3 Stunden eine Stunde lang, jeweils jede Minute",
+   "expected": "täglich von 0:00 bis 8:45 Uhr in den geraden Stunden sowie von 10:00 bis 15:45 Uhr, jeweils alle 15 Minuten",
+   "options": {
+    "lang": "de"
+   },
+   "pattern": "*/15 0-10/2,11-15 * * *"
+  },
+  {
+   "expected": "täglich von 0 bis 10 Uhr alle 2 Stunden sowie von 11 bis 23 Uhr alle 3 Stunden, jeweils eine Stunde lang jede Minute",
    "options": {
     "lang": "de"
    },

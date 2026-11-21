@@ -107,7 +107,7 @@ Examples are in the default style (Taiwan) unless marked.
   its rate.
 
   ```js
-  cronli5('30 */3 * * *', {lang: zhHant});      // '每天 00:30 起每3小時一次'
+  cronli5('30 */3 * * *', {lang: zhHant});      // '每3小時的30分'
   cronli5('*/7 * * * *', {lang: zhHant});       // '每小時的整點至56分內每7分鐘一次'
   ```
 

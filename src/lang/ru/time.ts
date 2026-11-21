@@ -5,7 +5,7 @@
 import {domainOf} from '../../core/index.js';
 import type {Hours} from './hours.js';
 import {
-  hoursAtMinute, hoursForEachMinute, minutesInNamedHours,
+  fillsTheDay, hoursAtMinute, hoursForEachMinute, minutesInNamedHours,
   rhythmInScatteredHours
 } from './hours.js';
 import lexicon from './lexicon.js';
@@ -293,7 +293,6 @@ function minutesOverHours(given: Hours): Time {
   const base = (found as Exception).base || found;
   const rhythm = isBare((minuteSet as Exception).base || minuteSet,
     domainOf('minute'));
-  const wholeRhythm = isBare(minuteSet, domainOf('minute'));
   const scattered = runsOf(hours).length === hours.length;
   // A bare rhythm of hours less an hour is no longer a rhythm.
   const bareHours = isBare(found, domainOf('hour'));
@@ -317,6 +316,11 @@ function minutesOverHours(given: Hours): Time {
     }, function parity() {
       return over(parityOf(found));
     }],
+    [function stepFillsTheDay() {
+      return fillsTheDay(given);
+    }, function inEachHour() {
+      return rhythmInScatteredHours(given);
+    }],
     [function scatteredNamedHours() {
       return scattered && !bareHours;
     }, function inNamedHours() {
@@ -327,11 +331,6 @@ function minutesOverHours(given: Hours): Time {
         minuteSet.kind === 'values';
     }, function eachMinute() {
       return hoursForEachMinute(found, given);
-    }],
-    [function rhythmOfScatteredHours() {
-      return wholeRhythm && hours.length > 4 && scattered;
-    }, function inEachHour() {
-      return rhythmInScatteredHours(given);
     }],
     [Boolean, function stretches() {
       return over(stretchesOf(given));
