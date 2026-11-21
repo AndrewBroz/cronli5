@@ -4,6 +4,35 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). This project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1]
+
+### Changed
+
+- **A step of three or four hours is said by its step, whatever the
+  minutes** (Korean, Polish, Russian, Simplified and Traditional Chinese).
+  These languages named every hour, every window, or a first and last
+  time; `30 */3` is now «каждые 3 часа, на 30-й минуте часа», «3시간마다
+  30분에», 每3小时的30分.
+- **The same minutes in several hours are said once** (Spanish,
+  Portuguese, French, Italian, German, Czech, Polish, Russian, Ukrainian,
+  Indonesian, Simplified Chinese). Where these languages listed every
+  clock time or every window (ten times for `5,35 1,4,9,14,18 * * *`),
+  they now name the hours once and say the minutes once, the same way
+  under every kind of minutes: «täglich um 1, 4, 9, 14 und 18 Uhr, jeweils
+  zu den Minuten 5 und 35», «denně 5 a 35 minut po 1:00, 4:00, 9:00, 14:00
+  a 18:00», «щодня кожні 2 хвилини з 2 до 18 хвилин після 0:00, 3:00,
+  6:00, 9:00 та 12:00» for `2-18/2 0-13/3 * * *`. Where a few hours stop
+  being listed is each language's own call, recorded in its notes.
+- **Minutes that fill the hour, under a step of hours, no longer stack
+  two rhythms** (English, Spanish, Portuguese, Italian, German, Japanese).
+  `*/15 */3 * * *` was "every 15 minutes for one hour every 3 hours"; it
+  is now "every 15 minutes for the whole hour, every 3 hours", said like
+  "every minute for the first 30 minutes of the hour, every 3 hours".
+  Japanese now says 3時間ごとの時台に15分ごと.
+
+No fluent human has reviewed the new forms; each was checked by readers
+briefed only in its language and scored against the true schedule.
+
 ## [1.3.0]
 
 ### Added
