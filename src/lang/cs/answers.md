@@ -1,5 +1,77 @@
 # Czech: answers to the language questionnaire
 
+**Amended 2026-11-20: the same minutes in several hours are said once**
+(by Claude Opus 5.5; rows rewritten by hand before the renderer changed).
+When three hours or more each carried the same minutes, and those
+minutes were more than one moment, Czech said them once per hour: ten
+clock times for `5,35 1,4,9,14,18 * * *` («denně v 1:05, 1:35, 4:05,
+4:35, …»), five windows for `*/15 1,4,9,14,18 * * *` («každých 15 minut
+od 1:00 do 1:45, od 4:00 do 4:45, …»), and under a cadence of five hours
+or more the first hour or two windows and «a tak dále každé 3 hodiny až
+do 18:35», with the last minute fused into the end of the hours. A
+reader holds about four things and reads once; ten times or five windows
+that differ only in their hour are the same minutes said five times, and
+the reader has to find the pattern the sentence did not state. The
+series did state it, but it says the minutes once at the start and once
+again fused into the end («až do 18:35»), names neither the middle hours
+nor the true last hour (18:00), and is said differently under a list of
+minutes (one hour's clock times) than under a rhythm (two windows). Its
+recorded reason (4.1a, 2026-11-13: «hour by hour every clock time and
+every window would be said again») is answered by naming the hours once,
+which a list of up to seven hours allows. Now (4.1, **T1b**): the hours
+are named once, as clock times, and the minutes are said once, in front
+of them, as so many minutes after each: «denně 5 a 35 minut po 1:00,
+4:00, 9:00, 14:00 a 18:00»; a stretch of minutes is said from those
+moments: «denně každých 15 minut, vždy po dobu jedné hodiny od 1:00,
+4:00, 9:00, 14:00 a 18:00». The hours are said the same way under every
+kind of minutes; only the minutes' own words before them change. A
+cadence of hours that does not tile the day is a list by the generic
+order up to seven values (rule 7), so `6-18/3` is named the same way
+(«5 a 35 minut po 6:00, 9:00, 12:00, 15:00 a 18:00»); the series stays
+only for a cadence of more than seven hours, where naming them would be
+a list too long to hold.
+
+*Why these words.* «N minut po celé hodině» is already how Czech says a
+place in the hour (usage §3.3, «vždy 15 minut po celé»; 4.1a), and the
+Czech hour after which minutes are counted is said with «po» («pět minut
+po druhé», the everyday way to say 2:05, attested in the Czech
+time-telling lessons the search found). Replacing «každé celé hodině»
+by the named hours is the smallest change to the every-hour sentence
+(«vždy 5 a 35 minut po každé celé hodině» → «… po 1:00, 4:00, …»), so
+editing the hours changes only the hours' words. «po dobu jedné hodiny»
+is the phrase T0 already uses for a stretch of minutes through the hour;
+with named starting moments it is «vždy po dobu jedné hodiny od 1:00,
+4:00, …». Rejected: hours first as clock times and the minutes after
+(«denně v 1:00, 4:00, …, vždy 5 a 35 minut po celé hodině»), the shape
+of T0, because «v 1:00» is the moment 1:00 and the rest of the sentence
+takes it back (judge 4 called «ve 22 hodin vždy 5 minut po celé hodině»
+a contradiction); ordinal hours («po 14. hodině»), which Czech also
+writes but which are off by one for some readers («18. hodina» is
+17:00–18:00); Polish's «po každé z hodin», heavier than Czech needs.
+Corpus searches for the exact phrases («vždy 5 minut po celé hodině»,
+«minut po každé celé hodině», «5 minut po 9:00») found no attestation
+either way: Czech timetables print minute columns, not prose, and the
+search engine does not index phrase matches in Czech well. The choice
+therefore rests on the usage notes and the existing forms, and is open
+to a native reader.
+
+*Threshold.* Two hours are listed up to six clock times («denně v 9:05,
+9:35, 17:05 a 17:35», «v 9:05, 9:20, 9:45, 17:05, 17:20 a 17:45»), and a
+rhythm in two hours keeps its two windows («každých 15 minut od 9:00 do
+9:45 a od 17:00 do 17:45»): two items, each exact, read at a glance.
+From three hours, or past six clock times in two, the hours are named
+once: «5 a 35 minut po 9:00, 13:00 a 17:00» names five things where the
+list named six, all of them heard twice over. (T1's earlier rule, that a
+list of minutes over hours none of which are neighbours is listed
+"whatever the count", is withdrawn: it was what produced the ten and
+fifteen clock times.) Hours that tile the day keep T0; hours with a run
+of three among them keep T3 and T5, where each stretch is a real one; a
+minute alone keeps its clock times (the declared fusion); a cadence of
+more than seven hours keeps the series of T3 and T5 (eight hours or more
+named one by one would be a list too long to hold, and the cadence is
+then the shorter statement; this is left as it was and not re-judged
+here).
+
 **Amended 2026-11-14 on the maintainer's rulings** (by Claude Opus 5.5;
 rows rewritten by hand before the renderer changed; nothing blind-read).
 What was said before, and why it was wrong:
@@ -601,7 +673,7 @@ zero. In a list the preposition is said once and follows the first time
 (7.3, 7.4), and the times are in the order of the day.
 
 The rules are tried in this order: with every hour, T2; with hours that
-tile the day, T0; otherwise T1, then T3, then T4, then T5.
+tile the day, T0; otherwise T1, then T1b, then T3, then T4, then T5.
 
 **T0. Hours that tile the day** (2026-11-14). H tiles the day when it
 is a cadence that comes round evenly (its step divides 24 and its start
@@ -713,16 +785,54 @@ T3, which listed what the cadence already says. A stretch over a step
 of two is the exception above: its rhythm leads, because «v sudých
 hodinách» is how Czech says it.)
 
-**T1. A list of times.** When M and H are both listable and together
-make **six times or fewer**; or one of them is a single value and the
-other listable; or M is a list (not a cadence said as one, not a run)
-and **no two hours of H are neighbours**, whatever the count (a from–to
-round two or three moments of one hour reads as a continuous stretch,
-and «po každé celé hodině» contradicts three named hours: judge 5): «v 9:30», «v 9:00 a 17:00», «v 9:00, 9:15, 9:30 a 9:45»,
-«v 9:00, 9:30, 17:00 a 17:30», «v 0:00, 5:00, 10:00, 15:00 a 20:00», «v 8:05, 8:20, 8:45, 12:05, 12:20,
-12:45, 18:05, 18:20 a 18:45».
-(Six, not four: the list is the product of two short lists and reads in
-groups.)
+**T1. A list of times.** When M and H are both listable, H has **at
+most two values**, and together they make **six times or fewer**; or one
+of them is a single value and the other listable: «v 9:30», «v 9:00 a
+17:00», «v 9:00, 9:15, 9:30 a 9:45», «v 9:00, 9:30, 17:00 a 17:30»,
+«v 0:00, 5:00, 10:00, 15:00 a 20:00». (Six, not four: the list is the
+product of two short lists and reads in groups. Until 2026-11-20 a list
+of minutes over hours none of which are neighbours was listed whatever
+the count, «v 8:05, 8:20, 8:45, 12:05, 12:20, 12:45, 18:05, 18:20 a
+18:45»; that is now T1b.)
+
+**T1b. Named hours** (2026-11-20). When H is a list (the generic order
+makes it values: a list, or a cadence of seven hours or fewer that does
+not tile the day) and M is more than one minute, not pieces, and either
+H has **three hours or more**, or M is a list and T1 would name more
+than six times: the hours are named **once**, as clock times on the
+hour joined as a list (7.4), and the minutes are said **once**, before
+them, by what each hour gets. Write Hs for the named hours, «1:00, 4:00,
+9:00, 14:00 a 18:00».
+
+| M | Said |
+| --- | --- |
+| a list without minute 0 (also an offset rhythm the generic order lists, `5/15`) | «vždy 5 a 35 minut po Hs»; «vždy» is dropped after «denně» as in 4.1a |
+| a list with minute 0 | «v Hs a vždy 15 a 45 minut po nich» (opens with clock times) |
+| every minute; a rhythm that tiles the hour from zero (`*/15`, `0,30`); a cadence from zero that runs as far as the hour lets it (`*/7`) | «každých 15 minut, vždy po dobu jedné hodiny od Hs» |
+| a run from minute 0 | «každou minutu v prvních 30 minutách po Hs» |
+| any other run | «každou minutu od 10 do 40 minut včetně po Hs» |
+| any other cadence | «každých 10 minut od 5 do 55 minut včetně po Hs»; from zero, «každých 6 minut v prvních 43 minutách po Hs» |
+| pieces | the parts in these forms, joined as in 4.1b by «a pak» or «a také», Hs once at the end: «každou minutu v prvních 30 minutách a pak ještě 45 minut po Hs», «každé 2 minuty v prvních 21 minutách a pak každé 3 minuty od 21 do 57 minut včetně po Hs»; minute 0 among them is the named hours themselves, «v Hs a vždy každou minutu od 35 do 59 minut včetně po nich» |
+| one or two minutes missing | the base, then «, kromě» in T0's short form: «…, kromě každé celé hodiny a okamžiku 59 minut po ní», «…, kromě okamžiku 29 minut po celé hodině» |
+
+A cadence from zero is said «po dobu jedné hodiny» even where its step
+does not divide the hour (`*/7`): no two named hours make one window
+here unless they are neighbours, and «od 1:00 po dobu jedné hodiny» is
+already where the count stops and starts again. «včetně» stands after
+the minutes, not after Hs, where it would seem to speak of the last
+hour. Seconds follow as in T0: a rhythm of seconds takes the place of
+«každou minutu» in a stretch of every minute or a run, anything else
+follows after «pokaždé» («…, pokaždé 5 a 30 sekund po začátku minuty»);
+a single second does not join the minutes here (there is no single
+minute to join).
+
+* `5,35 1,4,9,14,18 * * *` → «denně 5 a 35 minut po 1:00, 4:00, 9:00,
+  14:00 a 18:00»; `*/15 1,4,9,14,18 * * *` → «denně každých 15 minut,
+  vždy po dobu jedné hodiny od 1:00, 4:00, 9:00, 14:00 a 18:00»;
+  `5,35 6-18/3 * * *` → «denně 5 a 35 minut po 6:00, 9:00, 12:00, 15:00
+  a 18:00»; `*/25 */5 * * *` → «denně v 0:00, 5:00, 10:00, 15:00 a 20:00
+  a vždy 25 a 50 minut po nich»; `0-29 8,12,18 * * *` → «denně každou
+  minutu v prvních 30 minutách po 8:00, 12:00 a 18:00».
 
 **T2. Every hour (H is all).**
 
@@ -805,17 +915,14 @@ note that recorded it as a "known limit" was a defect left standing.)
   «v prvních N minutách», «v posledních N minutách» and «znovu od celé
   hodiny» need nothing.
 * The cadences here are those generic rule 7 says as a cadence; a
-  cadence of seven values or fewer that does not come round is a list.
-  **The hours are the exception when more than one minute fires in the
-  hour:** a cadence of five hours or more is then said as a cadence
-  whether or not it comes round, because hour by hour every clock time
-  and every window would be said again (`*/25 */5`: fifteen clock times;
-  «denně v 0:00, 0:25 a 0:50 a tak dále každých 5 hodin až do 20:50»). At
-  one minute the hours stay a list («denně v 0:00, 5:00, 10:00, 15:00 a
-  20:00»), and four hours or fewer are always said one by one: four
-  windows, each exact, are still held («od 2:00 do 2:59, od 8:00 do 8:59,
-  od 14:00 do 14:59 a od 20:00 do 20:59»). Hours that tile the day are
-  T0's, not this.
+  cadence of seven values or fewer that does not come round is a list,
+  for the hours as for the minutes. (From 2026-11-13 to 2026-11-20 a
+  cadence of five hours or more beside several minutes was said as a
+  cadence, «denně v 0:00, 0:25 a 0:50 a tak dále každých 5 hodin až do
+  20:50», so that every clock time and every window was not said again
+  hour by hour; T1b names the hours once instead: «denně v 0:00, 5:00,
+  10:00, 15:00 a 20:00 a vždy 25 a 50 minut po nich».) Hours that tile
+  the day are T0's, not this.
 
 **T3. M is an even rhythm, or an exception whose base is an even
 rhythm (or, when every window is a single hour, anything that reads as
