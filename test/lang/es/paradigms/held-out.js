@@ -95,14 +95,15 @@ const rows = [
     'de lunes a viernes, en los minutos 10, 20, 30 y 40 de cada hora, de ' +
     '9:10 a 17:40'],
 
-  // window / hour
+  // window / hour (three separate hours are named once as the hours
+  // that begin, not as a window each: 2026-11-20)
   ['*/15 0 * * 1-5', 'de lunes a viernes, cada 15 minutos de 0:00 a 0:45'],
   ['*/15 9 * * 1-5', 'de lunes a viernes, cada 15 minutos de 9:00 a 9:45'],
   ['*/15 9,17 * * 1-5',
     'de lunes a viernes, cada 15 minutos de 9:00 a 9:45 y de 17:00 a 17:45'],
   ['*/15 8,12,18 * * 1-5',
-    'de lunes a viernes, cada 15 minutos de 8:00 a 8:45, de 12:00 a 12:45 ' +
-    'y de 18:00 a 18:45'],
+    'de lunes a viernes, cada 15 minutos durante las horas que empiezan a ' +
+    'las 8:00, 12:00 y 18:00'],
   ['*/15 */2 * * 1-5',
     'de lunes a viernes, cada 15 minutos en las horas pares'],
   ['*/15 */6 * * 1-5',
@@ -250,11 +251,11 @@ const rows = [
   ['5/15 * * * *', 'en los minutos 5, 20, 35 y 50 de cada hora'],
   ['10-40/10 * * * *', 'en los minutos 10, 20, 30 y 40 de cada hora'],
 
-  // open / hour
+  // open / hour (three separate hours are named once: 2026-11-20)
   ['* 12 * * *', 'todos los días, cada minuto de 12:00 a 12:59'],
   ['* 8,12,18 * * *',
-    'todos los días, cada minuto de 8:00 a 8:59, de 12:00 a 12:59 y de ' +
-    '18:00 a 18:59'],
+    'todos los días, cada minuto durante las horas que empiezan a las ' +
+    '8:00, 12:00 y 18:00'],
   ['* 9-17 * * *', 'todos los días, cada minuto de 9:00 a 17:59'],
   ['* */2 * * *', 'cada minuto en las horas pares'],
   ['* */6 * * *', 'cada minuto durante una hora cada 6 horas'],
