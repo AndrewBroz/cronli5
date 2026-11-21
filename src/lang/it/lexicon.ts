@@ -157,7 +157,7 @@ const words = {
   eachTime: 'ogni volta',
   every: 'ogni',
   forAWholeMinute: 'per un minuto intero',
-  forAnHour: 'per un\'ora',
+  forTheWholeHour: 'per tutta l\'ora',
   fromMinute: 'dal minuto',
   fromSecond: 'dal secondo',
   firstTime: 'prima volta',

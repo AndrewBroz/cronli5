@@ -34,7 +34,9 @@ the day"): such hours are «ogni N ore», or «ogni N ore a partire dalle
 X:00» when the series starts later but still tiles; a minute or second
 over them is said apart, before a comma («al minuto 30, ogni 2 ore»); a
 unit that fires from the top of each hour is a stretch of one hour
-(«ogni minuto per un'ora ogni 2 ore»); and the day says no «tutti i
+(then «ogni minuto per un'ora ogni 2 ore»; since 2026-11-21 «ogni minuto
+per tutta l'ora, ogni 3 ore», and every other hour the even or odd
+hours); and the day says no «tutti i
 giorni». A cadence that does not tile keeps both ends. No bracket in
 these answers shows a series of numbers; none needed removing. The same
 day the coordinator extended this to such a cadence less an hour or two,
@@ -49,8 +51,9 @@ ogni 2 ore», «30 secondi dopo ogni ora in punto» (4.2). Second, every
 other hour under a finer field stacked two «ogni», «ogni minuto per
 un'ora ogni 2 ore»; for interval 2 it is now the even or odd hours,
 «ogni minuto nelle ore pari», «ogni 15 minuti nelle ore dispari», as
-Portuguese and German say it, and «per un'ora ogni N ore» stays for the
-longer intervals (4.1, 5.1). The first draft's objection to «nelle ore
+Portuguese and German say it, and «per un'ora ogni N ore» stayed for the
+longer intervals (4.1, 5.1; replaced 2026-11-21 by «per tutta l'ora, ogni
+N ore»). The first draft's objection to «nelle ore
 pari», that a judge stopped to ask whether midnight is even, is
 overruled: it is a pause, not a misreading (0 is even), and it was
 weighed against a sentence with a range of its own beside it, not
@@ -69,6 +72,17 @@ none touches another are named once under every kind of minutes, «ogni
 delle ore 6, 9, 12, 15 e 18», where a rate or a run of minutes had been
 one window per hour, or two windows «e così via ogni 3 ore» (4.1 "Hours
 named once").
+
+**Amended 2026-11-21, by Claude Opus 5.5.** A unit that fills each hour
+(every minute, or minutes that tile the hour from 0) under a step of
+hours longer than two was «ogni 15 minuti per un'ora ogni 3 ore». It is
+now «ogni 15 minuti per tutta l'ora, ogni 3 ore» (4.1 "Hours that tile
+the day", 2). The old form stacked a rhythm, a duration and a rhythm with
+nothing between them, left the reader to work out which hour the «un'ora»
+was and whether its end (the next :00) fired, and put the step of hours
+in other words than every other kind of minutes does («al minuto 30,
+ogni 3 ore», «ogni minuto dal minuto 0 al 29, ogni 3 ore»), so that
+editing only the minutes changed the hours' words.
 
 What Italian does its own way, and the rest of this file relies on:
 
@@ -690,15 +704,37 @@ are said apart from them, never folded into clock times:
    after the rate with no comma: `* */2` — «ogni minuto nelle ore pari»;
    `*/15 */2` — «ogni 15 minuti nelle ore pari»; `* 1/2` — «ogni minuto
    nelle ore dispari»; `*/15 1/2` — «ogni 15 minuti nelle ore dispari».
-   A longer interval is «per un'ora» between the rate and the hours, no
-   comma: `* */6` — «ogni minuto per un'ora ogni 6 ore»; `*/5 */4` —
-   «ogni 5 minuti per un'ora ogni 4 ore»; `* 1/3` — «ogni minuto per
-   un'ora ogni 3 ore a partire dall'1:00». A minute or two left out is
-   the usual «, tranne al minuto 29» at the end. The even and odd hours
+   A longer interval is **«per tutta l'ora»** after the rate, then a
+   comma and the hours as case 4 says them: `* */3` — «ogni minuto per
+   tutta l'ora, ogni 3 ore»; `*/15 */3` — «ogni 15 minuti per tutta
+   l'ora, ogni 3 ore»; `* */6` — «ogni minuto per tutta l'ora, ogni 6
+   ore»; `*/5 */4` — «ogni 5 minuti per tutta l'ora, ogni 4 ore»; `* 1/3`
+   — «ogni minuto per tutta l'ora, ogni 3 ore a partire dall'1:00»;
+   `*/15 1/3` — «ogni 15 minuti per tutta l'ora, ogni 3 ore a partire
+   dall'1:00». A minute or two left out is the usual «, tranne al minuto
+   29» at the end. The even and odd hours
    are the shortest way to say every other hour and say which; «ogni
    minuto per un'ora ogni 2 ore» stacked two «ogni», and «un'ora sì e una
-   no» is speech. «Per un'ora ogni N ore» is how Italian says a burst
-   that recurs when there is no such name. Only a stretch takes the even
+   no» is speech. Over a longer step the minutes' phrase says that they
+   fill the hour, and the hours are «, ogni N ore» exactly as after
+   «al minuto 30» or «ogni minuto dal minuto 0 al 29», so an edit to the
+   minutes changes only the words before the comma (amended 2026-11-21).
+   The earlier «ogni 15 minuti per un'ora ogni 3 ore» stacked two rhythms
+   and a duration for the reader to assemble, «un'ora» did not say which
+   hour or whether the next :00 fired, and the hours' words changed with
+   the minutes. «Per tutta l'ora» is the clock hour that the comma's
+   «ogni 3 ore» names, the use usage §7 gives «per tutta la fascia»
+   (from… to, the whole stretch); it adds one word and no value to hold.
+   Rejected: «dal minuto 0 al 45» (exact, and continuous with `0-29`, but
+   three values where habit supplies them, and no writer says «dal
+   minuto 0 al 59» for every minute); «un'ora su tre» (Italian has «una
+   volta su tre», but it replaces «ogni 3 ore» only under these minutes,
+   breaking continuity, and does not say which hour); naming the hours
+   (eight for `*/3`, a list where one step does). Web searches for the
+   exact fragments («ogni 15 minuti per tutta l'ora», «per tutta l'ora»
+   with a rate) found no timetable or scheduler prose that says such a
+   schedule at all, and so no competing native form; the phrase is chosen
+   as the plain Italian for «through the whole hour». Only a stretch takes the even
    or odd hours: a point in the hour keeps «, ogni 2 ore» («al minuto 30,
    ogni 2 ore»), which says when it is and how often, and an edit to the
    minute changes only the words before «nelle» or the comma. The windows
@@ -882,7 +918,7 @@ alle 9:50».
    via» (the step is said in words, so one window is enough): `*/15
    0,4,6,8,…,20` — «ogni 15 minuti dalle 0:00 alle 0:45 e così via ogni 2
    ore fino alle 20:45, tranne dalle 2:00 alle 2:59». (Hours that tile the
-   day less an hour or two do not come here: «ogni 15 minuti per un'ora
+   day less an hour or two do not come here: «ogni 15 minuti per tutta l'ora,
    ogni 2 ore, tranne dalle 2:00 alle 2:59», above.) (The first or last
    hour of a cadence cannot be the one left out: the core then gives the
    shorter cadence.) Two wordings that left the gap silent («dalle 0:00…,
@@ -1195,7 +1231,7 @@ secondi».
    minute of such hours fire all through each hour, so they are a stretch
    of the hours as in 4.1: `5,30 * */2` — «ai secondi 5 e 30 di ogni
    minuto nelle ore pari»; `0-10 * */4` — «ogni secondo dal
-   secondo 0 al 10 di ogni minuto per un'ora ogni 4 ore».
+   secondo 0 al 10 di ogni minuto per tutta l'ora, ogni 4 ore».
 5. **Any other D** (a rate of minutes, with or without windows; a long
    list of times): D's base, a comma, and the seconds clause; D's
    exceptions come after the clause, so that it cannot be read of what
@@ -1712,7 +1748,8 @@ mese/mesi, anno/anni.
 (from…to, both ends firing), compreso (the last year of «fino al»), a
 partire da
 (a cadence that never breaks, and the start of hours that tile the day),
-per un'ora (a unit that fills each hour of such hours), nelle ore pari,
+per tutta l'ora (a unit that fills each hour of such hours, before «,
+ogni N ore»), nelle ore pari,
 nelle ore dispari (every other hour, under such a unit), N secondi dopo
 l'ora in punto (seconds named at minute 0), e così via… fino alle (a long regular
 series of windows), ripartendo a ogni ora (a cadence that starts again),

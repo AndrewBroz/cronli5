@@ -112,8 +112,9 @@ const rows = [
     'dal lunedì al venerdì, ogni 15 minuti nelle ore 8, 12 e 18'],
   ['*/15 */2 * * 1-5',
     'dal lunedì al venerdì, ogni 15 minuti nelle ore pari'],
+  // A longer step of hours: the whole hour, then the step (answers 4.1).
   ['*/15 */6 * * 1-5',
-    'dal lunedì al venerdì, ogni 15 minuti per un\'ora ogni 6 ore'],
+    'dal lunedì al venerdì, ogni 15 minuti per tutta l\'ora, ogni 6 ore'],
   ['*/15 0,2,4,6,10,12,14,16,18,20,22 * * 1-5',
     'dal lunedì al venerdì, ogni 15 minuti nelle ore pari, tranne ' +
     'dalle 8:00 alle 8:59'],
@@ -279,7 +280,9 @@ const rows = [
   ['* 8,12,18 * * *', 'tutti i giorni, ogni minuto nelle ore 8, 12 e 18'],
   ['* 9-17 * * *', 'tutti i giorni, ogni minuto dalle 9:00 alle 17:59'],
   ['* */2 * * *', 'ogni minuto nelle ore pari'],
-  ['* */6 * * *', 'ogni minuto per un\'ora ogni 6 ore'],
+  // A longer step of hours under every minute: the whole hour, then the
+  // step after a comma, as under any other minutes (answers 4.1).
+  ['* */6 * * *', 'ogni minuto per tutta l\'ora, ogni 6 ore'],
   ['* 0,2,4,6,10,12,14,16,18,20,22 * * *',
     'ogni minuto nelle ore pari, tranne dalle 8:00 alle 8:59'],
   ['* 22-2 * * *', 'tutti i giorni, ogni minuto dalle 22:00 alle 2:59'],

@@ -558,17 +558,27 @@ const rows = [
     'tutti i giorni, ogni minuto nelle ore 6, 8, 12, 18 e 20'],
   // A unit that fills each hour of hours that tile the day is a stretch
   // of one hour, with no windows (answers 4.1 "Hours that tile the day"):
-  // every other hour is the even or the odd hours.
+  // every other hour is the even or the odd hours; a longer step is the
+  // whole hour, then the step after a comma as under any other minutes
+  // (2026-11-21: «per un'ora ogni 3 ore» stacked two rhythms and a
+  // duration, and changed the hours' words when only the minutes did).
   ['* 0-23/2 * * *', 'ogni minuto nelle ore pari'],
-  ['* */3 * * *', 'ogni minuto per un\'ora ogni 3 ore'],
-  ['* 0-23/6 * * *', 'ogni minuto per un\'ora ogni 6 ore'],
+  ['* */3 * * *', 'ogni minuto per tutta l\'ora, ogni 3 ore'],
+  ['*/15 */3 * * *', 'ogni 15 minuti per tutta l\'ora, ogni 3 ore'],
+  ['* 1/3 * * *',
+    'ogni minuto per tutta l\'ora, ogni 3 ore a partire dall\'1:00'],
+  ['*/15 1/3 * * *',
+    'ogni 15 minuti per tutta l\'ora, ogni 3 ore a partire dall\'1:00'],
+  ['* 0-23/6 * * *', 'ogni minuto per tutta l\'ora, ogni 6 ore'],
+  ['*/20 */6 * * *', 'ai minuti 0, 20 e 40, ogni 6 ore'],
+  ['*/15 */6 * * *', 'ogni 15 minuti per tutta l\'ora, ogni 6 ore'],
   ['0,15,30,45 0-23/2 * * 1-5',
     'dal lunedì al venerdì, ogni 15 minuti nelle ore pari'],
   ['*/5 */2 * * *', 'ogni 5 minuti nelle ore pari'],
   ['*/5 1/2 * * *', 'ogni 5 minuti nelle ore dispari'],
-  ['*/5 */4 * * *', 'ogni 5 minuti per un\'ora ogni 4 ore'],
+  ['*/5 */4 * * *', 'ogni 5 minuti per tutta l\'ora, ogni 4 ore'],
   ['0-28,30-59 */6 * * *',
-    'ogni minuto per un\'ora ogni 6 ore, tranne al minuto 29'],
+    'ogni minuto per tutta l\'ora, ogni 6 ore, tranne al minuto 29'],
   ['* * */2 * * *', 'ogni secondo nelle ore pari'],
   ['30 * */2 * * *', 'al secondo 30 di ogni minuto nelle ore pari'],
   // A cadence of hours that does not tile the day is named once, as the
@@ -991,9 +1001,11 @@ const rows = [
     '14'],
   ['0-10 */25 */4 * * *',
     'ogni secondo dal secondo 0 al 10 dei minuti 0, 25 e 50, ogni 4 ore'],
+  // Seconds through every minute under a longer step of hours are the
+  // whole hour, then the step after a comma (answers 4.1, 2026-11-21).
   ['0-10 * */4 * * *',
-    'ogni secondo dal secondo 0 al 10 di ogni minuto per un\'ora ogni 4 ' +
-    'ore'],
+    'ogni secondo dal secondo 0 al 10 di ogni minuto per tutta l\'ora, ' +
+    'ogni 4 ore'],
   ['0-10 */25 4/4 * * *',
     'tutti i giorni, ogni secondo dal secondo 0 al 10 dei minuti 0, 25 e ' +
     '50 delle ore 4, 8, 12, 16 e 20']

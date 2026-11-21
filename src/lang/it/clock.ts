@@ -639,7 +639,8 @@ function tilingOut(stretched: boolean, work: Clockwork): string[] {
 // Hours that tile the day, said bare or from their start, and the unit
 // said apart from them, before a comma. Minute 0 alone is the hours
 // alone; a unit that runs from the top of each hour, or through every
-// minute of it, is a stretch of one hour.
+// minute of it, is a stretch: the even or odd hours, or the whole hour
+// and then, after the comma, the hours as under any other unit.
 function sayRoundTheClock(cadence: Cadence, work: Clockwork): TimeSaid {
   const {speech, voice} = work;
   const {unit} = voice;
@@ -656,7 +657,7 @@ function sayRoundTheClock(cadence: Cadence, work: Clockwork): TimeSaid {
   const parity = [words.evenHours, words.oddHours][cadence.start];
   const during = cadence.interval === 2 ?
     parity :
-    phrase(words.forAnHour, hours);
+    `${words.forTheWholeHour}, ${hours}`;
   const text = phrase(voice.within(form), voice.kept) +
     tailOf(form, voice);
 

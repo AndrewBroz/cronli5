@@ -989,7 +989,7 @@
    "pattern": "*/15 */2 * * 1-5"
   },
   {
-   "expected": "dal lunedì al venerdì, ogni 15 minuti per un'ora ogni 6 ore",
+   "expected": "dal lunedì al venerdì, ogni 15 minuti per tutta l'ora, ogni 6 ore",
    "options": {
     "lang": "it"
    },
@@ -1521,7 +1521,7 @@
    "pattern": "* */2 * * *"
   },
   {
-   "expected": "ogni minuto per un'ora ogni 6 ore",
+   "expected": "ogni minuto per tutta l'ora, ogni 6 ore",
    "options": {
     "lang": "it"
    },
@@ -3889,18 +3889,53 @@
    "pattern": "* 0-23/2 * * *"
   },
   {
-   "expected": "ogni minuto per un'ora ogni 3 ore",
+   "expected": "ogni minuto per tutta l'ora, ogni 3 ore",
    "options": {
     "lang": "it"
    },
    "pattern": "* */3 * * *"
   },
   {
-   "expected": "ogni minuto per un'ora ogni 6 ore",
+   "expected": "ogni 15 minuti per tutta l'ora, ogni 3 ore",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 */3 * * *"
+  },
+  {
+   "expected": "ogni minuto per tutta l'ora, ogni 3 ore a partire dall'1:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "* 1/3 * * *"
+  },
+  {
+   "expected": "ogni 15 minuti per tutta l'ora, ogni 3 ore a partire dall'1:00",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 1/3 * * *"
+  },
+  {
+   "expected": "ogni minuto per tutta l'ora, ogni 6 ore",
    "options": {
     "lang": "it"
    },
    "pattern": "* 0-23/6 * * *"
+  },
+  {
+   "expected": "ai minuti 0, 20 e 40, ogni 6 ore",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/20 */6 * * *"
+  },
+  {
+   "expected": "ogni 15 minuti per tutta l'ora, ogni 6 ore",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "*/15 */6 * * *"
   },
   {
    "expected": "dal lunedì al venerdì, ogni 15 minuti nelle ore pari",
@@ -3924,14 +3959,14 @@
    "pattern": "*/5 1/2 * * *"
   },
   {
-   "expected": "ogni 5 minuti per un'ora ogni 4 ore",
+   "expected": "ogni 5 minuti per tutta l'ora, ogni 4 ore",
    "options": {
     "lang": "it"
    },
    "pattern": "*/5 */4 * * *"
   },
   {
-   "expected": "ogni minuto per un'ora ogni 6 ore, tranne al minuto 29",
+   "expected": "ogni minuto per tutta l'ora, ogni 6 ore, tranne al minuto 29",
    "options": {
     "lang": "it"
    },
@@ -5052,7 +5087,7 @@
    "pattern": "0-10 */25 */4 * * *"
   },
   {
-   "expected": "ogni secondo dal secondo 0 al 10 di ogni minuto per un'ora ogni 4 ore",
+   "expected": "ogni secondo dal secondo 0 al 10 di ogni minuto per tutta l'ora, ogni 4 ore",
    "options": {
     "lang": "it"
    },
