@@ -202,7 +202,6 @@ const words = {
   fullHour: 'pełnej godzinie',
   fullHourGenitive: 'pełnej godziny',
   fullMinute: 'pełnej minucie',
-  hoursBeginningAt: 'godzinach rozpoczynających się o',
   ifSaturday: 'a jeśli to sobota –',
   ifSunday: 'jeśli niedziela –',
   ifSundayAndLast: 'a jeśli niedziela i zarazem ostatni dzień miesiąca –',

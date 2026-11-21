@@ -7,8 +7,8 @@ import {asFew} from './forms.js';
 import type {Clock} from './text.js';
 import {counted, every, listed, units, words} from './text.js';
 import type {Anchor, Gap, Tone} from './within.js';
-import {fullHours, hours, lacks, momentsLacking, theHour, within}
-  from './within.js';
+import {fullHours, hours, lacks, momentsLacking, namedHours, theHour,
+  within} from './within.js';
 import {inEach, windows} from './spans.js';
 
 /**
@@ -242,8 +242,16 @@ function open(t: TimeFacts, g: Grain): Said {
 }
 
 // Minutes that fill the hour evenly: the rhythm once, and a window for
-// each run of hours; what is missing inside the windows after them.
+// each run of hours; what is missing inside the windows after them. A
+// list of hours whose windows name too many clock times is named once.
 function windowed(t: TimeFacts, g: Grain): Said {
+  const named = t.hour.kind === 'list' &&
+    tooMany(t, hourRuns(t.hour).length * 2);
+
+  return named ? eachOfHours(t, g) : windowEach(t, g);
+}
+
+function windowEach(t: TimeFacts, g: Grain): Said {
   const {minute} = t;
   const rhythm = [every(minute.interval, units.minute, t.short), g.each][
     Number(minute.interval === 1)];
@@ -298,52 +306,64 @@ function underTiling(t: TimeFacts, g: Grain): Said {
   });
 }
 
-// A rhythm of hours under several minutes: the hours are not moments but
-// hours that each hold several firings. A rhythm that tiles the day is
-// said by its step; every other hour of the whole day by parity; any
-// other rhythm names its hours by the moment each begins.
-function underRhythm(t: TimeFacts, g: Grain): Said {
-  return tilingStep(t.hour) > 0 ? underTiling(t, g) : namedRhythm(t, g);
-}
-
-// Every other hour of the whole day by parity, any other rhythm by the
-// moment each of its hours begins.
-function namedRhythm(t: TimeFacts, g: Grain): Said {
-  const {hour, minute} = t;
-  const tone = toneOf(t, g);
-  const parity = parityOf(hour) !== null;
-  const odd = (hour.base || hour).values[0] % 2;
-  const starts = listed(hour.values.map(function start(value) {
-    return t.clock(value, 0, null);
-  }));
-  const each = `${words.eachOfTheHours} ${starts}`;
-  const [anchor, where] = parity ?
-    [
-      hours([words.eachEvenHourLocative, words.eachOddHourLocative][odd],
-        [words.eachEvenHourGenitive, words.eachOddHourGenitive][odd], tone),
-      [words.evenHours, words.oddHours][odd]
-    ] :
-    [hours(each, each, tone), `${words.hoursBeginningAt} ${starts}`];
-  const fewer = withoutHours(hour.removed).repeat(Number(parity));
-  const rhythm = [every(minute.interval, units.minute, t.short), g.each][
-    Number(minute.interval === 1)];
-  const text = minute.steady ?
-    `${rhythm} ${words.in} ${where}${fewer}` +
-      `${momentsLacking(minute.removed, fullHours(tone))}` :
-    `${within(minute, anchor)}${fewer}`;
-
-  return said(text, !parity, false);
-}
-
-// A list of minutes after each of a few hours: «5, 20 i 45 minut po
-// każdej z godzin 8:00, 12:00 i 18:00».
+// The hours named once and the minutes said once, inside each of them:
+// «5, 20 i 45 minut po każdej z godzin 8:00, 12:00 i 18:00», «co 15
+// minut od każdej z godzin 1:00, 4:00 i 9:00 do 45 minut po niej».
 function eachOfHours(t: TimeFacts, g: Grain): Said {
   const each = `${words.eachOfTheHours} ${listed(
     t.hour.values.map(function start(value) {
       return t.clock(value, 0, null);
     }))}`;
 
-  return said(within(t.minute, hours(each, each, toneOf(t, g))), true, false);
+  return {
+    ...said(within(t.minute, namedHours(each, toneOf(t, g))), true, false),
+    spans: t.minute.kind === 'all' || runsOnly(t.minute)
+  };
+}
+
+// Every other hour of the whole day, under several minutes, by parity.
+function byParity(t: TimeFacts, g: Grain): Said {
+  const {hour, minute} = t;
+  const tone = toneOf(t, g);
+  const odd = (hour.base || hour).values[0] % 2;
+  const anchor = hours(
+    [words.eachEvenHourLocative, words.eachOddHourLocative][odd],
+    [words.eachEvenHourGenitive, words.eachOddHourGenitive][odd], tone);
+  const rhythm = [every(minute.interval, units.minute, t.short), g.each][
+    Number(minute.interval === 1)];
+  const text = minute.steady ?
+    `${rhythm} ${words.in} ${[words.evenHours, words.oddHours][odd]}` +
+      `${withoutHours(hour.removed)}` +
+      `${momentsLacking(minute.removed, fullHours(tone))}` :
+    `${within(minute, anchor)}${withoutHours(hour.removed)}`;
+
+  return said(text, false, false);
+}
+
+// A rhythm of hours under several minutes: the hours are not moments but
+// hours that each hold several firings. A rhythm that tiles the day is
+// said by its step; every other hour of the whole day by parity; any
+// other rhythm names its hours once.
+function underRhythm(t: TimeFacts, g: Grain): Said {
+  return tilingStep(t.hour) > 0 && underTiling(t, g) ||
+    parityOf(t.hour) !== null && byParity(t, g) ||
+    eachOfHours(t, g);
+}
+
+// How many clock times a set of minutes names in one hour said as real
+// times: a moment one, a stretch its two ends.
+function clocksIn(form: Form): number {
+  return form.parts.length > 0 ?
+    form.parts.reduce(function add(total, part) {
+      return total + clocksIn(part);
+    }, 0) :
+    [2, form.values.length][Number(isList(form))];
+}
+
+// Up to six clock times a day are said hour by hour; past that several
+// hours are named once.
+function tooMany(t: TimeFacts, clocks: number): boolean {
+  return t.hour.values.length > 1 && clocks > twoListsAtMost;
 }
 
 // A list of minutes in every hour but one or two.
@@ -367,8 +387,14 @@ function colon(t: TimeFacts, g: Grain): Said {
 }
 
 // One hour, or a few: real clock times in the minutes' own form for each
-// hour.
+// hour; hours that would name too many clock times are named once.
 function perHour(t: TimeFacts, g: Grain): Said {
+  return tooMany(t, t.hour.values.length * clocksIn(t.minute)) ?
+    eachOfHours(t, g) :
+    hourByHour(t, g);
+}
+
+function hourByHour(t: TimeFacts, g: Grain): Said {
   const seconds = [g.first, g.last, g.moment];
   const found = inEach(t.minute, t.hour.values.map(function dial(hour) {
     return {
