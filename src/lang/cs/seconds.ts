@@ -19,7 +19,9 @@ import {
   stretchOf
 } from './sets.js';
 import type {Tiling} from './tiled.js';
-import {removedHours, tiledHead, tilingOf} from './tiled.js';
+import {
+  namedHead, namedOf, removedHours, tiledHead, tilingOf
+} from './tiled.js';
 import lexicon from './lexicon.js';
 
 const {units, words} = lexicon;
@@ -43,13 +45,11 @@ const mostListedTimes = 6;
 const nightFalls = 22;
 const nightEnds = 6;
 
-// How many hours a cadence beside several minutes needs to be said as one.
-const enoughForACadence = 5;
-
 // The hours. A run past midnight is kept whole only as a night, and only
 // when no day, month or year is restricted; otherwise nothing wraps.
 // Hours of runs and cadences together are said as their parts only at
-// one minute.
+// one minute. A cadence of seven hours or fewer that does not come round
+// is a list, beside one minute or several.
 function hoursOf(facts: ScheduleFacts, free: boolean, alone: boolean): Clock {
   const own = facts.analyses.candidates.hour as SetDescription[];
   const run = ofKind(own, 'range');
@@ -59,15 +59,8 @@ function hoursOf(facts: ScheduleFacts, free: boolean, alone: boolean): Clock {
   const candidates = night ?
     own :
     candidatesAs(facts, 'hour', {linear: true}) as SetDescription[];
-  const field = clockField(candidates, 'hour', alone);
-  const cadence = ofKind(candidates, 'cadence');
 
-  // Beside several minutes a cadence of hours is said as one, also where
-  // alone it would be a list.
-  return cadence && !alone && field.form.kind === 'values' &&
-    field.values.length >= enoughForACadence ?
-    {...field, form: cadence} :
-    field;
+  return clockField(candidates, 'hour', alone);
 }
 
 // A phrase with the seconds set after its head and before its stretches
@@ -257,15 +250,19 @@ function secondsAfter(seconds: Clock, throughout: boolean): string {
     minutePlace(seconds, words.ofTheMinute).text;
 }
 
-// Hours that tile the day, bare, then the minutes apart from them with
-// «vždy», then the seconds: a single second joins a single minute, a
-// rhythm of seconds takes the place of «každou minutu» in a stretch of
-// minutes, and anything else follows after «pokaždé»; removed hours last.
-function tiledPart(tiling: Tiling, clocks: {
+// The hours, then the minutes apart from them, then the seconds: a single
+// second joins a single minute, a rhythm of seconds takes the place of
+// «každou minutu» in a stretch of minutes, and anything else follows after
+// «pokaždé»; removed hours last. `say` gives the hours and minutes (bare
+// hours that tile the day, or hours named once) and the removed hours.
+function apartPart(say: {
+  head(rhythm: string, second: number[]): {opening: Opening; text: string};
+  removed(second: number[]): string;
+}, clocks: {
   joins: ReturnType<typeof joinsOf>;
   minutes: Clock;
   seconds: Clock;
-}, shown: Shown): string {
+}, shown: Shown): {opening: Opening; text: string} {
   const {joins, minutes, seconds} = clocks;
   const second = minutes.values.length === 1 && shown.one && [shown.one] ||
     [];
@@ -275,12 +272,12 @@ function tiledPart(tiling: Tiling, clocks: {
     everyUnit(1, units.minute);
   const after = !joins.silent && !second.length && !stretch &&
     spaced(words.eachTime, secondsAfter(seconds, joins.throughout));
+  const head = say.head(rhythm, second);
 
-  return [
-    tiledHead(tiling, minutes, {rhythm, second, style: shown.style}),
-    after,
-    removedHours(tiling, minutes, {second, style: shown.style})
-  ].filter(Boolean).join(', ');
+  return {
+    opening: head.opening,
+    text: [head.text, after, say.removed(second)].filter(Boolean).join(', ')
+  };
 }
 
 /**
@@ -298,6 +295,7 @@ function timePart(facts: ScheduleFacts, free: boolean, style: CzechStyle):
   const hours = hoursOf(facts, free, minutes.values.length === 1);
   const tiling = tilingOf(hours,
     candidatesAs(facts, 'hour', {linear: true}) as SetDescription[]);
+  const named = !tiling && namedOf(hours, minutes);
   const told = minutesAndHours(minutes, hours);
   const one = facts.analyses.clockSecond;
   const shown: Shown = {many: seconds.values.length > 1, one, style};
@@ -308,11 +306,24 @@ function timePart(facts: ScheduleFacts, free: boolean, style: CzechStyle):
   const rules: Array<{when: unknown; say: () => ReturnType<typeof composed>}> =
   [
     {
-      say: () => ({
-        opening: '',
-        text: tiledPart(tiling as Tiling, {joins, minutes, seconds}, shown)
-      }),
+      say: () => apartPart({
+        head: (each, second) => ({
+          opening: '',
+          text: tiledHead(tiling as Tiling, minutes,
+            {rhythm: each, second, style})
+        }),
+        removed: (second) =>
+          removedHours(tiling as Tiling, minutes, {second, style})
+      }, {joins, minutes, seconds}, shown),
       when: tiling
+    },
+    {
+      say: () => apartPart({
+        head: (each) => namedHead(named as number[], minutes,
+          {rhythm: each, style}),
+        removed: () => ''
+      }, {joins, minutes, seconds}, shown),
+      when: named
     },
     {say: () => composed(told.say({style})), when: joins.silent},
     {

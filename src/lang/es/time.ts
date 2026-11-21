@@ -79,8 +79,13 @@ const DAY = 24;
 // many values: midnight and noon alone are listed.
 const FEWEST_BARE_HOURS = 3;
 
-// Inside up to this many separate hours, minutes are clock times.
-const FEW_HOURS = 4;
+// Up to this many separate hours carry their minutes as clock times or
+// a window each; from one more, the hours are named once (answers 4.1).
+const FEW_HOURS = 2;
+
+// Inside a few separate hours, a cadence of minutes is a window from this
+// many values.
+const LEAST_WINDOWED = 4;
 
 // A list of clock times goes up to this many.
 const MOST_TIMES = 12;
@@ -358,16 +363,17 @@ function rivalCost(scene: Scene): number {
     things + 2 * spans.length;
 }
 
-// Whether the clock times are listed (answers 4.1): at most twelve, and
-// either the hours stand apart with no window to offer, or the list names
-// no more than its rival.
+// Whether the clock times are listed (answers 4.1): at most twelve, in a
+// range, pieces or a few separate hours, and either the minutes are named
+// one by one or the list names no more than its rival. Many hours, or a
+// cadence of them, are named once instead.
 function timesListed(scene: Scene): boolean {
   const {facts, hourKind, minutes} = scene;
   const times = facts.minute.length * facts.hour.length;
-  const apart = hourKind === 'many' || hourKind === 'cadence' ||
-    hourKind === 'few' && listed(minutes);
+  const namedOnce = hourKind === 'many' || hourKind === 'cadence';
 
-  return times <= MOST_TIMES && (apart || times <= rivalCost(scene));
+  return times <= MOST_TIMES && !namedOnce &&
+    (hourKind === 'few' && listed(minutes) || times <= rivalCost(scene));
 }
 
 // Whether hours that stand apart are named by when they begin, after the
@@ -396,8 +402,6 @@ function formOf(scene: Scene, silent: boolean): Form {
     ['clocks', single && apart],
     ['points', single],
     ['clocks', timesListed(scene)],
-    ['rhythm', onCadence && tiles(minutes)],
-    ['points', onCadence && facts.minute.length <= FEW_HOURS],
     ['phraseHours', onCadence || apart && hoursNamed(scene)],
     ['windows', tiles(minutes) || hourKind === 'few'],
     ['phraseWindows', true]
@@ -557,8 +561,7 @@ const forms: {[form in Form]: (scene: Scene) => string} = {
     ]);
   },
   // «cada minuto durante las horas que empiezan a las 6:00, 8:00, …»;
-  // hours on a cadence too long to list begin «cada 2 horas de 5:00 a
-  // 23:00».
+  // «en los minutos 5 y 35 de las horas pares de 8:00 a 18:00».
   phraseHours(scene) {
     const {clock, facts, hours, minutes, voice} = scene;
 
@@ -570,7 +573,11 @@ const forms: {[form in Form]: (scene: Scene) => string} = {
 
     return spaced([
       unitPhrase(minutes, units.minute, voice),
-      pick([[words.during, tiles(minutes)], [words.of, true]]),
+      pick([
+        [words.in, tiles(minutes) && everyOther(hours)],
+        [words.during, tiles(minutes)],
+        [words.of, true]
+      ]),
       pick([
         [`${parityHours(hours)} ${span}`, everyOther(hours)],
         [`${HOURS_THAT_BEGIN} ${clock.at(facts.hour.map(onTheHour))}`, true]
@@ -609,27 +616,22 @@ const forms: {[form in Form]: (scene: Scene) => string} = {
         };
       })));
   },
-  // Hours by their rule, the minutes apart before it: «cada 2 horas»;
-  // «en el minuto 30, cada 2 horas desde la 1:00»; filled, «cada minuto
-  // durante una hora cada 2 horas», and where the cadence does not tile
-  // the day, with the window from its first moment to its last.
+  // Hours that tile the day, by their rule, the minutes apart before it:
+  // «cada 2 horas»; «en el minuto 30, cada 2 horas desde la 1:00»;
+  // filled, «cada minuto durante toda la hora, cada 3 horas», and every
+  // second hour «cada minuto en las horas pares».
   rhythm(scene) {
     const {clock, facts, hours, minutes, voice} = scene;
-    const window = windowOf(scene, [hours.start, hours.last],
-      minuteEnds(scene), voice.edge);
     const rule = spaced([
       every(units.hour, hours.interval, EACH),
       pick([
-        ['', tilesDay(hours) && hours.start === 0],
-        [clock.since({hour: hours.start, minute: 0, tail: []}),
-          tilesDay(hours)],
-        [window, true]
+        ['', hours.start === 0],
+        [clock.since({hour: hours.start, minute: 0, tail: []}), true]
       ])
     ]);
     const filled = pick([
-      [spaced([words.in, parityHours(hours),
-        pick([['', tilesDay(hours)], [window, true]])]), everyOther(hours)],
-      [`${words.during} ${words.oneHour} ${rule}`, true]
+      [`${words.in} ${parityHours(hours)}`, everyOther(hours)],
+      [`${words.during} ${words.wholeHour}, ${rule}`, true]
     ]);
 
     return pick([
@@ -785,7 +787,7 @@ function sceneOf(facts: TimeFacts, clock: Clock): Scene {
   // second, under every minute of every hour.
   const everyHour = hourKind === 'all';
   const minutes = say(facts.minute, subHourPolicy(
-    pick([[FEW_HOURS, hourKind === 'few'], [8, true]]), 0, everyHour));
+    pick([[LEAST_WINDOWED, hourKind === 'few'], [8, true]]), 0, everyHour));
 
   // Beside minutes that are not every minute, a cadence of four seconds
   // or fewer is named.

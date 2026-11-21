@@ -27,6 +27,9 @@ export interface Gap {
 export interface Anchor {
   unit: Unit;
   short: boolean;
+  // Hours named one by one: a rhythm stops in each, so it says where it
+  // starts and where it stops.
+  bounded: boolean;
   // The rhythm of every value: «co minutę», or a finer one in its place.
   each: string;
   // After «po»: «każdej pełnej godzinie».
@@ -103,8 +106,14 @@ function beat(form: Form, voice: Voice): string {
     Number(form.interval === 1)];
 }
 
+// Inside named hours a rhythm names its first and last firing, and one
+// of two values is its two moments.
 function rhythm(form: Form, voice: Voice): string {
-  return `${beat(form, voice)}${voice.anchor.whole}`;
+  const stops = voice.anchor.bounded;
+
+  return stops && form.values.length <= 2 && moments(form, voice) ||
+    stops && stretch(form, voice) ||
+    `${beat(form, voice)}${voice.anchor.whole}`;
 }
 
 // «5, 20 i 45 minut po każdej pełnej godzinie»; the full hour is never
@@ -148,7 +157,7 @@ function stretch(form: Form, voice: Voice): string {
 // A rhythm with a seam says where it stops; a seamless one where it
 // starts.
 function cadence(form: Form, voice: Voice): string {
-  return form.seamless ?
+  return form.seamless && !voice.anchor.bounded ?
     `${beat(form, voice)}, ${words.starting} ` +
       `${numbered(form.from, voice)} ${past(voice)}` :
     stretch(form, voice);
@@ -267,6 +276,7 @@ export interface Tone {
 function hours(locative: string, genitive: string, tone: Tone): Anchor {
   return {
     ...tone,
+    bounded: false,
     from: genitive,
     itFrom: words.minutesPastIt,
     itPast: words.minutesPastIt,
@@ -277,14 +287,31 @@ function hours(locative: string, genitive: string, tone: Tone): Anchor {
   };
 }
 
+/**
+ * Hours named one by one: «każdej z godzin 1:00, 4:00 i 9:00», after «po»
+ * and after «od» alike.
+ */
+function namedHours(each: string, tone: Tone): Anchor {
+  return {...hours(each, each, tone), bounded: true};
+}
+
 /** Every full hour: «każdej pełnej godzinie». */
 function fullHours(tone: Tone): Anchor {
   return hours(words.eachFullHour, words.eachFullHourGenitive, tone);
 }
 
+/** One hour, after «za każdym razem»: «pełnej godzinie». */
+function theHour(tone: Tone): Anchor {
+  return {
+    ...hours(words.fullHour, words.fullHourGenitive, tone),
+    whole: ` ${words.wholeHour}`
+  };
+}
+
 /** Every minute of the open hour, for the seconds inside it. */
 function eachMinute(short: boolean): Anchor {
   return {
+    bounded: false,
     each: every(1, units.second, short),
     endTail: '',
     from: words.startOfEachMinute,
@@ -311,4 +338,4 @@ function theMinute(short: boolean): Anchor {
 }
 
 export {butNot, eachMinute, except, fullHours, hours, lacks, momentsLacking,
-  theMinute, within};
+  namedHours, theHour, theMinute, within};

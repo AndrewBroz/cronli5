@@ -5,6 +5,7 @@
 import type {Gender} from './lexicon.js';
 import type {Led} from './phrases.js';
 import lexicon from './lexicon.js';
+import {list, spaced} from './phrases.js';
 import type {PortugueseStyle} from './options.js';
 
 const {contractions, dayParts, twoDigits, words} = lexicon;
@@ -60,6 +61,46 @@ function timeOf(
   };
 }
 
+// An hour by its number as the clock writes it.
+function hourNumber(hour: number, style: PortugueseStyle): string {
+  return String(style.hour12 ? hour % 12 || Math.min(hour, 12) : hour);
+}
+
+/**
+ * Hours by number, as the hours something happens in: «1, 4, 9, 14 e
+ * 18». On a 12-hour clock the part of the day follows, said once for
+ * neighbours that share it: «1 e 4 da madrugada, 9 da manhã e 2 e 6 da
+ * tarde».
+ */
+function hourNumbers(hours: number[], style: PortugueseStyle): string {
+  function tail(hour: number): string {
+    return style.hour12 ? dayPart(hour) : '';
+  }
+
+  const groups = hours.reduce(function gather(found: number[][], hour) {
+    const current = found[found.length - 1];
+
+    if (current && tail(current[0]) === tail(hour)) {
+      current.push(hour);
+    }
+    else {
+      found.push([hour]);
+    }
+
+    return found;
+  }, []);
+
+  return list(groups.map((group) => spaced([
+    list(group.map((hour) => hourNumber(hour, style))),
+    tail(group[0])
+  ])));
+}
+
+/** An hour by number with its part of the day on a 12-hour clock. */
+function hourName(hour: number, style: PortugueseStyle): string {
+  return hourNumbers([hour], style);
+}
+
 /** A time as an item of a list, led by «à», «às» or «ao». */
 function at(time: Time): Led {
   return {lead: contractions.a[time.number][time.gender], text: time.text};
@@ -73,4 +114,4 @@ function fromTo(start: Time, finish: Time): string {
   return `${from} ${start.text} ${to} ${finish.text}`;
 }
 
-export {at, fromTo, timeOf};
+export {at, fromTo, hourName, hourNumbers, timeOf};

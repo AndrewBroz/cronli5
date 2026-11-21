@@ -79,6 +79,16 @@ const forms: Array<Rule<Seconds, string>> = [
   [function none(given) {
     return given.values.length === 1 && given.values[0] === 0;
   }, plainText],
+  [function underEveryMinuteInHours({time}) {
+    return time.everyMinuteInHours;
+  }, function inPlaceOfTheMinute(given) {
+    const {time} = given;
+    const clock = clockOf(given.style);
+    const seconds = secondsOverMinutes(given);
+
+    return clausal(spaced(time.lead, time.tail(clock)), seconds.lead.text,
+      seconds.clause);
+  }],
   [function underEveryMinute({several, time}) {
     return time.mode === 'everyMinute' &&
       (several ? time.windows : time.bare);

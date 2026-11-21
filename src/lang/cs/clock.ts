@@ -654,7 +654,8 @@ function waysOf(minutes: Clock, hours: Clock): Ways {
   const named = hours.form.kind === 'values' && apart(hours);
   const fewTimes = [minutes, hours].some(function single(field) {
     return field.values.length === 1;
-  }) || minutes.values.length * hours.values.length <= mostListedTimes;
+  }) || hours.values.length <= 2 &&
+    minutes.values.length * hours.values.length <= mostListedTimes;
   const windows = hourBase.kind !== 'all';
   const stretch = apart(hours) && ['range', 'cadence'].includes(form.kind) ||
     named && ['pieces', 'cadencePieces'].includes(form.kind);
@@ -663,7 +664,7 @@ function waysOf(minutes: Clock, hours: Clock): Ways {
     inWindows: rhythmic(minutes, windows) || stretch,
     listed: [form, hours.form].every(function isList(found) {
       return found.kind === 'values';
-    }) && (fewTimes || !minutes.step && named),
+    }) && fewTimes,
     named,
     windows
   };

@@ -329,14 +329,85 @@ const rows = [
   ['5,20,45 9,17 * * *', 'denně v 9:05, 9:20, 9:45, 17:05, 17:20 a 17:45'],
   ['5,20,45 9-10 * * *', 'denně v 9:05, 9:20, 9:45, 10:05, 10:20 a 10:45'],
   ['0,20,40 9,17 * * *', 'denně v 9:00, 9:20, 9:40, 17:00, 17:20 a 17:40'],
-  ['0,30 8,12,18 * * *', 'denně v 8:00, 8:30, 12:00, 12:30, 18:00 a 18:30'],
-  ['5,20,45 8,12,18 * * *',
-    'denně v 8:05, 8:20, 8:45, 12:05, 12:20, 12:45, 18:05, 18:20 a 18:45'],
+  // Three hours or more (2026-11-20): the hours are named once and the
+  // minutes said once for all of them; nine clock times were the same
+  // three minutes said three times. The rows had listed every time.
+  ['0,30 8,12,18 * * *',
+    'denně každých 30 minut, vždy po dobu jedné hodiny od 8:00, 12:00 ' +
+    'a 18:00'],
+  ['5,20,45 8,12,18 * * *', 'denně 5, 20 a 45 minut po 8:00, 12:00 a 18:00'],
   ['0,15,45 8,12,18 * * *',
-    'denně v 8:00, 8:15, 8:45, 12:00, 12:15, 12:45, 18:00, 18:15 a 18:45'],
+    'denně v 8:00, 12:00 a 18:00 a vždy 15 a 45 minut po nich'],
   ['5,20,45 8,12,18 * * 1',
-    'každé pondělí v 8:05, 8:20, 8:45, 12:05, 12:20, 12:45, 18:05, 18:20 a ' +
-    '18:45'],
+    'každé pondělí vždy 5, 20 a 45 minut po 8:00, 12:00 a 18:00'],
+  ['5,35 9,13,17 * * *', 'denně 5 a 35 minut po 9:00, 13:00 a 17:00'],
+  // Two hours are listed up to six clock times; past that the frame.
+  ['5,35 9,17 * * *', 'denně v 9:05, 9:35, 17:05 a 17:35'],
+  ['0-29/5 9,17 * * *',
+    'denně v 9:00 a 17:00 a vždy 5, 10, 15, 20 a 25 minut po nich'],
+  // Every kind of minutes under an irregular list of five hours, and
+  // under a stepped range of five (a list by the generic order): the
+  // hours are said the same way under each (2026-11-20).
+  ['5,35 1,4,9,14,18 * * *',
+    'denně 5 a 35 minut po 1:00, 4:00, 9:00, 14:00 a 18:00'],
+  ['5,20,35 1,4,9,14,18 * * *',
+    'denně 5, 20 a 35 minut po 1:00, 4:00, 9:00, 14:00 a 18:00'],
+  ['*/15 1,4,9,14,18 * * *',
+    'denně každých 15 minut, vždy po dobu jedné hodiny od 1:00, 4:00, ' +
+    '9:00, 14:00 a 18:00'],
+  ['* 1,4,9,14,18 * * *',
+    'denně každou minutu, vždy po dobu jedné hodiny od 1:00, 4:00, 9:00, ' +
+    '14:00 a 18:00'],
+  ['0-29 1,4,9,14,18 * * *',
+    'denně každou minutu v prvních 30 minutách po 1:00, 4:00, 9:00, 14:00 ' +
+    'a 18:00'],
+  ['10-40 1,4,9,14,18 * * *',
+    'denně každou minutu od 10 do 40 minut včetně po 1:00, 4:00, 9:00, ' +
+    '14:00 a 18:00'],
+  ['5-55/10 1,4,9,14,18 * * *',
+    'denně každých 10 minut od 5 do 55 minut včetně po 1:00, 4:00, 9:00, ' +
+    '14:00 a 18:00'],
+  ['*/7 1,4,9,14,18 * * *',
+    'denně každých 7 minut, vždy po dobu jedné hodiny od 1:00, 4:00, 9:00, ' +
+    '14:00 a 18:00'],
+  ['45-59 1,4,9,14,18 * * *',
+    'denně každou minutu od 45 do 59 minut včetně po 1:00, 4:00, 9:00, ' +
+    '14:00 a 18:00'],
+  ['0-42/6 1,4,9,14,18 * * *',
+    'denně každých 6 minut v prvních 43 minutách po 1:00, 4:00, 9:00, ' +
+    '14:00 a 18:00'],
+  ['0-29,45 1,4,9,14,18 * * *',
+    'denně každou minutu v prvních 30 minutách a pak ještě 45 minut po ' +
+    '1:00, 4:00, 9:00, 14:00 a 18:00'],
+  ['0,35-59 1,4,9,14,18 * * *',
+    'denně v 1:00, 4:00, 9:00, 14:00 a 18:00 a vždy každou minutu od 35 ' +
+    'do 59 minut včetně po nich'],
+  ['0-20/2,21-59/3 1,4,9,14,18 * * *',
+    'denně každé 2 minuty v prvních 21 minutách a pak každé 3 minuty od ' +
+    '21 do 57 minut včetně po 1:00, 4:00, 9:00, 14:00 a 18:00'],
+  ['15 5,35 1,4,9,14,18 * * *',
+    'denně 5 a 35 minut po 1:00, 4:00, 9:00, 14:00 a 18:00, pokaždé 15 ' +
+    'sekund po začátku minuty'],
+  ['1-58 1,4,9,14,18 * * *',
+    'denně každou minutu, vždy po dobu jedné hodiny od 1:00, 4:00, 9:00, ' +
+    '14:00 a 18:00, kromě každé celé hodiny a okamžiku 59 minut po ní'],
+  ['*/15 1,4,9,14,18 * * 1-5',
+    'od pondělí do pátku každých 15 minut, vždy po dobu jedné hodiny od ' +
+    '1:00, 4:00, 9:00, 14:00 a 18:00'],
+  ['5,35 6-18/3 * * *',
+    'denně 5 a 35 minut po 6:00, 9:00, 12:00, 15:00 a 18:00'],
+  ['*/15 6-18/3 * * *',
+    'denně každých 15 minut, vždy po dobu jedné hodiny od 6:00, 9:00, ' +
+    '12:00, 15:00 a 18:00'],
+  ['* 6-18/3 * * *',
+    'denně každou minutu, vždy po dobu jedné hodiny od 6:00, 9:00, 12:00, ' +
+    '15:00 a 18:00'],
+  ['0-29 6-18/3 * * *',
+    'denně každou minutu v prvních 30 minutách po 6:00, 9:00, 12:00, 15:00 ' +
+    'a 18:00'],
+  ['5-55/10 6-18/3 * * *',
+    'denně každých 10 minut od 5 do 55 minut včetně po 6:00, 9:00, 12:00, ' +
+    '15:00 a 18:00'],
   ['0 1 * * *', 'denně v 1:00'],
   ['0 2 * * *', 'denně ve 2:00'],
   ['0 3 * * *', 'denně ve 3:00'],
@@ -457,11 +528,11 @@ const rows = [
     'denně každou sekundu od 9:00:00 do 9:00:59, kromě 9:00:29'],
 
   // Hours as windows.
-  // (This row said all six windows until the length gate was held to
-  // Czech; five hours or more in a cadence are now said as the cadence.)
+  // (This row said all six windows, then the first two and «a tak dále»;
+  // since 2026-11-20 six hours are named once, as any list of hours.)
   ['*/15 8-18/2 * * *',
-    'denně každých 15 minut od 8:00 do 8:45, od 10:00 do 10:45 a tak dále ' +
-    'každé 2 hodiny až do 18:45'],
+    'denně každých 15 minut, vždy po dobu jedné hodiny od 8:00, 10:00, ' +
+    '12:00, 14:00, 16:00 a 18:00'],
   ['0 9-17,20,22 * * *',
     'denně každou hodinu od 9:00 do 17:00, ve 20:00 a ve 22:00'],
   ['* 9-17,20,22 * * *',
@@ -476,12 +547,13 @@ const rows = [
   ['5,20,45 9-17,22 * * *',
     'denně 5, 20 a 45 minut po každé celé hodině, od 9:05 do 17:45 a ve ' +
     '22:05, 22:20 a 22:45'],
+  // Three hours or more are named once (2026-11-20; the rows said a
+  // window for each hour).
   ['0-29 8,12,18 * * *',
-    'denně každou minutu od 8:00 do 8:29, od 12:00 do 12:29 a od 18:00 do ' +
-    '18:29'],
+    'denně každou minutu v prvních 30 minutách po 8:00, 12:00 a 18:00'],
   ['* 6,8,12,18,20 * * *',
-    'denně každou minutu od 6:00 do 6:59, od 8:00 do 8:59, od 12:00 do ' +
-    '12:59, od 18:00 do 18:59 a od 20:00 do 20:59'],
+    'denně každou minutu, vždy po dobu jedné hodiny od 6:00, 8:00, 12:00, ' +
+    '18:00 a 20:00'],
   ['0-29,45 9,17 * * *',
     'denně každou minutu od 9:00 do 9:29, v 9:45, od 17:00 do 17:29 a v ' +
     '17:45'],
@@ -665,10 +737,10 @@ const rows = [
   ['0 0 1-7 * *',
     'Spouští se od 1. do 7. dne v měsíci vždy v 0:00.',
     {form: 'sentence'}],
+  // The hours named once (2026-11-20; the row said eight windows).
   ['*/15 1,2,5,7,11,13,17,19,23 * * *',
-    'denně každých 15 minut od 1:00 do 2:45, od 5:00 do 5:45, od 7:00 do ' +
-    '7:45, od 11:00 do 11:45, od 13:00 do 13:45, od 17:00 do 17:45, od ' +
-    '19:00 do 19:45 a od 23:00 do 23:45'],
+    'denně každých 15 minut, vždy po dobu jedné hodiny od 1:00, 2:00, ' +
+    '5:00, 7:00, 11:00, 13:00, 17:00, 19:00 a 23:00'],
 
   // Added with the fifth version, after the second schedule read.
   ['0 10-5 * * *', 'denně každou hodinu od 0:00 do 5:00 a od 10:00 do 23:00'],
@@ -799,46 +871,48 @@ const rows = [
     'v každé minutě každých 15 sekund od 5 do 50 sekund po začátku minuty ' +
     'a také každých 15 sekund od 10 do 55 sekund po začátku minuty'],
 
-  // A cadence of five hours or more is said as a cadence wherever more
-  // than one minute fires in the hour, also when alone it would be a
-  // list: hour by hour, every clock time and every window is said again
-  // (fifteen windows for `* */25 */5`, which the length gate caught). At
-  // one minute the hours stay a list.
+  // A cadence of seven hours or fewer that does not tile the day is a
+  // list by the generic order, and beside several minutes the hours are
+  // named once and the minutes said once (2026-11-20). These rows had
+  // said the first hour or two windows and «a tak dále každých 5 hodin
+  // až do», with the last minute fused into the cadence's end. At one
+  // minute the hours stay clock times.
   ['*/25 */5 * * *',
-    'denně v 0:00, 0:25 a 0:50 a tak dále každých 5 hodin až do 20:50'],
+    'denně v 0:00, 5:00, 10:00, 15:00 a 20:00 a vždy 25 a 50 minut po ' +
+    'nich'],
   ['*/15 2/6 * * *',
-    'denně každých 15 minut od 2:00 do 2:45, od 8:00 do 8:45, od 14:00 do ' +
-    '14:45 a od 20:00 do 20:45'],
+    'denně každých 15 minut, vždy po dobu jedné hodiny od 2:00, 8:00, ' +
+    '14:00 a 20:00'],
   ['*/15 */5 * * *',
-    'denně každých 15 minut od 0:00 do 0:45, od 5:00 do 5:45 a tak dále ' +
-    'každých 5 hodin až do 20:45'],
+    'denně každých 15 minut, vždy po dobu jedné hodiny od 0:00, 5:00, ' +
+    '10:00, 15:00 a 20:00'],
   ['* */5 1 * *',
-    'vždy 1. dne v měsíci každou minutu od 0:00 do 0:59, od 5:00 do 5:59 ' +
-    'a tak dále každých 5 hodin až do 20:59'],
+    'vždy 1. dne v měsíci každou minutu, vždy po dobu jedné hodiny od ' +
+    '0:00, 5:00, 10:00, 15:00 a 20:00'],
   ['0 */5 * * *', 'denně v 0:00, 5:00, 10:00, 15:00 a 20:00'],
   ['* */25 */5 * * *',
-    'denně v 0:00, 0:25 a 0:50 a tak dále každých 5 hodin až do 20:50, ' +
-    'pokaždé po dobu jedné minuty každou sekundu'],
+    'denně v 0:00, 5:00, 10:00, 15:00 a 20:00 a vždy 25 a 50 minut po ' +
+    'nich, pokaždé po dobu jedné minuty každou sekundu'],
   ['5,30 */25 */5 * * *',
-    'denně v 0:00, 0:25 a 0:50 a tak dále každých 5 hodin až do 20:50, ' +
-    'pokaždé 5 a 30 sekund po začátku minuty'],
+    'denně v 0:00, 5:00, 10:00, 15:00 a 20:00 a vždy 25 a 50 minut po ' +
+    'nich, pokaždé 5 a 30 sekund po začátku minuty'],
   ['30 */25 */5 * * *',
-    'denně v 0:00:30, 0:25:30 a 0:50:30 a tak dále každých 5 hodin až do ' +
-    '20:50:30'],
+    'denně v 0:00, 5:00, 10:00, 15:00 a 20:00 a vždy 25 a 50 minut po ' +
+    'nich, pokaždé 30 sekund po začátku minuty'],
   ['5,30 * */5 * * *',
-    'denně 5 a 30 sekund po začátku každé minuty, od 0:00 do 0:59, od ' +
-    '5:00 do 5:59 a tak dále každých 5 hodin až do 20:59'],
+    'denně každou minutu, vždy po dobu jedné hodiny od 0:00, 5:00, 10:00, ' +
+    '15:00 a 20:00, pokaždé 5 a 30 sekund po začátku minuty'],
 
   // More than six clock times do not each become a window of seconds, or
   // carry a list of seconds each: the seconds are said once, after
-  // «pokaždé». Six or fewer stay as they were.
+  // «pokaždé». Six or fewer stay as they were. Over four hours the hours
+  // are named once (2026-11-20; these rows had listed twelve times).
   ['* */25 2/6 * * *',
-    'denně ve 2:00, 2:25, 2:50, 8:00, 8:25, 8:50, 14:00, 14:25, 14:50, ' +
-    '20:00, 20:25 a 20:50, pokaždé po dobu jedné minuty každou sekundu'],
+    'denně ve 2:00, 8:00, 14:00 a 20:00 a vždy 25 a 50 minut po nich, ' +
+    'pokaždé po dobu jedné minuty každou sekundu'],
   ['*/15 */25 2/6 * * *',
-    'denně ve 2:00, 2:25, 2:50, 8:00, 8:25, 8:50, 14:00, 14:25, 14:50, ' +
-    '20:00, 20:25 a 20:50, pokaždé na začátku minuty a 15, 30 a 45 sekund ' +
-    'po něm'],
+    'denně ve 2:00, 8:00, 14:00 a 20:00 a vždy 25 a 50 minut po nich, ' +
+    'pokaždé na začátku minuty a 15, 30 a 45 sekund po něm'],
   ['5,30 */25 9,17 * * *',
     'denně v 9:00, 9:25, 9:50, 17:00, 17:25 a 17:50, pokaždé 5 a 30 sekund ' +
     'po začátku minuty'],
@@ -849,8 +923,8 @@ const rows = [
   ['5,30 */25 9 * * *',
     'denně v 9:00:05, 9:00:30, 9:25:05, 9:25:30, 9:50:05 a 9:50:30'],
   ['30 */25 2/6 * * *',
-    'denně ve 2:00:30, 2:25:30, 2:50:30, 8:00:30, 8:25:30, 8:50:30, ' +
-    '14:00:30, 14:25:30, 14:50:30, 20:00:30, 20:25:30 a 20:50:30'],
+    'denně ve 2:00, 8:00, 14:00 a 20:00 a vždy 25 a 50 minut po nich, ' +
+    'pokaždé 30 sekund po začátku minuty'],
 
   // Hours that tile the day (2026-11-14): said bare from midnight, from
   // their start when they start later, with no «denně»; the minutes and

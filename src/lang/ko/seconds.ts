@@ -201,7 +201,8 @@ const rules: SecondsRule[] = [
     const {inEach, voice, work} = clock;
     const flat = hoursAndMinutes(work);
     const level = levelOf('second');
-    const closed = [words.interval, words.alsoAt].some(function ends(word) {
+    const closing = [words.interval, words.alsoAt, words.at];
+    const closed = closing.some(function ends(word) {
       return flat.body.endsWith(word);
     });
 

@@ -445,13 +445,15 @@ through midnight.
 - `0 1/2 * * *` — «o każdej nieparzystej godzinie» (parity, 4.1)
 - `0 2-22/2 * * *` — «codziennie co 2 godziny od 2:00 do 22:00» (a first
   and a last moment in the day)
-- `15,45 */4 * * *` — «codziennie 15 i 45 minut po każdej z godzin 0:00,
-  4:00, …» (hours named one by one are heard as restricted)
+- `15,45 */6 * * *` — «codziennie 15 i 45 minut po każdej z godzin 0:00,
+  6:00, …» (hours named one by one are heard as restricted)
+- `15,45 */4 * * *` — «co 4 godziny, za każdym razem 15 i 45 minut po
+  pełnej godzinie» (a step that tiles the day, 4.1)
 
 As a test a builder can apply to the finished time: with no day named,
 «codziennie» is said exactly when the time names at least one clock time
 that is not part of an «oprócz» phrase (a time, a list, an end of a
-window, «każdej z godzin 0:00, …», «rozpoczynających się o …»). A time
+window, «każdej z godzin 0:00, …»). A time
 made only of rhythms, distances and parity, with or without an exception,
 takes none.
 
@@ -813,8 +815,12 @@ Three audit readers gave 9:05, 9:20, 9:35 … 17:20, 17:35, 17:50 for the
 first row, no ring at 10:00 and one at 10:05.
 
 Hours off the beat keep both ends as real times («codziennie co 3 godziny
-od 0:30 do 21:30»). A start alone («co 3 godziny od 0:30») reads as a
-timestamp. Every other hour of the whole day is the exception: the odd
+od 1:00 do 22:00», `0 1/3 * * *`). A start alone («co 3 godziny od 1:00»)
+reads as a timestamp. "Off the beat" is said of the hour field, not of
+the clock time: `30 */3 * * *` fires at 0:30, 3:30 … 21:30, and its
+hours are 0, 3 … 21, a step that tiles the day; it is said by its step
+with the minute after it (4.1, "A step of hours that tiles the day";
+until 2026-11-20 it was «codziennie co 3 godziny od 0:30 do 21:30»). Every other hour of the whole day is the exception: the odd
 hours, and the even hours at any minute but 0, are said by parity, which
 needs neither end (4.1, from 2026-11-19; until then `1/2` and `30 */2`
 were «codziennie co 2 godziny od 1:00 do 23:00» and «… od 0:30 do
@@ -1092,8 +1098,9 @@ minute:
 | a tiling rhythm, minute 0 | bare (step 1) | «co 2 godziny» |
 | a tiling rhythm less one or two (kind 10), minute 0 | bare, «, oprócz» the clock times | «co 2 godziny, oprócz 8:00» |
 | every other hour of the whole day (the twelve odd hours; the twelve even hours with a minute or a second other than 0), and either less one or two | by parity, "Every other hour of the whole day" below: minute 0 «o każdej nieparzystej godzinie»; otherwise the distance after «każdej parzystej / nieparzystej godzinie»; «, oprócz» the clock times | «o każdej nieparzystej godzinie»; «30 minut po każdej parzystej godzinie»; «o każdej nieparzystej godzinie, oprócz 13:00» |
-| any other rhythm of five or more: one that does not tile, or a tiling one with another minute | «co N godzin od … do …» | «codziennie co 3 godziny od 0:30 do 21:30»; «codziennie co 5 godzin od 0:00 do 20:00»; «codziennie co 2 godziny od 2:00 do 22:00» |
-| that, less one or two (kind 10) | the same, «, oprócz» the clock times | «codziennie co 3 godziny od 0:30 do 21:30, oprócz 9:30» |
+| a tiling rhythm of five or more hours (steps 3 and 4) with another minute or a second, and that less one or two | the step bare, then «, za każdym razem» and the distance after «pełnej godzinie»; «, oprócz» the clock times ("A step of hours that tiles the day", below) | «co 3 godziny, za każdym razem 30 minut po pełnej godzinie»; «co 3 godziny, za każdym razem 30 minut po pełnej godzinie, oprócz 9:30» |
+| any other rhythm of five or more: one that does not tile | «co N godzin od … do …» | «codziennie co 3 godziny od 1:00 do 22:00»; «codziennie co 5 godzin od 0:00 do 20:00»; «codziennie co 2 godziny od 2:00 do 22:00» |
+| that, less one or two (kind 10) | the same, «, oprócz» the clock times | «codziennie co 2 godziny od 2:00 do 22:00, oprócz 8:00» |
 | pieces | each piece by this table, «oraz» | «codziennie co godzinę od 9:00 do 17:00 oraz o 22:00»; «codziennie o 5:00 oraz co godzinę od 9:00 do 17:00» |
 | a list | the times | «codziennie o 6:00, 8:00, 12:00, 18:00 i 20:00» |
 
@@ -1105,13 +1112,14 @@ firing to the last:
 | --- | --- | --- |
 | every | the rhythm alone; off the beat with its start (3.8) | «co 15 minut»; «co 10 minut, zaczynając 5 minut po każdej pełnej godzinie» |
 | one, a list, a run, pieces, all but one or two, a run that wraps | the rhythm, then a window for each run of hours in the linear view (a wrapping run that may stay one, 3.5, is one window); two windows «A oraz B», more «A, B oraz C» | «co 15 minut od 9:00 do 17:45 oraz od 22:00 do 22:45»; «co minutę od 9:00 do 9:59 oraz od 17:00 do 17:59»; «co 10 minut od 0:00 do 2:50 oraz od 4:00 do 23:50»; «co 10 minut od 9:05 do 9:55 oraz od 17:05 do 17:55» |
+| a list whose windows would name more than six clock times (four windows or more) | "Named hours under several minutes", below | «co 15 minut od każdej z godzin 1:00, 4:00, 9:00, 14:00 i 18:00 do 45 minut po niej» |
 | a rhythm of five or more, tiling or not, and such a rhythm less one or two | "A rhythm of hours under several minutes", below | «co 15 minut w godzinach parzystych» |
 
 Hours that are neighbours are one window: `*/15 9,10 * * *` — «codziennie
 co 15 minut od 9:00 do 10:45». A rhythm of hours with few values is a
-list of hours, so four windows: `*/15 */6 * * *` — «codziennie co 15 minut
-od 0:00 do 0:45, od 6:00 do 6:45, od 12:00 do 12:45 oraz od 18:00 do
-18:45».
+list of hours; four of them are four windows, past the line, so named:
+`*/15 */6 * * *` — «codziennie co 15 minut od każdej z godzin 0:00, 6:00,
+12:00 i 18:00 do 45 minut po niej» (until 2026-11-20 four windows).
 
 **(c) (b) less one or two.** The base exactly as (b) says it, with its
 windows from the first firing to the last (a removed value that would be
@@ -1139,8 +1147,8 @@ inside:
 | --- | --- | --- |
 | every | the hour's form | «5, 20 i 45 minut po każdej pełnej godzinie» |
 | one | real clock times in the minute's own form; pieces inside the hour joined by «oraz» | «codziennie co minutę od 9:00 do 9:29»; «codziennie co minutę od 9:00 do 9:29 oraz o 9:45»; «codziennie co 7 minut od 9:00 do 9:56»; «codziennie o 9:00, 9:10, 9:20, 9:40 i 9:50»; «codziennie co minutę od 9:00 do 9:10 oraz od 9:50 do 9:59» |
-| a list (no run of three or more); minutes a list | up to six clock times (step 1); beyond, the hour's form with «każdej z godzin …» for «każdej pełnej godzinie» | «codziennie 5, 20 i 45 minut po każdej z godzin 8:00, 12:00 i 18:00»; «codziennie o każdej z godzin 8:00, 12:00 i 18:00 oraz 15 i 45 minut później» |
-| a list; minutes not a list | real times for each hour as in the row "one", the hours joined by «oraz»; where an hour holds pieces, they are joined by «i» and the rhythm is repeated for each hour | «codziennie co minutę od 8:00 do 8:29, od 12:00 do 12:29 oraz od 18:00 do 18:29»; «codziennie co 7 minut od 9:00 do 9:56 oraz od 17:00 do 17:56»; «codziennie co minutę od 9:00 do 9:29 i o 9:45 oraz co minutę od 17:00 do 17:29 i o 17:45» |
+| a list (no run of three or more); minutes a list | up to six clock times (step 1); beyond, "Named hours under several minutes", below | «codziennie 5, 20 i 45 minut po każdej z godzin 8:00, 12:00 i 18:00»; «codziennie o każdej z godzin 8:00, 12:00 i 18:00 oraz 15 i 45 minut później» |
+| a list; minutes not a list | while the sentence names at most six clock times (a window or a stretch counts two, a moment one): real times for each hour as in the row "one", the hours joined by «oraz»; where an hour holds pieces, they are joined by «i» and the rhythm is repeated for each hour; beyond, "Named hours under several minutes", below | «codziennie co minutę od 8:00 do 8:29, od 12:00 do 12:29 oraz od 18:00 do 18:29»; «codziennie co 7 minut od 9:00 do 9:56 oraz od 17:00 do 17:56»; «codziennie co minutę od 9:00 do 9:29 i o 9:45 oraz co minutę od 17:00 do 17:29 i o 17:45»; beyond: «codziennie co minutę od 10 do 20 minut po każdej z godzin 1:00, 4:00, 9:00 i 14:00» |
 | all but one or two; minutes a list | the hour's form, «, oprócz godziny 3» | «5, 20 i 45 minut po każdej pełnej godzinie, oprócz godziny 3» |
 | a run, pieces, a run that wraps; and all but one or two when the minutes are not a list | "Inside each hour of several hours", below | «od 9:00 do 17:56: co 7 minut od każdej pełnej godziny do 56 minut po niej» |
 | a rhythm of five or more | "A rhythm of hours under several minutes", below | «15 i 45 minut po każdej parzystej godzinie» |
@@ -1262,16 +1270,34 @@ several firings each.
 
 No «codziennie» (2.5).
 
-*Any other rhythm of hours* (another step, or every other hour of part of
-the day) names its hours by the clock time each begins at, in ascending
-order; a rhythm less an hour simply names the hours that are left:
+*A step of hours that tiles the day* (0, 3 … 21 or 0, 4 … 20: a tiling
+rhythm of five or more hours other than every other hour, or that less
+one or two) is said by its step, bare, and the minutes follow once
+inside one hour, after «, za każdym razem» (from 2026-11-20; the reason
+is under "A step of hours that tiles the day", below):
 
 | Minutes | Said | Example |
 | --- | --- | --- |
-| (b) | the rhythm, «w godzinach rozpoczynających się o …» | «codziennie co 20 minut w godzinach rozpoczynających się o 0:00, 3:00, 6:00, 9:00, 12:00, 15:00, 18:00 i 21:00»; «codziennie co 15 minut w godzinach rozpoczynających się o 8:00, 10:00, 12:00, 14:00, 16:00 i 18:00» |
-| (d) | the hour's form with «każdej z godzin …» for «każdej pełnej godzinie/godziny» | «codziennie 15 i 45 minut po każdej z godzin 0:00, 4:00, 8:00, 12:00, 16:00 i 20:00» |
+| (b) | the rhythm, « przez całą godzinę» | «co 3 godziny, za każdym razem co 15 minut przez całą godzinę»; «co 4 godziny, za każdym razem co minutę przez całą godzinę» |
+| (d) | the hour's form with «pełnej godzinie/godziny» for «każdej pełnej godzinie/godziny» | «co 4 godziny, za każdym razem 15 i 45 minut po pełnej godzinie»; «co 3 godziny, za każdym razem o pełnej godzinie oraz 15 i 45 minut później»; «co 3 godziny, za każdym razem co minutę od 10 do 20 minut po pełnej godzinie»; «co 4 godziny, za każdym razem co minutę od pełnej godziny do 29 minut po niej»; «co 3 godziny, za każdym razem co 10 minut, zaczynając 5 minut po pełnej godzinie» |
+| either, with one or two of those hours missing | the same, «, oprócz godziny 9» | «co 3 godziny, za każdym razem 5 i 35 minut po pełnej godzinie, oprócz godziny 9» |
 
-With «codziennie».
+No «codziennie» (2.5). Seconds that fill the minute take the place of
+«co minutę» as everywhere: `* * */3 * * *` — «co 3 godziny, za każdym
+razem co sekundę przez całą godzinę».
+
+*Any other rhythm of hours* (a step that does not start at 0:00 or does
+not divide the day, or every other hour of part of the day) names its
+hours by the clock time each begins at, in ascending order; a rhythm less
+an hour simply names the hours that are left:
+
+| Minutes | Said | Example |
+| --- | --- | --- |
+| any | "Named hours under several minutes", below | «codziennie co 20 minut od każdej z godzin 1:00, 4:00, 7:00, 10:00, 13:00, 16:00, 19:00 i 22:00 do 40 minut po niej»; «codziennie 15 i 45 minut po każdej z godzin 1:00, 5:00, 9:00, 13:00, 17:00 i 21:00» |
+
+With «codziennie». Until 2026-11-20 minutes of class (b) took a frame of
+their own here, «w godzinach rozpoczynających się o …»; why it went is
+under "Named hours under several minutes".
 
 This is the fifth wording. «co minutę w co drugiej godzinie, od 0:00 do
 22:59» looked like one unbroken window (fluency read 1, 9). «co 2 godziny
@@ -1296,7 +1322,8 @@ Ustka «w godzinach parzystych» (gp24.pl; the page was not opened, so the
 quotation is the search engine's). Parity is said only of the whole day:
 «w godzinach parzystych od 8 do 18» would be heard to close at 18:00.
 
-*Named hours.* Bare numbers («w godzinach 8, 10 … 18») were also heard as
+*Named hours* (the history of a frame retired on 2026-11-20; see "Named
+hours under several minutes"). Bare numbers («w godzinach 8, 10 … 18») were also heard as
 moments and the last as a close (schedule read 3, 2). «w godzinach
 rozpoczynających się o 8:00, … i 18:00» names each hour by the one moment
 that is certainly inside it, so the last hour is whole. It is long (six
@@ -1316,13 +1343,146 @@ that reading has something to hold on to; with a rhythm of hours («o
 0:00, 3:00, 6:00 …») it would mean every hour, which the sentence plainly
 does not say, and the earlier judges did not report it. The form was
 therefore **not** extended to hours that are not a rhythm, and for a
-rhythm of hours it stays, with this doubt recorded against it.
+rhythm of hours it stayed, with this doubt recorded against it, until
+2026-11-20, when «każdej z godzin» with a named last firing replaced it.
 
-*Many separate hours* are therefore a window each, however many: `*/15
-1,3,6,8,11,13,16,18,20,22 * * *` is ten windows and twenty clock times.
+**A step of hours that tiles the day** (2026-11-20). `30 */3 * * *`
+was «codziennie co 3 godziny od 0:30 do 21:30»; `5,35 */3` named all
+eight hours, «5 i 35 minut po każdej z godzin 0:00, 3:00 … 21:00»;
+`*/15 */3` and `* */3` named them again after «w godzinach
+rozpoczynających się o». A reader held eight hours, or a step and two
+ends, where one step does. The hour field `*/3` begins on the day's first
+hour whatever the minutes are, so by habit 1 and the project's
+convention (README "Description Accuracy") it is said bare, «co
+3 godziny», and the minutes are said once, inside one hour. The old rows
+judged tiling by the clock time (0:30 is not the day's start) rather than
+by the hour field; the convention is about the field. Steps of three and
+four are covered; six, eight and twelve have four hours or fewer and
+stay listed (habit 4); a step that starts elsewhere (`1/3`) or does not
+divide the day (`*/5`) keeps its ends (habit 2).
+
+The form is the one Polish already had one level down, for seconds under
+a step of minutes: «co 3 minuty, za każdym razem 30 sekund po pełnej
+minucie», «co 3 minuty, za każdym razem co sekundę przez całą minutę»
+(4.2). Carried up a level: «co 3 godziny, za każdym razem 30 minut po
+pełnej godzinie»; «… 5 i 35 minut po pełnej godzinie»; «… co 15 minut
+przez całą godzinę»; «… co minutę od 10 do 20 minut po pełnej godzinie».
+After «za każdym razem» the minutes are worded exactly as for every hour,
+with «pełnej godzinie» (one hour, the notes' own «pięć po pełnej
+godzinie», §2.5, §4.5) for «każdej pełnej godzinie», as parity puts
+«parzystej» there. So the step is one object, and the minutes are what
+they would be under «co godzinę»; an edit to the minutes changes only
+what follows «za każdym razem», and minute 0 drops it («co 3 godziny»).
+
+Rejected:
+
+- *An ordinal* («30 minut po każdej trzeciej godzinie», «co trzecią
+  godzinę»). In Polish «godzina trzecia» is three o'clock, and «po
+  trzeciej» is "after three"; «po każdej trzeciej godzinie» is heard as
+  a particular hour of the day before it is heard as a step. The notes
+  give «co drugi dzień» = «co dwa dni» (§4.1) but no ordinal of hours.
+  The answers already rejected «w co trzeciej godzinie» ("which?").
+- *The minutes bare after the step* («co 3 godziny, 30 minut po pełnej
+  godzinie»). Shorter by three words, but the second phrase stands beside
+  the step as a second rule; «za każdym razem» says it applies to each
+  of the step's hours, and it is the form the language already uses for
+  this structure one level down, so one device serves both levels.
+- *A first time only* («co 3 godziny od 0:30»): a start alone reads as a
+  timestamp (3.8).
+
+Evidence. On 2026-11-20 the open web was searched for «"co 3 godziny"
+"po pełnej godzinie"», for «co trzy godziny … minut po pełnej godzinie»
+in timetables, and for «co dwie godziny» with «o pełnej godzinie» / «po
+pełnej godzinie»; the search tool again did not honour exact phrases and
+returned timetables, law texts and school pages with neither phrase
+together, so there is no attestation either way. The call rests on the
+notes (§2.5, §4.5: minutes are said from the full hour, «pięć po pełnej
+godzinie»; §9: a bare «co 2 godziny» leaves «od której?» open, which the
+convention answers), on the language's own seconds form, and on my
+judgment; the reading check is in status.json.
+
+*Many separate hours* were therefore a window each, however many: `*/15
+1,3,6,8,11,13,16,18,20,22 * * *` was ten windows and twenty clock times.
 Nobody can hold that. The audit found no shorter form with one reading
-(the named-hours form above is the candidate, and has the doubt above),
-and left it.
+and left it; the next section settles it.
+
+**Named hours under several minutes** (2026-11-20). When several hours
+that stand apart each carry the same minutes, and those minutes are more
+than one moment, the hours are named once, after «każdej z godzin», and
+the minutes are said once, in the hour's own form (as when every hour
+fires), with «każdej z godzin …» in place of «każdej pełnej godzinie /
+godziny». It applies to a list of hours past the line below and to every
+rhythm of hours that is neither the whole day's parity nor a step that
+tiles the day. The forms, for `H` = «1:00, 4:00, 9:00, 14:00 i 18:00»:
+
+| Minutes | Said |
+| --- | --- |
+| a list | «5 i 35 minut po każdej z godzin H»; «10, 20, 30 i 40 minut po każdej z godzin H» |
+| a list from the full hour; a rhythm of two values | «o każdej z godzin H oraz 15 i 45 minut później»; `0,30` — «o każdej z godzin H oraz 30 minut później» |
+| a run | «co minutę od 10 do 20 minut po każdej z godzin H»; from minute 0: «co minutę od każdej z godzin H do 29 minut po niej» |
+| a rhythm that fills the hour, every minute | both ends, the last firing named: «co 15 minut od każdej z godzin H do 45 minut po niej»; «co minutę od każdej z godzin H do 59 minut po niej»; off the beat: «co 10 minut od 5 do 55 minut po każdej z godzin H» |
+| a rhythm with a seam | «co 7 minut od każdej z godzin H do 56 minut po niej» |
+| pieces | «co minutę od każdej z godzin H do 29 minut po niej, a potem raz 45 minut po niej» |
+| less one or two | the base, «, oprócz chwili wypadającej 29 minut po niej» |
+
+Seconds follow as everywhere: a rhythm of seconds takes the place of «co
+minutę» in a stretch («co sekundę od każdej z godzin H do 59 minut i
+59 sekund po niej»), and anything else follows after «, za każdym razem».
+
+*Why.* A person reads once and holds about four things. Five windows
+that differ only in their hour («co 15 minut od 1:00 do 1:45, od 4:00 do
+4:45, …, oraz od 18:00 do 18:45») are ten clock times, and the reader has
+to find for himself the pattern the sentence never states: the same
+quarter-hours, five times. Named once, the hours are five recognisable
+clock times and the minutes one rule. The frame was already the
+language's for two or three minutes («5 i 35 minut po każdej z godzin
+…»), so the hours were said two ways depending on the minutes: an edit
+from `5,35` to `*/15` re-cast the whole time, which the frame's
+continuity forbids. Now the hours are said one way under every kind of
+minutes, and an edit to the minutes changes only the minutes' words.
+
+*Why both ends for a rhythm that fills the hour.* Under every hour «co
+15 minut» needs no ends: it never stops. Under named hours it stops in
+each, and a frame that names only where each hour begins invites the
+reading the audit found (stretches that run from one named time until
+the next). «od każdej z godzin H do 45 minut po niej» names the first
+and last firing, so no «do» is followed by more firing; it is the form
+the language already uses for a rhythm with a seam, «co 7 minut od
+każdej pełnej godziny do 56 minut po niej», and for runs, «co minutę od
+każdej pełnej godziny do 29 minut po niej», both read one way. A rhythm
+of two values (`0,30`) is said as its two moments, «o każdej z godzin H
+oraz 30 minut później»: «co 30 minut od … do 30 minut po niej» names a
+rhythm that happens once.
+
+*One frame, not two.* «w godzinach rozpoczynających się o …» (the fifth
+wording above) was kept for class (b) under a rhythm of hours, with the
+audit's doubt recorded against it, and not extended to lists for that
+doubt. It is retired: it was a second frame for the same hours, chosen
+by the kind of minutes, so `*/15 6-18/3` and `10-20 6-18/3` named the
+same hours in two different ways; and the reading it invited is closed
+by the stated last firing. «każdej z godzin» is the one frame for named
+hours.
+
+*The line.* Up to six clock times a day are listed, a window or stretch
+counting two and a moment one: two hours of two minutes («o 9:05, 9:35,
+17:05 i 17:35»), three windows («co 15 minut od 9:00 do 9:45, od 13:00
+do 13:45 oraz od 17:00 do 17:45»). This is step 1's line for two lists,
+extended by counting what is actually said; past it (three hours of
+three minutes, four windows, four hours of a run) the hours are named.
+Three windows are kept because each is read off a clock face and the
+repetition is short; four are where the reader starts counting. Five
+hours are always past the line.
+
+*Evidence* (2026-11-20). Searches of the open web for «"minut po każdej
+pełnej godzinie"» and for «"co 15 minut" "po każdej"» with clock times
+returned Wrocław's municipal timetables, which set every departure as a
+number of minutes after a named hour («… minut po godzinie 7»), the
+hour first as a container and the minutes inside it: the device this
+frame uses. No page was found with «od każdej z godzin … do … minut po
+niej» or with «w godzinach rozpoczynających się o»; the search tool did
+not honour exact phrases, so this is no attestation either way. The call
+rests on the reader's limits above, on the language's existing forms,
+and on my judgment; the reading check is in status.json.
 
 ### 4.2 Seconds
 
@@ -1338,10 +1498,14 @@ seconds:
   clock time in it shows the second: «codziennie o 9:30:15»; «codziennie
   o 9:30:15 i 17:30:15»; «od poniedziałku do piątku co 15 minut od
   9:00:30 do 17:45:30»; «codziennie co minutę od 9:00:30 do 17:59:30».
-- A bare rhythm of hours («co 2 godziny», minute 0) no longer starts with
-  its unit, so it takes its ends, or is listed when few: `15 0 */2 * *
-  *` — «codziennie co 2 godziny od 0:00:15 do 22:00:15»; `15 0 */6 * *
-  *` — «codziennie o 0:00:15, 6:00:15, 12:00:15 i 18:00:15».
+- A bare rhythm of hours keeps its step, and the second follows it as
+  a distance, the way a minute does (4.1): `15 0 */3 * * *` — «co
+  3 godziny, za każdym razem 15 sekund po pełnej godzinie»; every other
+  hour by parity, `15 0 */2 * * *` — «15 sekund po każdej parzystej
+  godzinie»; four hours or fewer are listed, `15 0 */6 * * *` —
+  «codziennie o 0:00:15, 6:00:15, 12:00:15 i 18:00:15». (Until
+  2026-11-20 the step took its first and last time, «codziennie co
+  3 godziny od 0:00:15 do 21:00:15».)
 - Every hour and one minute: minute 0, «30 sekund po każdej pełnej
   godzinie» (hours all but one or two: «…, oprócz 3:00:30»); another
   minute, «30 minut i 15 sekund po każdej pełnej godzinie». Every hour
@@ -1470,7 +1634,13 @@ has been called clumsy or stiff by every reader and read one way by every
 one (judge 1: 23, 37, 59, 66). It differs from the hour-level form that
 was read two ways (4.1): what stands before it is a rhythm of moments
 whose last is the last minute that fires, and «przez całą minutę» says
-how long each lasts. It is not to be carried up to hours.
+how long each lasts. It was first said here not to be carried up to
+hours, because the hour-level form read two ways was «co 2 godziny od
+0:00 do 22:00, za każdym razem co minutę przez całą godzinę», whose
+«do 22:00» was not the last firing. That reason is the window, not the
+frame: after a bare step that tiles the day there is no «do», and the
+frame is carried up there (4.1, "A step of hours that tiles the day",
+2026-11-20).
 
 ### 4.3 A day of the month and a weekday together
 
@@ -2407,8 +2577,7 @@ do not say, or say otherwise, is listed here with its reason.
     «miesiąca» is kept for a day under a frame of months, so the full
     tail has to be what "every month" sounds like.
 17. **«w nieparzyste dni każdego miesiąca», «w godzinach parzystych»,
-    «w godzinach rozpoczynających się o …», «chwili wypadającej …», «,
-    ale tylko»** are not in the notes, which mention parity only for
+    «chwili wypadającej …», «, ale tylko»** are not in the notes, which mention parity only for
     weeks and years and give the coincidence of a weekday and a date in
     other words (§8). Each is argued where it is used; only «w godzinach
     parzystych» was attested on 2026-11-19, and that from a search

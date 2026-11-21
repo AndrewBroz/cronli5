@@ -315,14 +315,14 @@ const rows = [
   ['0 0,1,22,23 * * 1',
     'todas as segundas às 00:00, à 01:00 e às 22:00 e 23:00'],
 
-  // Clock times: up to four moments are listed, and up to seven clock
-  // times that are not a cadence; beyond that, a window or a cadence with
-  // both ends. Hours that tile the day from midnight, three or more, are
+  // Clock times: up to four moments are listed. More, under two hours or
+  // more, are the minutes and then the hours they fall in, each said once
+  // (4.1, 2026-11-20: six clock times are three minutes said twice). Hours that tile the day from midnight, three or more, are
   // the step alone even where they are four moments.
   ['0,30 9,17 * * *', 'todos os dias às 09:00, 09:30, 17:00 e 17:30'],
   ['5,20 9,17 * * *', 'todos os dias às 09:05, 09:20, 17:05 e 17:20'],
   ['5,20,45 9,17 * * *',
-    'todos os dias às 09:05, 09:20, 09:45, 17:05, 17:20 e 17:45'],
+    'todos os dias, nos minutos 5, 20 e 45, nas horas 9 e 17'],
   ['0 9,13 * * *', 'todos os dias às 09:00 e 13:00'],
   ['30 0 * * *', 'todos os dias às 00:30'],
   ['30 0 0 * * *', 'todos os dias às 00:00:30'],
@@ -372,21 +372,35 @@ const rows = [
   ['0 5/2 * * *', 'todos os dias, a cada 2 horas das 05:00 às 23:00'],
   ['0 0-20/2 * * *', 'todos os dias, a cada 2 horas das 00:00 às 20:00'],
   ['30 5/2 * * *', 'todos os dias, a cada 2 horas das 05:30 às 23:30'],
+  // Hours on a step that does not tile the day, under more than one
+  // minute, are the hours the minutes fall in, said the same way under
+  // every kind of minutes and never fused with the minutes into clock-time
+  // ends: up to seven are named, more (every second hour) are «nas horas
+  // ímpares» with their first and last hour (4.1, 2026-11-20).
   ['15,45 5/2 * * *',
-    'todos os dias, nos minutos 15 e 45, de 2 em 2 horas, das 05:15 às ' +
-    '23:45'],
-  ['* 5/2 * * *', 'todos os dias, a cada minuto nas horas ímpares, das ' +
-    '05:00 às 23:59'],
+    'todos os dias, nos minutos 15 e 45, nas horas ímpares de 5 a 23'],
+  ['* 5/2 * * *', 'todos os dias, a cada minuto nas horas ímpares de 5 a 23'],
   ['* 5-20/3 * * *',
-    'todos os dias, a cada minuto durante uma hora, de 3 em 3 horas, das ' +
-    '05:00 às 20:59'],
+    'todos os dias, a cada minuto nas horas 5, 8, 11, 14, 17 e 20'],
   ['0-29 5/2 * * *',
-    'todos os dias, a cada minuto durante os primeiros 30 minutos, de 2 em ' +
-    '2 horas, das 05:00 às 23:29'],
+    'todos os dias, a cada minuto durante os primeiros 30 minutos, nas ' +
+    'horas ímpares de 5 a 23'],
   ['* 0-23/2 * * *', 'a cada minuto nas horas pares'],
-  ['* 0-23/6 * * *', 'a cada minuto durante uma hora, de 6 em 6 horas'],
+  // Minutes that fill each hour of a step are «durante a hora inteira»:
+  // the clock hour the step names, where «durante uma hora» was a stretch
+  // the reader had to place and close (4.1, 2026-11-21).
+  ['* 0-23/6 * * *', 'a cada minuto durante a hora inteira, de 6 em 6 horas'],
   ['*/15 1/3 * * *',
-    'a cada 15 minutos durante uma hora, de 3 em 3 horas a partir da 01:00'],
+    'a cada 15 minutos durante a hora inteira, de 3 em 3 horas a partir da ' +
+    '01:00'],
+  ['* 1/3 * * *',
+    'a cada minuto durante a hora inteira, de 3 em 3 horas a partir da 01:00'],
+  ['* */3 * * *', 'a cada minuto durante a hora inteira, de 3 em 3 horas'],
+  ['*/10 */6 * * *', 'a cada 10 minutos durante a hora inteira, de 6 em 6 horas'],
+  ['*/15 * */6 * * *',
+    'a cada 15 segundos durante a hora inteira, de 6 em 6 horas'],
+  ['* * 1/3 * * *',
+    'a cada segundo durante a hora inteira, de 3 em 3 horas a partir da 01:00'],
   ['15 0 1/2 * * *', 'de 2 em 2 horas a partir da 01:00, 15 segundos depois'],
   ['* * */2 * * *', 'a cada segundo nas horas pares'],
   ['30 * */2 * * *', 'no segundo 30 de cada minuto, nas horas pares'],
@@ -415,14 +429,15 @@ const rows = [
     'a cada minuto nas horas ímpares, exceto das 09:00 às 09:59'],
   ['0 0,3,6,12,15,18,21 * * *', 'de 3 em 3 horas, exceto às 09:00'],
   ['* 0,3,6,12,15,18,21 * * *',
-    'a cada minuto durante uma hora, de 3 em 3 horas, exceto das 09:00 às ' +
-    '09:59'],
+    'a cada minuto durante a hora inteira, de 3 em 3 horas, exceto das ' +
+    '09:00 às 09:59'],
   ['0 0-20/2 1 * *', 'no dia 1º de cada mês, a cada 2 horas das 00:00 às 20:00'],
   ['*/15 */12 * * *',
     'todos os dias, a cada 15 minutos das 00:00 às 00:45 e das 12:00 às ' +
     '12:45'],
+  // Six hours on a step that does not tile: named (4.1, 2026-11-20).
   ['*/15 8-18/2 * * *',
-    'todos os dias, a cada 15 minutos nas horas pares, das 08:00 às 18:45'],
+    'todos os dias, a cada 15 minutos nas horas 8, 10, 12, 14, 16 e 18'],
   ['*/20 */2 */2 */3 *',
     'nos dias ímpares de janeiro, abril, julho e outubro, a cada 20 minutos ' +
     'nas horas pares'],
@@ -437,13 +452,16 @@ const rows = [
   ['5,20,45 9-17,22 * * *',
     'todos os dias, nos minutos 5, 20 e 45 de cada hora, das 09:05 às ' +
     '17:45 e das 22:05 às 22:45'],
+  // Separate hours under more than one minute: the hours named once, not a
+  // window for each, which read as firing all through 09:05 to 09:45
+  // (4.1, 2026-11-20).
   ['5,20,45 9,17,22 * * *',
-    'todos os dias, nos minutos 5, 20 e 45 de cada hora, das 09:05 às ' +
-    '09:45, das 17:05 às 17:45 e das 22:05 às 22:45'],
+    'todos os dias, nos minutos 5, 20 e 45, nas horas 9, 17 e 22'],
   ['* 8,10,13,15,20 * * *',
-    'todos os dias, a cada minuto das 08:00 às 08:59, das 10:00 às 10:59, ' +
-    'das 13:00 às 13:59, das 15:00 às 15:59 e das 20:00 às 20:59'],
-  ['*/15 */3 * * *', 'a cada 15 minutos durante uma hora, de 3 em 3 horas'],
+    'todos os dias, a cada minuto nas horas 8, 10, 13, 15 e 20'],
+  // The clock hour, not a stretch of «uma hora» (4.1, 2026-11-21).
+  ['*/15 */3 * * *',
+    'a cada 15 minutos durante a hora inteira, de 3 em 3 horas'],
 
   // The article before a time is singular for hour 1 («à», «da») and plural
   // for every other hour, the zero hour included.
@@ -961,16 +979,17 @@ const rows = [
     'segundo durante o minuto inteiro'],
 
   // Runs of minutes and cadences with ends inside one hour or two are
-  // windows; with strays and two hours, the minute phrase and a window for
-  // each hour.
+  // windows; with strays and two hours, the minute phrase and the hours
+  // named once (4.1, 2026-11-20: a window for each hour, «das 09:05 às
+  // 09:20», read as firing all through it).
   ['5/5 9,17 * * *',
     'todos os dias, a cada 5 minutos das 09:05 às 09:55 e das 17:05 às ' +
     '17:55'],
   ['5-10,20 9 * * *',
     'todos os dias, a cada minuto das 09:05 às 09:10 e às 09:20'],
   ['5-10,20 9,17 * * *',
-    'todos os dias, a cada minuto do minuto 5 ao 10 e no minuto 20 de cada ' +
-    'hora, das 09:05 às 09:20 e das 17:05 às 17:20'],
+    'todos os dias, a cada minuto do minuto 5 ao 10 e no minuto 20, nas ' +
+    'horas 9 e 17'],
 
   // Hours that tile the day under minutes that are not a list: the minute
   // phrase, then «de N em N horas», never a window for each hour.
@@ -992,15 +1011,19 @@ const rows = [
     'a cada segundo durante os primeiros 30 minutos, de 2 em 2 horas'],
 
   // A list of minutes beside hours that tile the day: the list, then
-  // «de N em N horas»; beside midnight and noon alone, a window for each.
+  // «de N em N horas»; beside midnight and noon alone, the hours named
+  // (2026-11-20: a window for each read as firing all through it).
   ['5,20,45 0,8,16 * * *', 'nos minutos 5, 20 e 45, de 8 em 8 horas'],
+  // Four hours from a later start are named, as under every other kind of
+  // minutes (`*/15 1/6`), not a step here and named there (2026-11-20).
   ['15,45 1/6 * * *',
-    'todos os dias, nos minutos 15 e 45, de 6 em 6 horas a partir da 01:00'],
+    'todos os dias, nos minutos 15 e 45, nas horas 1, 7, 13 e 19'],
+  ['*/15 1/6 * * *',
+    'todos os dias, a cada 15 minutos nas horas 1, 7, 13 e 19'],
   ['5,20,35,50 */2 * * *', 'nos minutos 5, 20, 35 e 50, de 2 em 2 horas'],
   ['5,20,35,50 0,8,16 * * *', 'nos minutos 5, 20, 35 e 50, de 8 em 8 horas'],
   ['5,20,35,50 0,12 * * *',
-    'todos os dias, nos minutos 5, 20, 35 e 50 de cada hora, das 00:05 às ' +
-    '00:50 e das 12:05 às 12:50'],
+    'todos os dias, nos minutos 5, 20, 35 e 50, nas horas 0 e 12'],
 
   // Seconds under one run of minutes are said in place of «a cada minuto».
   ['* 0-29 9 * * *', 'todos os dias, a cada segundo das 09:00:00 às 09:29:59'],
@@ -1069,7 +1092,74 @@ const rows = [
   // (answers 4.1), and the row first written here had four.
   ['0 8-12 * * *', 'todos os dias, a cada hora das 08:00 às 12:00'],
   ['0 9-12 * * *', 'todos os dias às 09:00, 10:00, 11:00 e 12:00'],
-  ['0 9,12,18 * * *', 'todos os dias às 09:00, 12:00 e 18:00']
+  ['0 9,12,18 * * *', 'todos os dias às 09:00, 12:00 e 18:00'],
+
+  // The same minutes in several hours (4.1, 2026-11-20). The minutes are
+  // said once and the hours once, as the hours they fall in, «nas horas 1,
+  // 4, 9, 14 e 18», the same way under every kind of minutes; one minute
+  // alone is still a clock time in each hour. Before, the minutes were
+  // said and then a window for each hour («nos minutos 5 e 35 de cada
+  // hora, da 01:05 à 01:35, das 04:05 às 04:35, …»), read as firing all
+  // through each, or fused into the ends of a step of hours with «durante
+  // uma hora» between two rhythms.
+  ['30 1,4,9,14,18 * * *',
+    'todos os dias à 01:30 e às 04:30, 09:30, 14:30 e 18:30'],
+  ['5,35 1,4,9,14,18 * * *',
+    'todos os dias, nos minutos 5 e 35, nas horas 1, 4, 9, 14 e 18'],
+  ['5,20,35 1,4,9,14,18 * * *',
+    'todos os dias, nos minutos 5, 20 e 35, nas horas 1, 4, 9, 14 e 18'],
+  ['*/15 1,4,9,14,18 * * *',
+    'todos os dias, a cada 15 minutos nas horas 1, 4, 9, 14 e 18'],
+  ['0,30 1,4,9,14,18 * * *',
+    'todos os dias, a cada 30 minutos nas horas 1, 4, 9, 14 e 18'],
+  ['10-20 1,4,9,14,18 * * *',
+    'todos os dias, a cada minuto do minuto 10 ao 20, nas horas 1, 4, 9, ' +
+    '14 e 18'],
+  ['10-40/10 1,4,9,14,18 * * *',
+    'todos os dias, nos minutos 10, 20, 30 e 40, nas horas 1, 4, 9, 14 e ' +
+    '18'],
+  ['5/5 1,4,9,14,18 * * *',
+    'todos os dias, a cada 5 minutos, do minuto 5 ao 55, nas horas 1, 4, 9, ' +
+    '14 e 18'],
+  ['* 1,4,9,14,18 * * *',
+    'todos os dias, a cada minuto nas horas 1, 4, 9, 14 e 18'],
+  ['30 6-18/3 * * *', 'todos os dias às 06:30, 09:30, 12:30, 15:30 e 18:30'],
+  ['5,35 6-18/3 * * *',
+    'todos os dias, nos minutos 5 e 35, nas horas 6, 9, 12, 15 e 18'],
+  ['5,20,35 6-18/3 * * *',
+    'todos os dias, nos minutos 5, 20 e 35, nas horas 6, 9, 12, 15 e 18'],
+  ['*/15 6-18/3 * * *',
+    'todos os dias, a cada 15 minutos nas horas 6, 9, 12, 15 e 18'],
+  ['10-20 6-18/3 * * *',
+    'todos os dias, a cada minuto do minuto 10 ao 20, nas horas 6, 9, 12, ' +
+    '15 e 18'],
+  ['10-40/10 6-18/3 * * *',
+    'todos os dias, nos minutos 10, 20, 30 e 40, nas horas 6, 9, 12, 15 e ' +
+    '18'],
+  ['5/5 6-18/3 * * *',
+    'todos os dias, a cada 5 minutos, do minuto 5 ao 55, nas horas 6, 9, ' +
+    '12, 15 e 18'],
+  ['* 6-18/3 * * *',
+    'todos os dias, a cada minuto nas horas 6, 9, 12, 15 e 18'],
+  ['5,35 9,13,17 * * *',
+    'todos os dias, nos minutos 5 e 35, nas horas 9, 13 e 17'],
+  ['*/15 9,13,17 * * 1-5',
+    'de segunda a sexta, a cada 15 minutos nas horas 9, 13 e 17'],
+  ['5,35 9-11,15 * * *',
+    'todos os dias, nos minutos 5 e 35, nas horas 9, 10, 11 e 15'],
+  ['30 * 1,4,9,14,18 * * *',
+    'todos os dias, no segundo 30 de cada minuto, nas horas 1, 4, 9, 14 e 18'],
+  ['30 5,35 1,4,9,14,18 * * *',
+    'todos os dias, nos minutos 5 e 35, nas horas 1, 4, 9, 14 e 18, sempre ' +
+    '30 segundos depois'],
+  ['5,35 1,4,9,14,18 * * *',
+    'todos os dias, nos minutos 5 e 35, nas horas 1 e 4 da madrugada, 9 da ' +
+    'manhã e 2 e 6 da tarde',
+    {style: {hour12: true}}],
+  ['15,45 5/2 * * *',
+    'todos os dias, nos minutos 15 e 45, nas horas ímpares de 5 da ' +
+    'madrugada a 11 da noite',
+    {style: {hour12: true}}]
 ];
 
 export {rows};

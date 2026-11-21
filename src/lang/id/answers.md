@@ -233,7 +233,7 @@ language and is not written here.
   ada»; two groups of months by length (5.3).
 - **Before the months or years of the closing part**: a space. A comma
   when the time part ends in a clause of its own («kecuali …»,
-  «terakhir …», «tiap kali …»), **and after every day part that always
+  «tiap kali …», «masing-masing …»), **and after every day part that always
   takes its comma** (the list just above): the time then stands between
   two commas, and months hung on it by a space would be heard with the
   time alone, where they must govern the day too: `0 9 */3 1,7 1-5` →
@@ -246,8 +246,9 @@ language and is not written here.
   joined by «dan kecuali», no comma, only when it follows the first at
   once; with months, years or another clause between them it is «,
   kecuali» again.
-- **Order at the end of the time**: the seconds after «tiap kali» (4.2),
-  then «, terakhir pukul …», then any «kecuali» of the time.
+- **Order at the end of the time**: the seconds after «tiap kali» or
+  «masing-masing» (4.2), then any «kecuali» of the time. (A «, terakhir
+  pukul …» stood between them until 2026-11-20; 4.1 F.)
 
 ### 2.2 Adding a month, a weekday, both
 
@@ -277,9 +278,10 @@ Said when no day is named **and the time is not a rhythm that runs round
 the clock**. Round the clock, by form (no «setiap hari»): 4.1 A; «setiap
 N jam» bare or with «mulai pukul», with or without «tiap kali» or
 positions («pada menit ke-…») after it,
-as long as it has no «terakhir» and no «dari … sampai»; «pada jam genap
-/ ganjil» forms; and any of these with «kecuali» after it. Every other
-time (clock times, stretches, «setelah pukul», «terakhir») takes it.
+as long as it has no «dari … sampai»; «pada jam genap / ganjil» forms;
+and any of these with «kecuali» after it. Every other time (clock times,
+stretches, «setiap N jam dari … sampai …», single hours «mulai pukul
+01.00, 04.00, …») takes it.
 
 - `0 9 * * *` → «setiap hari pukul 09.00»
 - `0 9 * 6 *` → «setiap hari pukul 09.00 pada bulan Juni»
@@ -409,9 +411,11 @@ For **days, dates, months, years the end is always included** [notes
 bulan Juni sampai Agustus», «pada tahun 2030 sampai 2035». For **times
 an end is a limit unless it is a firing** [notes 4.2]. So **both ends of
 every stretch of time are its first and last firing**, and **no clock
-time is named that does not fire**. Three constructions name an hour's
-start that may not fire, and each marks it: «setelah pukul» (4.1 E),
-«setiap N jam mulai pukul hh.00, tiap kali …» (4.1 C, F).
+time is named that does not fire**, except an hour named as the
+container of what follows «tiap kali», which marks it: «setiap N jam
+mulai pukul hh.00, tiap kali …» (4.1 C), «mulai pukul 01.00, 04.00, …,
+tiap kali …» (4.1 E), «setiap N jam dari pukul 05.00 sampai 23.00, tiap
+kali …» (4.1 F).
 
 - `0 9-17 * * *` → «setiap hari, setiap jam dari pukul 09.00 sampai
   17.00»
@@ -669,13 +673,6 @@ Except: H tiles the day from 00.00 and M is minute 0 → the bare «setiap
   ganjil, setiap menit»; `15,45 */2 * * *` → «pada jam genap, pada menit
   ke-15 dan ke-45»; `0-29 */2 * * *` → «pada jam genap, setiap menit
   selama 30 menit pertama».
-- **Otherwise, two first times or fewer** (two minutes, each with at
-  most one second shown): the rhythm with each of its first times, all
-  of which fire: `15,45 1/3 * * *` → «setiap 3 jam mulai pukul 01.15 dan
-  01.45»; `0,30 */6 * * *` → «setiap 6 jam mulai pukul 00.00 dan
-  00.30». Positions after bare hours (the case at the end of the next
-  bullet) come first: `15,45 */6 * * *` → «setiap 6 jam pada menit ke-15
-  dan ke-45».
 - **Otherwise**: the hours once, «, tiap kali» and the phrase inside the
   hour. Hours from 00.00 are **bare**, as every rhythm that tiles its
   cycle from its start is: `* */6 * * *` → «setiap 6 jam, tiap kali
@@ -686,7 +683,12 @@ Except: H tiles the day from 00.00 and M is minute 0 → the bare «setiap
   kali»: hours from 00.00 and M values none of which is minute 0; the
   positions follow the hours directly, as they follow «setiap jam»:
   `5,10,20,30,50 */4 * * *` → «setiap 4 jam pada menit ke-5, ke-10,
-  ke-20, ke-30, dan ke-50». [audit: the second revision named «mulai
+  ke-20, ke-30, dan ke-50»; `15,45 */6 * * *` → «setiap 6 jam pada menit
+  ke-15 dan ke-45». Two minutes take the same form as any other minutes:
+  `15,45 1/3 * * *` → «setiap 3 jam mulai pukul 01.00, tiap kali pada
+  menit ke-15 dan ke-45»; `0,30 */6 * * *` → «setiap 6 jam, tiap kali
+  tepat pada jam itu serta pada menit ke-30» (2026-11-20; see "The same
+  minutes in several hours" below). [audit: the second revision named «mulai
   pukul 00.00» here because judge 2 asked which hours; that is a wish
   for a stated start, which the project's convention answers (a rhythm
   from the first hour is said bare), and it named a 00.00 that need not
@@ -707,8 +709,9 @@ Except: H tiles the day from 00.00 and M is minute 0 → the bare «setiap
   hour as «pada jam genap, setiap 15 menit»: the hours once, then what
   happens in each. So now, by how many first times there are: **one or
   two** stay first times (one series, or a pair a reader sees at once:
-  «mulai pukul 00.00 dan 00.30»); **three or four** are the hours said
-  once and the minutes in each, as five or more already were:
+  «mulai pukul 00.00 dan 00.30»; **replaced 2026-11-20**, below);
+  **three or four** are the hours said once and the minutes in each, as
+  five or more already were:
   `*/15 */6 * * *` → «setiap 6 jam, tiap kali setiap 15 menit sampai
   menit ke-45»; `*/20 */4 * * *` → «setiap 4 jam, tiap kali setiap 20
   menit sampai menit ke-40»; `0-2 */6 * * *` → «setiap 6 jam, tiap kali
@@ -748,19 +751,23 @@ view, or the wrapped run of 3.5; two hours in a row are a run):
 - **A run less one or two hours inside it**: the run, then «, kecuali»
   (3.9): `0 9-11,13-17 * * *` → «setiap hari, setiap jam dari pukul 09.00
   sampai 17.00, kecuali pukul 12.00».
-- **M tiles the hour**: the rhythm, then each piece as a stretch from its
-  first to its last firing: `*/15 9-17,22 * * *` → «setiap hari, setiap
+- **M tiles the hour, H holds a run or is two single hours** (single
+  hours only, three or more: the frame below): the rhythm, then each
+  piece as a stretch from its first to its last firing: `*/15 9-17,22 * * *` → «setiap hari, setiap
   15 menit dari pukul 09.00 sampai 17.45 dan dari pukul 22.00 sampai
   22.45». The rhythm of one minute is «setiap jam», and its single hours
   are bare times: «…setiap jam dari pukul 09.00 sampai 17.00 dan pukul
   22.00»; «…setiap jam dari pukul 09.30 sampai 17.30». An offset rhythm
   is carried by its ends: `5/15 9-17 * * *` → «…setiap 15 menit dari
   pukul 09.05 sampai 17.50».
-- **M does not tile and its instance is one stretch** (a run or a
-  rhythm), **H single hours only**: one stretch per hour under one rhythm
-  word: `0-29 8,12,18 * * *` → «…setiap menit dari pukul 08.00 sampai
-  08.29, dari pukul 12.00 sampai 12.29, dan dari pukul 18.00 sampai
-  18.29».
+- **H single hours only, M more than one moment** (beyond B's four
+  moments a day): the hours once, as starts, then «, tiap kali» and the
+  phrase inside the hour: `0-29 8,12,18 * * *` → «setiap hari, mulai
+  pukul 08.00, 12.00, dan 18.00, tiap kali setiap menit selama 30
+  menit». Two hours whose minutes are one stretch stay two stretches
+  (the bullet above: «setiap 15 menit dari pukul 09.00 sampai 09.45 dan
+  dari pukul 17.00 sampai 17.45»). See "The same minutes in several
+  hours" below.
 - **M does not tile, H holds a run**: the phrase inside the hour (with
   «setiap jam»), then a comma and **every piece, single hours included,
   from its first to its last firing**: `5,20,45 9-17,22 * * *` → «setiap
@@ -768,30 +775,117 @@ view, or the wrapped run of 3.5; two hours in a row are a run):
   sampai 17.45 dan dari pukul 22.05 sampai 22.45»; `0-29 9-17 * * 1-5` →
   «setiap Senin sampai Jumat, setiap menit selama 30 menit pertama setiap
   jam, dari pukul 09.00 sampai 17.29».
-- **M values that do not tile, H single hours only**: the positions
-  counted after the hours named: `5,20,45 8,12,18 * * *` → «setiap hari,
-  pada menit ke-5, ke-20, dan ke-45 setelah pukul 08.00, 12.00, dan
-  18.00»; with minute 0, «setiap hari pukul 08.00, 12.00, dan 18.00 serta
-  pada menit ke-15 dan ke-45 setelahnya». Both first readers wrote this
-  form unprompted; judge 2: natural.
+- **M values over single hours**: the bullet before: `5,20,45 8,12,18
+  * * *` → «setiap hari, mulai pukul 08.00, 12.00, dan 18.00, tiap kali
+  pada menit ke-5, ke-20, dan ke-45»; with minute 0, «…, tiap kali tepat
+  pada jam itu serta pada menit ke-15 dan ke-45». Until 2026-11-20 values
+  were «pada menit ke-5, ke-20, dan ke-45 setelah pukul 08.00, 12.00, dan
+  18.00» (both first readers wrote it unprompted; judge 2: natural), and
+  with minute 0 «pukul 08.00, 12.00, dan 18.00 serta pada menit ke-15 dan
+  ke-45 setelahnya». It was a good form for values, but it was the only
+  kind of minutes that had it: every other kind named each hour's
+  stretch, so the hours changed form whenever the minutes did, and
+  «setelah» cannot carry a rhythm that fires on the hour («setiap 15
+  menit setelah pukul 01.00» leaves 01.00 in doubt).
 
 **F. H is a rhythm that does not tile the day** (five hours or more):
 - M one minute: both ends: «setiap hari, setiap 2 jam dari pukul 05.00
   sampai 23.00».
-- Two first times or fewer: those and the last firing: `15,45 4/4 * *
-  *` → «setiap hari, setiap 4 jam mulai pukul 04.15 dan 04.45, terakhir
-  pukul 20.45».
-- Otherwise: «setiap N jam mulai pukul hh.00, tiap kali» the phrase
-  inside the hour «, terakhir pukul» the last firing: `0-29 5/2 * * *`
-  → «setiap hari, setiap 2 jam mulai pukul 05.00, tiap kali setiap menit selama 30 menit, terakhir pukul 23.29»;
-  `*/15 5/2 * * *` → «setiap hari, setiap 2 jam mulai pukul 05.00, tiap
-  kali setiap 15 menit sampai menit ke-45, terakhir pukul 23.45»
-  [judge 2: «terakhir pukul» is good and clear]. Until 2026-11-19 three
-  or four first times were said here too («mulai pukul 05.00, 05.15,
-  05.30, dan 05.45, terakhir pukul 23.45»), and «terakhir» then gave the
-  last of one series only; replaced with C, for the same reason [cost
-  pass]. (The first revision ended the
-  hours at «sampai 23.00»; judge 2: 23.00 or 23.29?)
+- Otherwise the same hours, said by their first and last hour, then «,
+  tiap kali» and the phrase inside the hour: `0-29 5/2 * * *` →
+  «setiap hari, setiap 2 jam dari pukul 05.00 sampai 23.00, tiap kali
+  setiap menit selama 30 menit»; `15,45 4/4 * * *` → «setiap hari,
+  setiap 4 jam dari pukul 04.00 sampai 20.00, tiap kali pada menit ke-15
+  dan ke-45»; `*/15 6-18/3 * * *` → «setiap hari, setiap 3 jam dari
+  pukul 06.00 sampai 18.00, tiap kali setiap 15 menit sampai menit
+  ke-45». The hours are those of `0 5/2 * * *` word for word, so editing
+  the minutes changes only what follows «tiap kali». The ends here are
+  hours, not firings: «tiap kali» right after them says each of those
+  hours is a container, as «mulai pukul 05.00, tiap kali» did.
+  [2026-11-20; history below]
+
+**The same minutes in several hours** (2026-11-20, by Claude Opus 5.5
+as orchestrating model; replaces the forms marked in C, E and F). When
+several hours each carry the same minutes and those minutes are more than
+one moment, the hours are said **once**, the **same way under every kind
+of minutes**, and «, tiap kali» says what happens in each of them, once
+for all:
+
+| Hours | Said | `*/15` | `5,35` |
+| --- | --- | --- | --- |
+| a step that tiles the day (C) | «setiap 3 jam», «setiap 3 jam mulai pukul 01.00» | «…, tiap kali setiap 15 menit sampai menit ke-45» | «…, tiap kali pada menit ke-5 dan ke-35» |
+| a step that does not (F) | «setiap 3 jam dari pukul 06.00 sampai 18.00» | the same | the same |
+| single hours (E) | «mulai pukul 01.00, 04.00, 09.00, 14.00, dan 18.00» | the same | the same |
+
+The phrase after «tiap kali» is the one table of 4.1 for every kind of
+minutes: «setiap menit selama 1 jam», «setiap menit selama 30 menit»,
+«setiap menit dari menit ke-10 sampai ke-40», «setiap 10 menit dari
+menit ke-5 sampai ke-55», «tepat pada jam itu serta pada menit ke-15 dan
+ke-45». Seconds follow «, masing-masing» (4.2).
+
+*Why.* A person reads once and holds about four things. `5,35
+1,4,9,14,18` was «setiap 30 menit dari pukul 01.05 sampai 01.35, dari
+pukul 04.05 sampai 04.35, …»: ten clock times and a rhythm, for what is
+two minutes in each of five hours; `*/15 1,4,9,14,18` was five stretches
+that differ only in their hour. The reader had to find the pattern the
+sentence did not state. Said once, it is five hours and one phrase.
+Under a step of hours, two minutes were fused into the rhythm's first
+times and its last firing («setiap 3 jam mulai pukul 06.05 dan 06.35,
+terakhir pukul 18.35»), and every other kind ended on «terakhir pukul
+18.45»: the minutes were said twice, and the hours changed form with
+them. Continuity asks that editing only the minutes change only what is
+said of the minutes; now it does: `0 6-18/3`, `*/15 6-18/3` and `5,35
+6-18/3` share «setiap 3 jam dari pukul 06.00 sampai 18.00».
+
+*Why «mulai pukul» for single hours.* Three wordings were read by
+isolated readers briefed only in Indonesian (two of each of two models,
+on 5 patterns each, 720 answers, 2026-11-20): «mulai pukul 01.00, …,
+tiap kali …», bare «pukul 01.00, …, tiap kali …» and «pada menit ke-5
+dan ke-35 setelah pukul 01.00, …» / «setiap 15 menit sampai menit ke-45
+setelah pukul …». Every answer of every reader was right for all three,
+probes at the named hour's start included: the readers do not choose.
+The choice is then by the language's own rules and the cost model. Bare
+«pukul 01.00» names a clock time as if it fired, which 3.4 forbids.
+«setelah» suits positions only; a rhythm that fires on the hour makes
+«setelah pukul 01.00» doubtful, and «sampai menit ke-45 setelah pukul
+01.00» joins «setelah» to the nearest words. «mulai pukul … , tiap kali»
+is what a step of hours already says («setiap 3 jam mulai pukul 01.00,
+tiap kali …»), and carries every kind of minutes. For a step that does
+not tile the day, its two ends are hours, as with one minute, rather
+than five named hours, so that a step of ten hours (`5/2`) is said the
+same way as one of five.
+
+*Threshold.* Single hours take the frame from **three hours**, and from
+two hours where the minutes are more than one stretch. Four moments a
+day or fewer stay clock times (B: «setiap hari pukul 09.05, 09.35,
+17.05, dan 17.35», four things a reader recognises). Two hours whose
+minutes are one stretch stay two stretches (four ends, under one
+rhythm: «setiap 15 menit dari pukul 09.00 sampai 09.45 dan dari pukul
+17.00 sampai 17.45»); a third stretch is six ends, past what a reader
+holds. One minute under several hours is untouched (five clock times,
+one per hour, or «setiap 3 jam dari pukul 06.30 sampai 18.30»).
+
+*Evidence and its limits.* Web searches (2026-11-20) for «pada menit
+ke-15 dan ke-45», «menit ke-30 setiap jam», «menit setelah pukul» with
+«setiap jam», and «setiap 15 menit» with an hour's window found no
+Indonesian page using any of them: the open web has no attested way to
+say the same minutes in several named hours, which Indonesian timetables
+do by listing departures. The frame is built from the language's own
+forms («mulai pukul», «tiap kali», 4.1 C), and rests on judgment and on
+the readers above. The 38 rows changed or added for it were then read
+as rendered (same prompt and probes as `tooling/scripts/reading/run.mjs`,
+two readers each of two models, 1352 answers): none was answered
+wrongly, so there was nothing for `recheck.mjs` to ask again. [least
+sure: «mulai pukul» before a list of hours; a native reader should
+confirm]
+
+*Rejected.* «pada jam 1, 4, 9, 14, dan 18, …» on the model of «pada jam
+genap»: «jam 9» is also nine o'clock, and it breaks «pukul» with two
+digits (1.2). The cost pass's reason for keeping two first times
+(«setiap 8 jam mulai pukul 00.00 dan 00.30» is 10 to 16 syllables
+shorter than «setiap 8 jam, tiap kali tepat pada jam itu serta pada
+menit ke-30») is true and is outweighed: the short form says the hours
+one way for two minutes and another for three.
 
 **Hours that are runs and rhythms together** (order of choice, rule 10)
 **on one minute** are stretches, each with its own rhythm word: `0
@@ -804,10 +898,13 @@ looked at again with the form of 4.1 C that names the hours once; that
 form needs hours that are a step, or few, and these are neither (sixteen
 hours in eight runs), so it is still open]
 
-**M in pieces over single hours** (E, no run of hours): each hour's
-instance in one list: `0-29,45 8,12 * * *` → «setiap hari, setiap menit
-dari pukul 08.00 sampai 08.29, pukul 08.45, dari pukul 12.00 sampai
-12.29, dan pukul 12.45».
+**M in pieces over single hours** (E, no run of hours): the hours once
+and the pieces after «tiap kali»: `0-29,45 8,12 * * *` → «setiap hari,
+mulai pukul 08.00 dan 12.00, tiap kali setiap menit selama 30 menit dan
+pada menit ke-45». (Until 2026-11-20 each hour's instance in one list:
+«…dari pukul 08.00 sampai 08.29, pukul 08.45, dari pukul 12.00 sampai
+12.29, dan pukul 12.45».) One hour keeps its instance (the table at the
+top of 4.1).
 
 An exception inside M over several hours follows everything else: as
 clock times when one or two moments are left out, else by position
@@ -871,12 +968,10 @@ and «setiap jam, setiap detik sampai detik ke-59»].
    seconds follow **«, masing-masing»** instead: `30 * */6 * * *` →
    «setiap 6 jam, tiap kali setiap menit selama 1 jam, masing-masing
    pada detik ke-30» [audit: the first build said «tiap kali» twice].
-   **«, terakhir pukul» comes after the seconds and carries the last
-   second that fires**: `30 0-29 5/2 * * *` → «setiap hari, setiap 2 jam
-   mulai pukul 05.00, tiap kali setiap menit selama 30 menit,
-   masing-masing pada detik ke-30, terakhir pukul 23.29.30» [audit: the
-   first build ended «…, terakhir pukul 23.29, tiap kali pada detik
-   ke-30», where 23.29.00 does not fire].
+   `30 0-29 5/2 * * *` → «setiap hari, setiap 2 jam dari pukul 05.00
+   sampai 23.00, tiap kali setiap menit selama 30 menit, masing-masing
+   pada detik ke-30». (Until 2026-11-20 this ended «, terakhir pukul
+   23.29.30», the last firing; 4.1 F no longer says one.)
 
    One second after minutes not said with clock times is the first
    bullet's form: «setiap 15 menit, tiap kali pada detik ke-30»; under
@@ -1170,8 +1265,8 @@ Jumat (2), Sabtu (2), Minggu (2). Short forms are written only.
 
 6.5 Function words: setiap (3), tiap kali (4), masing-masing (4), pukul
 (2), tanggal (2), pada (2), dari (2), sampai (2), selama (3), pertama (3), dan (1), dan
-juga (3), serta (2), atau (3), kecuali (3), mulai (3), terakhir (3),
-tepat (2), setelah (3), keduanya (4), semuanya (4), digeser ke (4), yang
+juga (3), serta (2), atau (3), kecuali (3), mulai (3), terakhir (3,
+for days only since 2026-11-20), tepat (2), keduanya (4), semuanya (4), digeser ke (4), yang
 jatuh pada (5), jika (2). The full list is the lexicon.
 
 ## 7. Agreement
@@ -1253,9 +1348,10 @@ saat sistem dinyalakan.» Unrecognised: «pola cron yang tidak dikenali».
    usual (3.7).
 10. **Things the notes do not cover**, built here on their means; none
     has been read in its present form: «pada jam genap, …»; «setiap N jam
-    mulai pukul» with its first times, «tiap kali» and «terakhir
-    pukul»; lengths («selama 1 menit», «selama 30 menit pertama»,
-    «selama menit pertama»); «setiap jam tepat»; «setelah pukul»; «, dan
+    mulai pukul» with its first times and «tiap kali»; «mulai pukul
+    01.00, 04.00, …, tiap kali» (4.1, 2026-11-20); lengths («selama 1
+    menit», «selama 30 menit pertama», «selama menit pertama»); «setiap
+    jam tepat»; «, dan
     juga»; «, keduanya pada» and «, semuanya pada»; «setiap tahun ke-N
     sesudahnya»; the moved date as a closing clause.
 
@@ -1301,7 +1397,9 @@ this rule book was silent. Each is now a rule, as built unless marked
    2026-11-19 (4.1 C): three or four first times from two minutes or
    more are the hours once, the seconds after «masing-masing» («setiap 6
    jam, tiap kali tepat pada jam itu serta pada menit ke-30,
-   masing-masing pada detik ke-15 dan ke-45»).
+   masing-masing pada detik ke-15 dan ke-45»). **Changed** again 2026-11-20: two
+   first times from two minutes are the hours once too (4.1, "The same
+   minutes in several hours").
 8. Seconds in minute 0 of every hour, other shapes: «setiap 10 detik
    mulai detik ke-5 selama menit pertama setiap jam»; values with second
    0, «setiap jam tepat serta pada detik ke-20 dan ke-50 menit pertama».
@@ -1359,6 +1457,18 @@ same kind stand beside the rule they explain.)
   revision said «setiap 2 jam, setiap menit sampai menit ke-59» (judge
   2: which hours is unsaid, and 0 to 59 is not seen as the whole hour,
   so it reads as every minute, always).
+
+- **4.1, the same minutes in several hours** (replaced 2026-11-20).
+  Single hours: values «pada menit ke-5, ke-20, dan ke-45 setelah pukul
+  08.00, 12.00, dan 18.00», with minute 0 «pukul 08.00, … serta pada
+  menit ke-15 dan ke-45 setelahnya», and every other kind one stretch
+  per hour («setiap 30 menit dari pukul 01.05 sampai 01.35, dari pukul
+  04.05 sampai 04.35, …»). Steps of hours: two minutes as first times
+  («setiap 3 jam mulai pukul 01.15 dan 01.45»; «setiap 4 jam mulai pukul
+  04.15 dan 04.45, terakhir pukul 20.45»), other kinds ending on the last
+  firing («setiap 2 jam mulai pukul 05.00, tiap kali …, terakhir pukul
+  23.45»). Each said the hours a different way for each kind of minutes,
+  and the last two said the minutes twice.
 
 - **4.2 Seconds.** «, masing-masing … sepanjang menit itu» (first draft:
   «menit itu» after «15 menit» can be all fifteen [schedule read]); «,

@@ -45,6 +45,11 @@ interface Level {
   // The word that opens a filled stretch: «щохвилини».
   every: string;
   face: Face;
+  // The fewest slots named once, after «після», with what fires inside
+  // them said once before them.
+  framed: number;
+  // Whether a stretch to the end of the slot may be its last so many.
+  fromEnd: boolean;
   // A whole slot, filled: «протягом години».
   forA: string;
   // The seconds a firing of one value runs from and to.
@@ -258,7 +263,7 @@ function counted(count: number, level: Level): string {
 // A run inside the slot: its first so many, its last so many, or from
 // one place to another.
 function stretchOf(range: Describing<'range'>, level: Level): string {
-  if (range.to === cycle.max && range.from > 0) {
+  if (range.to === cycle.max && range.from > 0 && level.fromEnd) {
     return [
       words.throughout, words.last, counted(cycle.max + 1 - range.from, level)
     ].join(' ');
@@ -348,12 +353,10 @@ const steppedLeads: Table<Stepped, string[], [Level]> = {
   values: () => []
 };
 
-// The stretches of slots that windows are said for: a cadence is one,
-// from its first slot to its last.
+// The stretches of slots that windows are said for. A cadence of slots
+// never has windows: it is said as its cycle or named once.
 function stretches(coarse: Described, level: Level): number[][] {
-  return coarse.kind === 'cadence' ?
-    [[coarse.start, coarse.last]] :
-    runsOf(walk(coarse, level.slots), level.slots);
+  return runsOf(walk(coarse, level.slots), level.slots);
 }
 
 // Each stretch of slots from its first firing to its last.
@@ -380,6 +383,13 @@ function led(coarse: SetDescription, fine: Fine, level: Level): Said {
     !whole);
 }
 
+// A filled stretch or a running cadence in named slots: from the fewest
+// framed, the slots are named once; fewer, each is a window.
+function ledInSlots(coarse: ValuesDescription, fine: Fine, level: Level) {
+  return [led, namedOnce][Number(coarse.values.length >= level.framed)](
+    coarse, fine, level);
+}
+
 function onTheCycle(coarse: SetDescription, fine: Fine, level: Level): Said {
   return said(level.cycle, false);
 }
@@ -404,11 +414,8 @@ function timesIn(slots: number[], fine: Fine, level: Level): Said {
 function positioned(coarse: Plain, fine: Fine, level: Level): Said {
   const position = positionsOf(fine, level);
   const slots = walk(coarse, level.slots);
-  const lead = coarse.kind === 'cadence' ?
-    everyN(coarse.interval, units.hour) :
-    level.lead;
   const head = fine.description.kind === 'values' ?
-    `${lead} ${position}` :
+    `${level.lead} ${position}` :
     anchored(position, [level.each, `${words.afterStartOf} ${level.each}`]);
 
   if (slots.length * fine.values.length <= 6) {
@@ -444,25 +451,34 @@ function byParity(coarse: Described, fine: Fine, level: Level): Said {
   false);
 }
 
-// What happens each time a long cadence of slots fires, or every other
-// slot by its parity.
+// What happens each time a long cadence of slots that tiles the cycle
+// fires, or every other slot by its parity; the slots of one that does
+// not tile it are named.
 function eachTimeOrParity(
   coarse: Described,
   fine: Fine,
   level: Level
 ): Said {
-  return (level.paired ? byParity : eachTime)(coarse, fine, level);
+  const form = [eachTime, byParity][Number(level.paired)];
+
+  return [namedOnce, form][Number(level.tiled ||
+    walk(coarse, level.slots).length < level.framed)](coarse, fine, level);
 }
 
-// A cadence of slots said by the cycle words is said as every slot is.
-function tiledOr<C extends Described>(
-  form: (coarse: C, fine: Fine, level: Level) => Said
-) {
-  return function onTheBeat(coarse: C, fine: Fine, level: Level): Said {
-    return level.tiled ?
-      build(fine, {kind: 'all'}, level) :
-      form(coarse, fine, level);
-  };
+// A cadence of slots said by the cycle words is said as every slot is;
+// any other is named.
+function tiledOr(coarse: Described, fine: Fine, level: Level): Said {
+  return level.tiled ?
+    build(fine, {kind: 'all'}, level) :
+    namedOnce(coarse, fine, level);
+}
+
+// One value in every clock time of a cadence of slots, or as every slot
+// where the cycle words say it.
+function tiledOrPoints(coarse: Some, fine: Fine, level: Level): Said {
+  return level.tiled ?
+    build(fine, {kind: 'all'}, level) :
+    points(coarse, fine, level);
 }
 
 // Slots that are not every slot.
@@ -555,30 +571,56 @@ function countsFrom(named: ValuesDescription, level: Level): string {
   return [countsOnly(named, level), ...carried, level.afterStart].join(' ');
 }
 
-// A list of counts in named slots: in one slot, or as six clock times or
-// fewer, they are listed; more are the counts after the slots, and where
-// the list holds the slot's own start, the slots are said first and the
-// rest follows after each of them.
-function countsInSlots(slots: number[], fine: Fine, level: Level): Said {
-  const starts = slots.map(function start(slot) {
-    return startOf(slot, 0, level);
+// Slots named once: «1:00, 4:00 та 9:00». A cadence of more than five is
+// its first three and «і так далі до» its last, as days are.
+function slotNames(coarse: Described, level: Level): string {
+  const names = walk(coarse, level.slots).map(function write(slot) {
+    return clock(startOf(slot, 0, level), level.face);
   });
+  const series = coarse.kind === 'cadence' && names.length > 5;
+
+  return [
+    list(names),
+    [
+      `${names.slice(0, 3).join(', ')}`, words.andSoOn, words.until,
+      names[names.length - 1], words.inclusive
+    ].join(' ')
+  ][Number(series)];
+}
+
+// The slots named once, and what fires inside them said once: a list of
+// counts before «після» and the slots, or, where the list holds the
+// slot's own start, the slots first and the rest after each of them;
+// anything else in its own words before «після» and the slots, a stretch
+// to the slot's end counted, since «after» a moment has no last minutes.
+function namedOnce(coarse: Described, fine: Fine, level: Level): Said {
+  const names = slotNames(coarse, level);
+  const counts = fine.description.kind === 'values';
+  const sharp = counts && fine.values[0] === 0;
+  const position = [
+    positionsOf(fine, {...level, fromEnd: false}),
+    countsAfter(fine.values, level)
+  ][Number(counts)];
+
+  return said(sharp ?
+    [
+      `${words.at} ${names}${','.repeat(Number(names.endsWith(
+        words.inclusive)))}`, words.andPiece,
+      countsAfter(fine.values.slice(1), level), level.afterEach
+    ].join(' ') :
+    [position, words.after, names].join(' '), true);
+}
+
+// A list of counts in one or two named slots, as six clock times or
+// fewer, is listed; more are named once.
+function countsInSlots(coarse: ValuesDescription, fine: Fine, level: Level) {
+  const slots = coarse.values;
 
   if (slots.length === 1 || fine.values.length * slots.length <= 6) {
     return timesIn(slots, fine, level);
   }
 
-  return said(fine.values[0] === 0 ?
-    [
-      at(starts, level), words.andPiece,
-      countsAfter(fine.values.slice(1), level), level.afterEach
-    ].join(' ') :
-    [
-      countsAfter(fine.values, level), words.after,
-      list(starts.map(function write(moment) {
-        return clock(moment, level.face);
-      }))
-    ].join(' '), true);
+  return namedOnce(coarse, fine, level);
 }
 
 // The lead of each stretch said in named slots: one for them all,
@@ -597,8 +639,9 @@ function leadsOf(fine: Fine, level: Level) {
   };
 }
 
-// Named slots: a list of counts is said with the slots; anything else is
-// said slot by slot, as windows.
+// Named slots: from the fewest framed, named once; fewer, a list of
+// counts is said with the slots and anything else slot by slot, as
+// windows.
 function inNamedSlots(
   coarse: ValuesDescription,
   fine: Fine,
@@ -606,8 +649,12 @@ function inNamedSlots(
 ): Said {
   const slots = coarse.values;
 
+  if (slots.length >= level.framed) {
+    return namedOnce(coarse, fine, level);
+  }
+
   if (fine.description.kind === 'values') {
-    return countsInSlots(slots, fine, level);
+    return countsInSlots(coarse, fine, level);
   }
 
   // Runs and cadences together are said once for several slots.
@@ -733,11 +780,11 @@ const forms: {[fine in FineClass]: Table<Described, Said, [Fine, Level]>} =
     except: eachTimeOrLeftOut,
     pieces: led,
     range: led,
-    values: led
+    values: ledInSlots
   },
   list: {
     all: positioned,
-    cadence: tiledOr(positioned),
+    cadence: tiledOr,
     cadencePieces: eachTime,
     except: stretchesLeftOut,
     pieces: positioned,
@@ -755,7 +802,7 @@ const forms: {[fine in FineClass]: Table<Described, Said, [Fine, Level]>} =
   },
   single: {
     all: positioned,
-    cadence: tiledOr(points),
+    cadence: tiledOrPoints,
     cadencePieces: steppedPoints,
     except: slotsLeftOut,
     pieces: points,
@@ -764,7 +811,7 @@ const forms: {[fine in FineClass]: Table<Described, Said, [Fine, Level]>} =
   },
   zero: {
     all: onTheCycle,
-    cadence: tiledOr(points),
+    cadence: tiledOrPoints,
     cadencePieces: steppedPoints,
     except: slotsLeftOut,
     pieces: points,
@@ -813,6 +860,8 @@ function minuteLevel(
     afterStart: words.afterHourStart,
     every,
     face,
+    framed: 3,
+    fromEnd: true,
     hi,
     lo,
     scale: 60,
@@ -832,6 +881,8 @@ function secondLevel(face: Face): Level {
     every: words.everySecond,
     face,
     forA: words.forAMinute,
+    framed: Infinity,
+    fromEnd: true,
     hi: 0,
     lead: words.everyMinute,
     lo: 0,
@@ -968,6 +1019,12 @@ function takesTheLead(spanned: Said, lead: string): boolean {
   });
 }
 
+// Whether the hours are three or more named once, before which two
+// minutes are two places, as they are after a cadence of hours.
+function severalNamed(hours: Described): boolean {
+  return hours.kind === 'values' && hours.values.length >= 3;
+}
+
 /** The time part of a description, for hours already chosen. */
 function timeOf(
   facts: ScheduleFacts,
@@ -984,7 +1041,7 @@ function timeOf(
   // them are two places.
   const beat = isBeat(hours);
   const minutes = fineOf(facts, 'minute',
-    {except: !beat, lenient: true, pair: !beat});
+    {except: !beat, lenient: true, pair: !beat && !severalNamed(hours)});
   const eachSeconds =
     fineOf(facts, 'second', {except: false, lenient: false, pair: false});
   const bySecond = secondLevel({hour12, seconds: last > 0});

@@ -36,6 +36,10 @@ export interface Lead {
   before: string;
   // Before a bare rhythm: nothing, «짝수 시에», «…시대에».
   onto: string;
+  // Whether the unit is a moment that recurs («3시간마다»), not hours to
+  // fill: what happens in it then says where it starts and stops, and
+  // marks end in «에».
+  held?: boolean;
 }
 
 /** Where a bracket's exception stands. */
@@ -134,11 +138,12 @@ function progress(form: Described, level: Level, voice: Voice): string {
 function inside(form: Described, level: Level, lead: Lead, voice: Voice):
   string {
   const base = baseOf(form);
-  const step = voice.bare && stepOf(base, level.domain);
+  const step = voice.bare && !lead.held && stepOf(base, level.domain);
+  const after = lead.held && base.kind === 'values' && words.at || '';
 
   return step ?
     join(lead.onto, rhythm(step, level.unit, voice)) :
-    join(lead.before, progress(base, level, voice));
+    `${join(lead.before, progress(base, level, voice))}${after}`;
 }
 
 /**

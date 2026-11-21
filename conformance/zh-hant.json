@@ -3639,13 +3639,6 @@
    "pattern": "15,45 */6 * * *"
   },
   {
-   "expected": "每天0、4、8、12、16、20時的05、10、20、30、50分",
-   "options": {
-    "lang": "zh-Hant"
-   },
-   "pattern": "5,10,20,30,50 */4 * * *"
-  },
-  {
    "expected": "每天 00:00～00:45、12:00～12:45，每15分鐘一次",
    "options": {
     "lang": "zh-Hant"
@@ -3742,6 +3735,125 @@
     "lang": "zh-Hant"
    },
    "pattern": "7 4-22/6 1 */2 *"
+  },
+  {
+   "expected": "每3小時的30分",
+   "options": {
+    "lang": "zh-Hant"
+   },
+   "pattern": "30 */3 * * *"
+  },
+  {
+   "expected": "每4小時的30分",
+   "options": {
+    "lang": "zh-Hant"
+   },
+   "pattern": "30 */4 * * *"
+  },
+  {
+   "expected": "每3小時的05、35分",
+   "options": {
+    "lang": "zh-Hant"
+   },
+   "pattern": "5,35 */3 * * *"
+  },
+  {
+   "expected": "每4小時的15、45分",
+   "options": {
+    "lang": "zh-Hant"
+   },
+   "pattern": "15,45 */4 * * *"
+  },
+  {
+   "expected": "每4小時的05、10、20、30、50分",
+   "options": {
+    "lang": "zh-Hant"
+   },
+   "pattern": "5,10,20,30,50 */4 * * *"
+  },
+  {
+   "expected": "每3小時的00、20、40分",
+   "options": {
+    "lang": "zh-Hant"
+   },
+   "pattern": "0,20,40 */3 * * *"
+  },
+  {
+   "expected": "每3小時，整個小時內每15分鐘一次",
+   "options": {
+    "lang": "zh-Hant"
+   },
+   "pattern": "*/15 */3 * * *"
+  },
+  {
+   "expected": "每4小時，整個小時內每10分鐘一次",
+   "options": {
+    "lang": "zh-Hant"
+   },
+   "pattern": "*/10 */4 * * *"
+  },
+  {
+   "expected": "每3小時的10分至20分內每分鐘一次",
+   "options": {
+    "lang": "zh-Hant"
+   },
+   "pattern": "10-20 */3 * * *"
+  },
+  {
+   "expected": "每4小時的00分至29分內每分鐘一次",
+   "options": {
+    "lang": "zh-Hant"
+   },
+   "pattern": "0-29 */4 * * *"
+  },
+  {
+   "expected": "每3小時的05分至55分內每10分鐘一次",
+   "options": {
+    "lang": "zh-Hant"
+   },
+   "pattern": "5-55/10 */3 * * *"
+  },
+  {
+   "expected": "每4小時的00分至56分內每7分鐘一次",
+   "options": {
+    "lang": "zh-Hant"
+   },
+   "pattern": "*/7 */4 * * *"
+  },
+  {
+   "expected": "每3小時，整個小時內每分鐘一次",
+   "options": {
+    "lang": "zh-Hant"
+   },
+   "pattern": "* */3 * * *"
+  },
+  {
+   "expected": "每4小時，整個小時內每分鐘一次",
+   "options": {
+    "lang": "zh-Hant"
+   },
+   "pattern": "* */4 * * *"
+  },
+  {
+   "expected": "每3小時的00分15秒",
+   "options": {
+    "lang": "zh-Hant"
+   },
+   "pattern": "15 0 */3 * * *"
+  },
+  {
+   "expected": "每週一至週五，每3小時，整個小時內每15分鐘一次",
+   "options": {
+    "lang": "zh-Hant"
+   },
+   "pattern": "*/15 */3 * * 1-5"
+  },
+  {
+   "expected": "每3小時的15、45分",
+   "options": {
+    "lang": "zh-Hant-HK"
+   },
+   "pattern": "15,45 */3 * * *"
   },
   {
    "expected": "每小時整點（03:00 除外）",
@@ -4262,7 +4374,7 @@
    "pattern": "0 1/2,4 * * *"
   },
   {
-   "expected": "每天 00:30 起每3小時一次，另加 13:30",
+   "expected": "每3小時的30分，另加 13:30",
    "options": {
     "lang": "zh-Hant"
    },
@@ -4304,7 +4416,7 @@
    "pattern": "15,45 0-16/2,19 * * *"
   },
   {
-   "expected": "每天0、4、8、12、16、20時的05、20、45分，13、14時亦同",
+   "expected": "每4小時的05、20、45分，13、14時亦同",
    "options": {
     "lang": "zh-Hant"
    },

@@ -7,13 +7,13 @@
 import type {
   CadenceDescription, CadencePieces, RangeDescription, SetDescription
 } from '../../core/schedule.js';
-import type {Clock} from './clock.js';
-import {between, clock} from './clock.js';
+import type {Clock, Opening} from './clock.js';
+import {at, between, clock} from './clock.js';
 import type {CzechStyle} from './options.js';
 import type {Described} from './sets.js';
 import {
   cadenceCount, comesRound, counted, enoughForARun, everyUnit, listed,
-  ofKind, partsJoiner, runsOf, shortList, spaced
+  ofKind, partsJoiner, runsOf, shortList, spaced, stretchOf
 } from './sets.js';
 import lexicon from './lexicon.js';
 
@@ -21,6 +21,7 @@ const {hourParity, units, words} = lexicon;
 
 const lastMinute = 59;
 const halfPast = 30;
+const mostListedTimes = 6;
 
 // The step of the even and the odd hours.
 const stepOfTwo = 2;
@@ -217,7 +218,7 @@ function removedHours(tiling: Tiling, minutes: Clock, shown: {
   const {second, style} = shown;
 
   const times = minutes.values.length === 1 &&
-    spaced(words.except, listed(removed.map(function at(hour) {
+    spaced(words.except, listed(removed.map(function onClock(hour) {
       return clock([hour, minute, ...second], style);
     })));
 
@@ -250,4 +251,129 @@ function tiledHead(tiling: Tiling, minutes: Clock, shown: {
       .join(', ');
 }
 
-export {removedHours, tiledHead, tilingOf};
+/**
+ * The hours named once, or null: a list of hours beside more than one
+ * minute, from three hours, or in two hours where a
+ * list of minutes that is no rhythm would make more than six clock times.
+ */
+function namedOf(hours: Clock, minutes: Clock): number[] | null {
+  const {form} = minutes;
+  const many = hours.values.length > 2 ||
+    form.kind === 'values' && !minutes.step &&
+    form.values.length * hours.values.length > mostListedTimes;
+
+  return hours.form.kind === 'values' && hours.values.length > 1 &&
+    minutes.values.length > 1 && many && hours.values || null;
+}
+
+// A run of minutes before hours named once: the first minutes after
+// each, or from one place to another.
+function runSpan(from: number, to: number): string {
+  return !from && spaced(words.inTheFirst, String(to + 1),
+    words.minutesLocative) ||
+    spaced(words.from, String(from), words.to, String(to),
+      units.minute.many, words.inclusive);
+}
+
+// Pieces of minutes before hours named once: each run or cadence with
+// its stretch (the first rhythm once among runs alone, each its own where
+// cadences sit among them), and single minutes after «ještě».
+function piecesOnce(found: CadencePieces): string {
+  const {parts} = found;
+  const own = found.kind === 'cadencePieces';
+  const firstRun = parts.findIndex(function isRun(part) {
+    return part.kind === 'range';
+  });
+
+  return parts.map(function part(each, index) {
+    const {first, last, step} = each.kind !== 'values' &&
+      stretchOf(each as CadenceDescription) || {first: 0, last: 0, step: 0};
+
+    return step && spaced(
+      (own || index === firstRun) && everyUnit(step, units.minute) || '',
+      runSpan(first, last)) || singlesOnce(each, index);
+  }).filter(Boolean).join(` ${partsJoiner(parts)} `);
+}
+
+// Single minutes among pieces, after «ještě» when they follow another
+// part; the full hour is said by the named hours.
+function singlesOnce(part: CadencePieces['parts'][number], index: number):
+  string {
+  const later = (part as {values: number[]}).values.filter(Boolean);
+
+  return later.length && spaced(index && words.still || '',
+    counted(later, units.minute)) || '';
+}
+
+/**
+ * The minutes said once before hours named once: so many minutes after
+ * each hour, or a stretch of minutes from each. `rhythm` is what every
+ * minute of a stretch is said as.
+ */
+function namedHead(hours: number[], minutes: Clock, shown: {
+  rhythm: string;
+  style: CzechStyle;
+}): {opening: Opening; text: string} {
+  const {rhythm, style} = shown;
+  const named = listed(hours.map(function onTheHour(hour) {
+    return clock([hour, 0], style);
+  }));
+  const after = spaced(words.after, named);
+  const onTheHours = at(hours.map(function full(hour) {
+    return [hour, 0];
+  }), style);
+  const through = `, ${spaced(words.always, words.forOneHour, words.from,
+    named)}`;
+
+  function plain(text: string): {opening: Opening; text: string} {
+    return {opening: '', text};
+  }
+
+  function said(found: Described): {opening: Opening; text: string} {
+    const cadence = found as CadenceDescription;
+    const run = found as RangeDescription;
+    const values = (found as {values: number[]}).values || [];
+    const later = values.filter(Boolean);
+    const kinds: {[kind: string]: () => {opening: Opening; text: string}} = {
+      all: () => plain(rhythm + through),
+      cadence: () => plain(
+        !cadence.start && cadence.last + cadence.interval > lastMinute &&
+          everyUnit(cadence.interval, units.minute) + through ||
+        spaced(everyUnit(cadence.interval, units.minute),
+          runSpan(cadence.start, cadence.last), after)),
+      except: () => {
+        const base = said((found as {base: Described}).base);
+
+        return {
+          ...base,
+          text: `${base.text}, ${
+            removedApart((found as {removed: number[]}).removed)}`
+        };
+      },
+      pieces: () => {
+        const {parts} = found as {parts: CadencePieces['parts']};
+        // The full hour among them is the named hours themselves, and
+        // the rest is said after them.
+        const full = parts[0].kind === 'values' && !parts[0].values[0];
+
+        return plain(spaced(full && spaced(onTheHours, words.and,
+          words.always) || '', piecesOnce(found as CadencePieces),
+        full && words.afterThem || after));
+      },
+      range: () => plain(spaced(rhythm, runSpan(run.from, run.to), after)),
+      values: () => minutes.tiles && found === minutes.form &&
+        plain(everyUnit(minutes.step, units.minute) + through) ||
+        !values[0] && plain(spaced(onTheHours, words.and, words.always,
+          counted(later, units.minute), words.afterThem)) ||
+        {opening: 'always', text: spaced(counted(values, units.minute), after)}
+    };
+
+    kinds.cadencePieces = kinds.pieces;
+
+    return kinds[found.kind]();
+  }
+
+  return said(minutes.form);
+}
+
+export {namedHead, namedOf, removedHours, tiledHead, tilingOf};

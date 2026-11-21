@@ -311,11 +311,18 @@ const rows = [
   ['* * * * 0-2,4-6', 'tous les jours, sauf le mercredi, toutes les minutes'],
   ['0 0,1,22,23 * * 1', 'tous les lundis à 0 h, 1 h, 22 h et 23 h'],
 
-  // Clock times: the list, and what competes with it.
-  ['0,30 9,17 * * *', 'tous les jours à 9 h, 9 h 30, 17 h et 17 h 30'],
+  // Clock times: the list, and what competes with it. Separate hours
+  // named once, with the minutes said once for all of them, name fewer
+  // things than every time from three times past four (2026-11-20: these
+  // rows were four and six clock times); two minutes in two hours are a
+  // tie, and the list wins it.
+  ['0,30 9,17 * * *',
+    'tous les jours, toutes les 30 minutes, pendant les heures de 9 h et ' +
+    'de 17 h'],
   ['5,20 9,17 * * *', 'tous les jours à 9 h 05, 9 h 20, 17 h 05 et 17 h 20'],
   ['5,20,45 9,17 * * *',
-    'tous les jours à 9 h 05, 9 h 20, 9 h 45, 17 h 05, 17 h 20 et 17 h 45'],
+    'tous les jours, aux minutes 5, 20 et 45, pendant les heures de 9 h et ' +
+    'de 17 h'],
   ['0 1 * * *', 'tous les jours à 1 h'],
   ['30 1,13 * * *', 'tous les jours à 1 h 30 et à 13 h 30'],
   ['0 9,13 * * *', 'tous les jours à 9 h et à 13 h'],
@@ -357,9 +364,11 @@ const rows = [
   ['15,45 */12 * * *', 'tous les jours à 0 h 15, 0 h 45, 12 h 15 et 12 h 45'],
   ['23 */12 * * *', 'tous les jours à 0 h 23 et à 12 h 23'],
   ['0 1/12 * * *', 'tous les jours à 1 h et à 13 h'],
+  // Two hours on a cadence are separate hours, named once (2026-11-20:
+  // two windows said the same minutes twice).
   ['*/15 */12 * * *',
-    'tous les jours, toutes les 15 minutes de 0 h à 0 h 45 et de 12 h à 12 ' +
-    'h 45'],
+    'tous les jours, toutes les 15 minutes, pendant les heures de 0 h et ' +
+    'de 12 h'],
   ['0 */12 * * *', 'tous les jours à 0 h et à 12 h'],
   ['0 0/12 * * *', 'tous les jours à 0 h et à 12 h'],
   ['0 0,12 * * *', 'tous les jours à 0 h et à 12 h'],
@@ -379,9 +388,11 @@ const rows = [
   ['0-28,30-59 * * * 1',
     'tous les lundis, toutes les minutes, sauf à la minute 29 de chaque ' +
     'heure'],
+  // Separate hours named once, the minute taken out as beside « une
+  // heure sur » (2026-11-20: two windows).
   ['0-28,30-59 9,17 * * *',
-    'tous les jours, toutes les minutes de 9 h à 9 h 59 et de 17 h à 17 h ' +
-    '59, sauf à la minute 29 de chaque heure'],
+    'tous les jours, toutes les minutes, pendant les heures de 9 h et de ' +
+    '17 h, sauf à la minute 29'],
   ['0,10,20,40,50 9-17 * * *',
     'tous les jours, toutes les 10 minutes de 9 h à 17 h 50, sauf à la ' +
     'minute 30 de chaque heure'],
@@ -389,10 +400,12 @@ const rows = [
     'toutes les 10 minutes, sauf de 3 h à 3 h 50, et sauf à la minute 30 ' +
     'de chaque heure'],
 
-  // Hours as a confinement.
+  // Hours as a confinement. A cadence of six hours or fewer that does not
+  // tile the day is its hours named once (2026-11-20: the windows of its
+  // first two hours, and how the rest go on, said the minutes twice).
   ['*/15 8-18/2 * * *',
-    'tous les jours, toutes les 15 minutes de 8 h à 8 h 45, de 10 h à 10 h ' +
-    '45, et ainsi de suite toutes les 2 heures jusqu\'à 18 h 45'],
+    'tous les jours, toutes les 15 minutes, pendant les heures de 8 h, ' +
+    '10 h, 12 h, 14 h, 16 h et 18 h'],
   ['*/15 1/3 * * *',
     'toutes les 15 minutes, une heure sur trois à partir de 1 h'],
   ['*/15 */3 * * *', 'toutes les 15 minutes, une heure sur trois'],
@@ -405,9 +418,11 @@ const rows = [
   ['* 9-17,20,22 * * *',
     'tous les jours, toutes les minutes de 9 h à 17 h 59, de 20 h à 20 h ' +
     '59 et de 22 h à 22 h 59'],
+  // Separate hours named once (2026-11-20: five windows that differed
+  // only in their hour).
   ['* 8,10,13,16,19 * * *',
-    'tous les jours, toutes les minutes de 8 h à 8 h 59, de 10 h à 10 h ' +
-    '59, de 13 h à 13 h 59, de 16 h à 16 h 59 et de 19 h à 19 h 59'],
+    'tous les jours, toutes les minutes, pendant les heures de 8 h, 10 h, ' +
+    '13 h, 16 h et 19 h'],
   ['*/10 6-8,17-19 * * 1-5',
     'du lundi au vendredi, toutes les 10 minutes de 6 h à 8 h 50 et de 17 ' +
     'h à 19 h 50'],
@@ -417,13 +432,94 @@ const rows = [
   ['5,20,45 9-17,22 * * *',
     'tous les jours, aux minutes 5, 20 et 45 de chaque heure, de 9 h 05 à ' +
     '17 h 45 et de 22 h 05 à 22 h 45'],
+  // Hours in pieces under two runs of minutes: the minute phrase and a
+  // window for each run of hours names fewer things than a window for
+  // each run of minutes in each hour.
+  ['5-10,15-20 8,15,16 * * *',
+    'tous les jours, toutes les minutes de la minute 5 à la minute 10 et ' +
+    'de la minute 15 à la minute 20 de chaque heure, de 8 h 05 à 8 h 20 ' +
+    'et de 15 h 05 à 16 h 20'],
+  // The minutes once, then the hours once (2026-11-20: the minute phrase
+  // and then a window for each hour).
   ['5,20,45 8,10,13,16,19 * * *',
-    'tous les jours, aux minutes 5, 20 et 45 de chaque heure, de 8 h 05 à ' +
-    '8 h 45, de 10 h 05 à 10 h 45, de 13 h 05 à 13 h 45, de 16 h 05 à 16 h ' +
-    '45 et de 19 h 05 à 19 h 45'],
+    'tous les jours, aux minutes 5, 20 et 45, pendant les heures de 8 h, ' +
+    '10 h, 13 h, 16 h et 19 h'],
   ['0-29 */2 * * *',
     'toutes les minutes pendant les 30 premières minutes de l\'heure, ' +
     'toutes les 2 heures'],
+
+  // The same minutes in several hours: the minutes are said once and
+  // the hours once, as the hours the minutes fall in, under every kind
+  // of minutes alike (2026-11-20: these were up to ten clock times,
+  // five windows, or two hours shown and « et ainsi de suite »).
+  ['5,35 1,4,9,14,18 * * *',
+    'tous les jours, aux minutes 5 et 35, pendant les heures de 1 h, ' +
+    '4 h, 9 h, 14 h et 18 h'],
+  ['5,20,45 1,4,9,14,18 * * *',
+    'tous les jours, aux minutes 5, 20 et 45, pendant les heures de 1 ' +
+    'h, 4 h, 9 h, 14 h et 18 h'],
+  ['*/15 1,4,9,14,18 * * *',
+    'tous les jours, toutes les 15 minutes, pendant les heures de 1 ' +
+    'h, 4 h, 9 h, 14 h et 18 h'],
+  ['10-40 1,4,9,14,18 * * *',
+    'tous les jours, toutes les minutes de la minute 10 à la minute ' +
+    '40, pendant les heures de 1 h, 4 h, 9 h, 14 h et 18 h'],
+  ['10-40/10 1,4,9,14,18 * * *',
+    'tous les jours, aux minutes 10, 20, 30 et 40, pendant les heures ' +
+    'de 1 h, 4 h, 9 h, 14 h et 18 h'],
+  ['5-50/5 1,4,9,14,18 * * *',
+    'tous les jours, toutes les 5 minutes de la minute 5 à la minute ' +
+    '50, pendant les heures de 1 h, 4 h, 9 h, 14 h et 18 h'],
+  ['* 1,4,9,14,18 * * *',
+    'tous les jours, toutes les minutes, pendant les heures de 1 h, 4 ' +
+    'h, 9 h, 14 h et 18 h'],
+  ['0-29 1,4,9,14,18 * * *',
+    'tous les jours, toutes les minutes pendant les 30 premières ' +
+    'minutes de l\'heure, pendant les heures de 1 h, 4 h, 9 h, 14 h ' +
+    'et 18 h'],
+  ['5,35 6-18/3 * * *',
+    'tous les jours, aux minutes 5 et 35, pendant les heures de 6 h, ' +
+    '9 h, 12 h, 15 h et 18 h'],
+  ['5,20,45 6-18/3 * * *',
+    'tous les jours, aux minutes 5, 20 et 45, pendant les heures de 6 ' +
+    'h, 9 h, 12 h, 15 h et 18 h'],
+  ['*/15 6-18/3 * * *',
+    'tous les jours, toutes les 15 minutes, pendant les heures de 6 ' +
+    'h, 9 h, 12 h, 15 h et 18 h'],
+  ['10-40 6-18/3 * * *',
+    'tous les jours, toutes les minutes de la minute 10 à la minute ' +
+    '40, pendant les heures de 6 h, 9 h, 12 h, 15 h et 18 h'],
+  ['10-40/10 6-18/3 * * *',
+    'tous les jours, aux minutes 10, 20, 30 et 40, pendant les heures ' +
+    'de 6 h, 9 h, 12 h, 15 h et 18 h'],
+  ['5-50/5 6-18/3 * * *',
+    'tous les jours, toutes les 5 minutes de la minute 5 à la minute ' +
+    '50, pendant les heures de 6 h, 9 h, 12 h, 15 h et 18 h'],
+  ['* 6-18/3 * * *',
+    'tous les jours, toutes les minutes, pendant les heures de 6 h, 9 ' +
+    'h, 12 h, 15 h et 18 h'],
+  ['0-29 6-18/3 * * *',
+    'tous les jours, toutes les minutes pendant les 30 premières ' +
+    'minutes de l\'heure, pendant les heures de 6 h, 9 h, 12 h, 15 h ' +
+    'et 18 h'],
+  ['*/15 1,4,9,14,18 * * 1-5',
+    'du lundi au vendredi, toutes les 15 minutes, pendant les heures ' +
+    'de 1 h, 4 h, 9 h, 14 h et 18 h'],
+  // A cadence of more than six hours that does not tile the day names
+  // its first two hours and says how the rest go on, to the last hour,
+  // which is one the minutes fall in.
+  ['5,35 5/2 * * *',
+    'tous les jours, aux minutes 5 et 35, pendant les heures de 5 h, ' +
+    '7 h, et ainsi de suite toutes les 2 heures jusqu\'à celle de 23 ' +
+    'h'],
+  ['*/15 4/3 * * *',
+    'tous les jours, toutes les 15 minutes, pendant les heures de 4 ' +
+    'h, 7 h, et ainsi de suite toutes les 3 heures jusqu\'à celle de ' +
+    '22 h'],
+  ['0-29 4/3 * * *',
+    'tous les jours, toutes les minutes pendant les 30 premières ' +
+    'minutes de l\'heure, pendant les heures de 4 h, 7 h, et ainsi de ' +
+    'suite toutes les 3 heures jusqu\'à celle de 22 h'],
 
   // Minutes inside the hour.
   ['50-10 9 * * *',
@@ -438,9 +534,11 @@ const rows = [
     'toutes les minutes pendant les 15 dernières minutes de chaque heure'],
   ['10-40 * * * *',
     'toutes les minutes de la minute 10 à la minute 40 de chaque heure'],
+  // Separate hours named once, the run closed on « de l'heure » as beside
+  // a cadence (2026-11-20: two windows).
   ['0-29 9,17 * * *',
-    'tous les jours, toutes les minutes de 9 h à 9 h 29 et de 17 h à 17 h ' +
-    '29'],
+    'tous les jours, toutes les minutes pendant les 30 premières minutes ' +
+    'de l\'heure, pendant les heures de 9 h et de 17 h'],
   ['0-1 * * * *', 'aux minutes 0 et 1 de chaque heure'],
   ['15,45 * * * *', 'aux minutes 15 et 45 de chaque heure'],
   ['*/21 * * * *', 'aux minutes 0, 21 et 42 de chaque heure'],
@@ -724,19 +822,20 @@ const rows = [
     'à 0 et toutes les secondes de 10 à 20 secondes après le début de ' +
     'chaque minute'],
 
-  // Several stretches of minutes under several hours: a window for each
-  // stretch in each hour while that names no more than the minute phrase
-  // and one window an hour.
+  // Several stretches of minutes under several hours. Under separate
+  // hours the minute phrase is said once and the hours once (2026-11-20:
+  // a window for each stretch in each hour, or the phrase and a window an
+  // hour).
   ['50-10 9,17 * * *',
-    'tous les jours, toutes les minutes de 9 h à 9 h 10, de 9 h 50 à 9 h ' +
-    '59, de 17 h à 17 h 10 et de 17 h 50 à 17 h 59'],
+    'tous les jours, toutes les minutes pendant les 11 premières et les 10 ' +
+    'dernières minutes de l\'heure, pendant les heures de 9 h et de 17 h'],
   ['50-10 */6 * * *',
     'toutes les minutes pendant les 11 premières et les 10 dernières ' +
     'minutes de l\'heure, toutes les 6 heures'],
   ['0-4,10-14,20-24 9,17 * * *',
     'tous les jours, toutes les minutes de la minute 0 à la minute 4, de ' +
-    'la minute 10 à la minute 14 et de la minute 20 à la minute 24 de ' +
-    'chaque heure, de 9 h à 9 h 24 et de 17 h à 17 h 24'],
+    'la minute 10 à la minute 14 et de la minute 20 à la minute 24, ' +
+    'pendant les heures de 9 h et de 17 h'],
   ['0-4,10-14,20-24 9 * * *',
     'tous les jours, toutes les minutes de 9 h à 9 h 04, de 9 h 10 à 9 h ' +
     '14 et de 9 h 20 à 9 h 24'],

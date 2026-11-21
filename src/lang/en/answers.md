@@ -248,7 +248,7 @@ day part says "every day", in the day's place in the order:
 It is not said when the schedule runs round the clock, because then there
 is no daily rhythm to name. That is when the hours are every hour, or a
 cadence that tiles the day ("every 6 hours", "every 2 hours from 1 a.m.",
-"during every other hour", "for one hour every 6 hours"), or either of
+"during every other hour", "for the whole hour, every 6 hours"), or either of
 those with exceptions ("every 2 hours except at 8 a.m.").
 
 * `*/5 * * 6 *` — "every 5 minutes in June"
@@ -869,8 +869,40 @@ confinement:
 | range, under a cadence | closes on the last run: "every 15 minutes from 9 a.m. through 5:45 p.m." |
 | pieces | "from 9 a.m. through 5:59 p.m. and during the 10 p.m. hour"; under a cadence, "from 9 a.m. through 5:45 p.m. and during the 10 p.m. hour" |
 | every second hour | "during every other hour"; off the beat, "during every other hour from 1 a.m." |
-| any other cadence that runs through the day | "for one hour" and the cadence as it is said for points: "for one hour every 6 hours". It names what that cadence names. Off the beat such a cadence has eight hours at most, and they are named: "during the 1 a.m., 7 a.m., 1 p.m., and 7 p.m. hours". ("For one hour every 3 hours from 1 a.m." was said before.) |
+| any other cadence that runs through the day | "for the whole hour", a comma, and the cadence as it is said for points: "every 15 minutes for the whole hour, every 6 hours". It names what that cadence names. Off the beat such a cadence has eight hours at most, and they are named: "during the 1 a.m., 7 a.m., 1 p.m., and 7 p.m. hours". ("For one hour every 3 hours from 1 a.m." was said before.) |
 | a cadence with a named end | each end named as an hour: "during every other hour from the 2 a.m. hour through the 10 p.m. hour"; for a longer interval, which comes only among other parts (3.12), "during every 3rd hour from the 1 p.m. hour through the 10 p.m. hour". "For one hour every 2 hours from 2 a.m. through 10 p.m." is misheard as stopping at 10; "through the 10 p.m. hour" takes the whole hour in. Like every cadence with both ends named it is said only for more than eight hours: six are "during the 8 a.m., 10 a.m., noon, 2 p.m., 4 p.m., and 6 p.m. hours". (The hours were all listed at first, up to eleven of them, which nobody holds; then every cadence of four or more was said as one, which asked the listener to work out what six names would have told.) |
+
+"For the whole hour, every 3 hours" (2026-11-21). Until then this was
+"every 15 minutes for one hour every 3 hours", chosen because it named
+what the cadence names and kept the cadence as it is said for points. That
+reason still holds; the joint did not. Read once, it stacks three things
+to assemble (a rhythm, a duration, a rhythm) with no mark between them,
+and leaves the listener to place "one hour" (the hour each step names,
+or an hour of firing and then three hours off?) and to wonder whether
+its end, the next hour's :00, fires. It was also said unlike the same
+cadence under any other minutes, which follow it with "the hour" and a
+comma: "every minute for the first 30 minutes of the hour, every 3
+hours", "at 30 minutes past the hour, every 3 hours". "For the whole
+hour" is that part with only the minutes' words changed (an edit from
+`0-29` to `*` changes "the first 30 minutes of" to "whole"), so the
+cadence of hours reads the same after every minute set, and "the whole
+hour" is plainly the hour that cadence names, with nothing past its last
+minute. Alternatives weighed: naming the minutes ("at 0, 15, 30, and 45
+minutes past the hour, every 3 hours") holds four values where one
+rhythm does; "during every 3rd hour" is said only with both ends named
+(it leaves the count's start to the listener); "every minute of the
+hour" does not extend to a cadence ("every 15 minutes of the hour").
+Corpus: neither "every 15 minutes for the whole hour" nor "every 15
+minutes throughout the hour" has native use outside cron tools (web
+searches, 2026-11-21); the schedule itself is a cron schedule, so the
+choice is made on continuity with the forms above and the reader's
+task, and checked by readers scored against the true schedule: on
+2026-11-21 the fourteen rows of this kind (and the named offset rows)
+were read by three readers each of two models, 123 questions each,
+including the next hour's :00 and the minute after the last firing,
+with no misreading; asked separately about the hour after each window
+and the hour an "hour on, three off" reading would fire (4:00 under
+every 3 hours), all six readers answered all 19 questions right.
 
 Hours 0 and 12 are "the 12 a.m. hour" and "the noon hour". ("The
 midnight hour" was read by both blind readers on 2026-11-14 as the hour

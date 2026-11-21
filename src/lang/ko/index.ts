@@ -75,12 +75,14 @@ function describe(schedule: Schedule, opts: KoreanOptions): string {
 }
 
 // A sentence ends in «실행됩니다», after «에» unless the last word is a
-// rhythm or already carries «에도». A bracket that ends the description
-// is written after the verb.
+// rhythm or already ends in «에» or «에도». A bracket that ends the
+// description is written after the verb.
+const flowingEnds = [words.every, words.alsoAt, words.at];
+
 function sentence(description: string): string {
   const [, body, bracket = ''] =
     closingBracket.exec(description) as RegExpExecArray;
-  const flowing = [words.every, words.alsoAt].some(function ends(word) {
+  const flowing = flowingEnds.some(function ends(word) {
     return body.endsWith(word);
   });
   const verb = [`${words.at} ${words.runs}`, ` ${words.runs}`][

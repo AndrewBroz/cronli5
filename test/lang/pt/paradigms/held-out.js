@@ -98,13 +98,17 @@ const rows = [
   ['*/15 9,17 * * 1-5',
     'de segunda a sexta, a cada 15 minutos das 09:00 às 09:45 e das 17:00 ' +
     'às 17:45'],
+  // Three separate hours or more are named once, as the hours the minutes
+  // fall in («nas horas 8, 12 e 18»), not as a window for each (4.1).
   ['*/15 8,12,18 * * 1-5',
-    'de segunda a sexta, a cada 15 minutos das 08:00 às 08:45, das 12:00 ' +
-    'às 12:45 e das 18:00 às 18:45'],
+    'de segunda a sexta, a cada 15 minutos nas horas 8, 12 e 18'],
   ['*/15 */2 * * 1-5', 'de segunda a sexta, a cada 15 minutos nas horas pares'],
+  // Minutes that fill each hour of a step: «durante a hora inteira», the
+  // clock hour the step names, where «durante uma hora» was a stretch with
+  // no place and no end (4.1, 2026-11-21).
   ['*/15 */6 * * 1-5',
-    'de segunda a sexta, a cada 15 minutos durante uma hora, de 6 em 6 ' +
-    'horas'],
+    'de segunda a sexta, a cada 15 minutos durante a hora inteira, de 6 ' +
+    'em 6 horas'],
   ['*/15 0,2,4,6,10,12,14,16,18,20,22 * * 1-5',
     'de segunda a sexta, a cada 15 minutos nas horas pares, exceto das ' +
     '08:00 às 08:59'],
@@ -263,12 +267,13 @@ const rows = [
 
   // open / hour
   ['* 12 * * *', 'todos os dias, a cada minuto das 12:00 às 12:59'],
-  ['* 8,12,18 * * *',
-    'todos os dias, a cada minuto das 08:00 às 08:59, das 12:00 às 12:59 e ' +
-    'das 18:00 às 18:59'],
+  // Three separate hours: named once, not a window for each (4.1).
+  ['* 8,12,18 * * *', 'todos os dias, a cada minuto nas horas 8, 12 e 18'],
   ['* 9-17 * * *', 'todos os dias, a cada minuto das 09:00 às 17:59'],
   ['* */2 * * *', 'a cada minuto nas horas pares'],
-  ['* */6 * * *', 'a cada minuto durante uma hora, de 6 em 6 horas'],
+  // Every minute of each hour of a step: the clock hour, «a hora inteira»,
+  // not a stretch of «uma hora» (4.1, 2026-11-21).
+  ['* */6 * * *', 'a cada minuto durante a hora inteira, de 6 em 6 horas'],
   ['* 0,2,4,6,10,12,14,16,18,20,22 * * *',
     'a cada minuto nas horas pares, exceto das 08:00 às 08:59'],
   ['* 22-2 * * *', 'todos os dias, a cada minuto das 22:00 às 02:59'],

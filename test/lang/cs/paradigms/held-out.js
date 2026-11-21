@@ -95,9 +95,10 @@ const rows = [
   ['*/15 9,17 * * 1-5',
     'od pondělí do pátku každých 15 minut od 9:00 do 9:45 a od 17:00 do ' +
     '17:45'],
+  // Three hours are named once (2026-11-20; the row said three windows).
   ['*/15 8,12,18 * * 1-5',
-    'od pondělí do pátku každých 15 minut od 8:00 do 8:45, od 12:00 do ' +
-    '12:45 a od 18:00 do 18:45'],
+    'od pondělí do pátku každých 15 minut, vždy po dobu jedné hodiny od ' +
+    '8:00, 12:00 a 18:00'],
   ['*/15 */2 * * 1-5',
     'od pondělí do pátku každých 15 minut v sudých hodinách'],
   ['*/15 */6 * * 1-5',
@@ -251,9 +252,10 @@ const rows = [
 
   // open / hour
   ['* 12 * * *', 'denně každou minutu od 12:00 do 12:59'],
+  // Three hours are named once (2026-11-20; the row said three windows).
   ['* 8,12,18 * * *',
-    'denně každou minutu od 8:00 do 8:59, od 12:00 do 12:59 a od 18:00 do ' +
-    '18:59'],
+    'denně každou minutu, vždy po dobu jedné hodiny od 8:00, 12:00 a ' +
+    '18:00'],
   ['* 9-17 * * *', 'denně každou minutu od 9:00 do 17:59'],
   ['* */2 * * *', 'každou minutu v sudých hodinách'],
   ['* */6 * * *',

@@ -293,6 +293,34 @@ const rows = [
   ['0 1/12 * * *', 'at 1 a.m. and 1 p.m. every day'],
   ['*/15 */12 * * *',
     'every 15 minutes during the 12 a.m. and noon hours every day'],
+
+  // Minutes that fill the hour under a step of hours: the minutes, "for
+  // the whole hour", then the step as it is said under any other minutes
+  // ("for the first 30 minutes of the hour, every 3 hours"). These said
+  // "every 15 minutes for one hour every 3 hours", a rhythm, a duration
+  // and a rhythm stacked, with "one hour" left to be placed (2026-11-21).
+  // An offset step of eight hours or fewer names its hours, as it does
+  // under any minutes.
+  ['* */3 * * *', 'every minute for the whole hour, every 3 hours'],
+  ['*/15 */3 * * *', 'every 15 minutes for the whole hour, every 3 hours'],
+  ['0,15,30,45 */3 * * *',
+    'every 15 minutes for the whole hour, every 3 hours'],
+  ['*/10 */6 * * *', 'every 10 minutes for the whole hour, every 6 hours'],
+  ['*/30 */4 * * *', 'every 30 minutes for the whole hour, every 4 hours'],
+  ['* */8 * * *', 'every minute for the whole hour, every 8 hours'],
+  ['*/15 */3 * 6 *',
+    'every 15 minutes for the whole hour, every 3 hours in June'],
+  ['*/10 * */3 * * *',
+    'every 10 seconds for the whole hour, every 3 hours'],
+  ['* 1/3 * * *',
+    'every minute during the 1 a.m., 4 a.m., 7 a.m., 10 a.m., 1 p.m., 4 ' +
+    'p.m., 7 p.m., and 10 p.m. hours every day'],
+  ['*/15 1/3 * * *',
+    'every 15 minutes during the 1 a.m., 4 a.m., 7 a.m., 10 a.m., 1 p.m., ' +
+    '4 p.m., 7 p.m., and 10 p.m. hours every day'],
+  ['*/20 2/6 * * *',
+    'every 20 minutes during the 2 a.m., 8 a.m., 2 p.m., and 8 p.m. hours ' +
+    'every day'],
   ['0 0,6,18 * * *', 'at midnight, 6 a.m., and 6 p.m. every day'],
   ['0 9 * * 1,2,3,5',
     'at 9 a.m. on Mondays, Tuesdays, Wednesdays, and Fridays'],

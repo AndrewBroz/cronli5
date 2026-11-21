@@ -131,8 +131,6 @@ const dayParts = [
 // The function words and fixed phrases.
 const words = {
   also: 'e também',
-  // How long each stretch lasts under hours on a step: «durante uma hora».
-  anHour: 'uma hora',
   always: 'sempre',
   and: 'e',
   after: 'depois',
@@ -181,6 +179,8 @@ const words = {
   times: 'vezes',
   to: 'a',
   unrecognizable: 'um padrão cron não reconhecido',
+  // Each hour a step of hours names, all through: «durante a hora inteira».
+  wholeHour: 'a hora inteira',
   wholeMinute: 'o minuto inteiro'
 };
 

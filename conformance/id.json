@@ -975,7 +975,7 @@
    "pattern": "*/15 9,17 * * 1-5"
   },
   {
-   "expected": "setiap Senin sampai Jumat, setiap 15 menit dari pukul 08.00 sampai 08.45, dari pukul 12.00 sampai 12.45, dan dari pukul 18.00 sampai 18.45",
+   "expected": "setiap Senin sampai Jumat, mulai pukul 08.00, 12.00, dan 18.00, tiap kali setiap 15 menit sampai menit ke-45",
    "options": {
     "lang": "id"
    },
@@ -1500,7 +1500,7 @@
    "pattern": "* 12 * * *"
   },
   {
-   "expected": "setiap hari, setiap menit dari pukul 08.00 sampai 08.59, dari pukul 12.00 sampai 12.59, dan dari pukul 18.00 sampai 18.59",
+   "expected": "setiap hari, mulai pukul 08.00, 12.00, dan 18.00, tiap kali setiap menit selama 1 jam",
    "options": {
     "lang": "id"
    },
@@ -3211,7 +3211,7 @@
    "pattern": "*/15 */12 * * *"
   },
   {
-   "expected": "setiap hari, setiap menit dari pukul 06.00 sampai 06.59, dari pukul 08.00 sampai 08.59, dari pukul 12.00 sampai 12.59, dari pukul 18.00 sampai 18.59, dan dari pukul 20.00 sampai 20.59",
+   "expected": "setiap hari, mulai pukul 06.00, 08.00, 12.00, 18.00, dan 20.00, tiap kali setiap menit selama 1 jam",
    "options": {
     "lang": "id"
    },
@@ -3400,7 +3400,7 @@
    "pattern": "15,45 */2 * * *"
   },
   {
-   "expected": "setiap hari, setiap 4 jam mulai pukul 04.15 dan 04.45, terakhir pukul 20.45",
+   "expected": "setiap hari, setiap 4 jam dari pukul 04.00 sampai 20.00, tiap kali pada menit ke-15 dan ke-45",
    "options": {
     "lang": "id"
    },
@@ -3449,35 +3449,35 @@
    "pattern": "0-29 */2 * * *"
   },
   {
-   "expected": "setiap hari, setiap 2 jam mulai pukul 05.00, tiap kali setiap menit selama 30 menit, terakhir pukul 23.29",
+   "expected": "setiap hari, setiap 2 jam dari pukul 05.00 sampai 23.00, tiap kali setiap menit selama 30 menit",
    "options": {
     "lang": "id"
    },
    "pattern": "0-29 5/2 * * *"
   },
   {
-   "expected": "setiap hari, setiap 2 jam mulai pukul 05.00, tiap kali setiap 15 menit sampai menit ke-45, terakhir pukul 23.45",
+   "expected": "setiap hari, setiap 2 jam dari pukul 05.00 sampai 23.00, tiap kali setiap 15 menit sampai menit ke-45",
    "options": {
     "lang": "id"
    },
    "pattern": "*/15 5/2 * * *"
   },
   {
-   "expected": "setiap hari, setiap 2 jam mulai pukul 08.00, tiap kali setiap 15 menit sampai menit ke-45, terakhir pukul 18.45",
+   "expected": "setiap hari, setiap 2 jam dari pukul 08.00 sampai 18.00, tiap kali setiap 15 menit sampai menit ke-45",
    "options": {
     "lang": "id"
    },
    "pattern": "*/15 8-18/2 * * *"
   },
   {
-   "expected": "setiap hari, setiap 2 jam mulai pukul 05.00 dan 05.30, terakhir pukul 23.30",
+   "expected": "setiap hari, setiap 2 jam dari pukul 05.00 sampai 23.00, tiap kali tepat pada jam itu serta pada menit ke-30",
    "options": {
     "lang": "id"
    },
    "pattern": "0,30 5/2 * * *"
   },
   {
-   "expected": "setiap hari, setiap 5 jam mulai pukul 00.00, tiap kali pada menit ke-5, ke-10, dan ke-30, terakhir pukul 20.30",
+   "expected": "setiap hari, setiap 5 jam dari pukul 00.00 sampai 20.00, tiap kali pada menit ke-5, ke-10, dan ke-30",
    "options": {
     "lang": "id"
    },
@@ -3505,7 +3505,7 @@
    "pattern": "*/20 */4 * * *"
   },
   {
-   "expected": "setiap 6 jam mulai pukul 00.00 dan 00.30",
+   "expected": "setiap 6 jam, tiap kali tepat pada jam itu serta pada menit ke-30",
    "options": {
     "lang": "id"
    },
@@ -3519,7 +3519,7 @@
    "pattern": "15,45 */6 * * *"
   },
   {
-   "expected": "setiap 3 jam mulai pukul 01.15 dan 01.45",
+   "expected": "setiap 3 jam mulai pukul 01.00, tiap kali pada menit ke-15 dan ke-45",
    "options": {
     "lang": "id"
    },
@@ -3533,7 +3533,7 @@
    "pattern": "5/15 2/6 * * *"
   },
   {
-   "expected": "setiap 3 jam mulai pukul 01.00 dan 01.20",
+   "expected": "setiap 3 jam mulai pukul 01.00, tiap kali tepat pada jam itu serta pada menit ke-20",
    "options": {
     "lang": "id"
    },
@@ -3883,14 +3883,14 @@
    "pattern": "0-29 9-17 1 * *"
   },
   {
-   "expected": "setiap hari, pada menit ke-5, ke-20, dan ke-45 setelah pukul 09.00 dan 17.00",
+   "expected": "setiap hari, mulai pukul 09.00 dan 17.00, tiap kali pada menit ke-5, ke-20, dan ke-45",
    "options": {
     "lang": "id"
    },
    "pattern": "5,20,45 9,17 * * *"
   },
   {
-   "expected": "setiap hari, pada menit ke-5, ke-20, dan ke-45 setelah pukul 08.00, 12.00, dan 18.00",
+   "expected": "setiap hari, mulai pukul 08.00, 12.00, dan 18.00, tiap kali pada menit ke-5, ke-20, dan ke-45",
    "options": {
     "lang": "id"
    },
@@ -3911,7 +3911,7 @@
    "pattern": "5,20,45 8-10,14,20 * * *"
   },
   {
-   "expected": "setiap hari, setiap menit dari pukul 08.00 sampai 08.29, dari pukul 12.00 sampai 12.29, dan dari pukul 18.00 sampai 18.29",
+   "expected": "setiap hari, mulai pukul 08.00, 12.00, dan 18.00, tiap kali setiap menit selama 30 menit",
    "options": {
     "lang": "id"
    },
@@ -3923,6 +3923,153 @@
     "lang": "id"
    },
    "pattern": "0-29 9-17,22 * * *"
+  },
+  {
+   "expected": "setiap hari, mulai pukul 01.00, 04.00, 09.00, 14.00, dan 18.00, tiap kali pada menit ke-5 dan ke-35",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "5,35 1,4,9,14,18 * * *"
+  },
+  {
+   "expected": "setiap hari, mulai pukul 01.00, 04.00, 09.00, 14.00, dan 18.00, tiap kali tepat pada jam itu serta pada menit ke-15 dan ke-45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0,15,45 1,4,9,14,18 * * *"
+  },
+  {
+   "expected": "setiap hari, mulai pukul 01.00, 04.00, 09.00, 14.00, dan 18.00, tiap kali setiap 15 menit sampai menit ke-45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 1,4,9,14,18 * * *"
+  },
+  {
+   "expected": "setiap hari, mulai pukul 01.00, 04.00, 09.00, 14.00, dan 18.00, tiap kali setiap menit selama 30 menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-29 1,4,9,14,18 * * *"
+  },
+  {
+   "expected": "setiap hari, mulai pukul 01.00, 04.00, 09.00, 14.00, dan 18.00, tiap kali setiap menit dari menit ke-10 sampai ke-40",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "10-40 1,4,9,14,18 * * *"
+  },
+  {
+   "expected": "setiap hari, mulai pukul 01.00, 04.00, 09.00, 14.00, dan 18.00, tiap kali setiap 10 menit dari menit ke-5 sampai ke-55",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "5-55/10 1,4,9,14,18 * * *"
+  },
+  {
+   "expected": "setiap hari, mulai pukul 01.00, 04.00, 09.00, 14.00, dan 18.00, tiap kali setiap menit selama 1 jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* 1,4,9,14,18 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 3 jam dari pukul 06.00 sampai 18.00, tiap kali pada menit ke-5 dan ke-35",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "5,35 6-18/3 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 3 jam dari pukul 06.00 sampai 18.00, tiap kali tepat pada jam itu serta pada menit ke-15 dan ke-45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0,15,45 6-18/3 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 3 jam dari pukul 06.00 sampai 18.00, tiap kali setiap 15 menit sampai menit ke-45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 6-18/3 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 3 jam dari pukul 06.00 sampai 18.00, tiap kali setiap menit selama 30 menit",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-29 6-18/3 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 3 jam dari pukul 06.00 sampai 18.00, tiap kali setiap menit dari menit ke-10 sampai ke-40",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "10-40 6-18/3 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 3 jam dari pukul 06.00 sampai 18.00, tiap kali setiap 10 menit dari menit ke-5 sampai ke-55",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "5-55/10 6-18/3 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 3 jam dari pukul 06.00 sampai 18.00, tiap kali setiap menit selama 1 jam",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "* 6-18/3 * * *"
+  },
+  {
+   "expected": "setiap hari, mulai pukul 08.00, 12.00, dan 20.00, tiap kali pada menit ke-5 dan ke-35",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "5,35 8,12,20 * * *"
+  },
+  {
+   "expected": "setiap hari, mulai pukul 06.00, 09.00, dan 12.00, tiap kali setiap 15 menit sampai menit ke-45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 6-12/3 * * *"
+  },
+  {
+   "expected": "setiap hari, mulai pukul 01.00, 04.00, 09.00, 14.00, dan 18.00, tiap kali pada menit ke-5 dan ke-35, masing-masing pada detik ke-30",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "30 5,35 1,4,9,14,18 * * *"
+  },
+  {
+   "expected": "setiap hari, mulai pukul 08.00 dan 12.00, tiap kali setiap menit selama 30 menit dan pada menit ke-45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-29,45 8,12 * * *"
+  },
+  {
+   "expected": "setiap hari, mulai pukul 01.00, 04.00, dan 09.00, tiap kali setiap menit selama 1 jam, kecuali pada menit ke-29",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "0-28,30-59 1,4,9 * * *"
+  },
+  {
+   "expected": "setiap hari pukul 09.05, 09.35, 17.05, dan 17.35",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "5,35 9,17 * * *"
+  },
+  {
+   "expected": "setiap hari, setiap 15 menit dari pukul 09.00 sampai 09.45 dan dari pukul 17.00 sampai 17.45",
+   "options": {
+    "lang": "id"
+   },
+   "pattern": "*/15 9,17 * * *"
   },
   {
    "expected": "setiap hari pukul 09.30.15",
@@ -4418,14 +4565,14 @@
    "pattern": "30 * */6 * * *"
   },
   {
-   "expected": "setiap hari, setiap 2 jam mulai pukul 05.00, tiap kali setiap menit selama 30 menit, masing-masing pada detik ke-30, terakhir pukul 23.29.30",
+   "expected": "setiap hari, setiap 2 jam dari pukul 05.00 sampai 23.00, tiap kali setiap menit selama 30 menit, masing-masing pada detik ke-30",
    "options": {
     "lang": "id"
    },
    "pattern": "30 0-29 5/2 * * *"
   },
   {
-   "expected": "setiap hari, setiap 2 jam mulai pukul 05.00, tiap kali setiap 15 menit sampai menit ke-45, masing-masing setiap detik selama 1 menit, terakhir pukul 23.45.59",
+   "expected": "setiap hari, setiap 2 jam dari pukul 05.00 sampai 23.00, tiap kali setiap 15 menit sampai menit ke-45, masing-masing setiap detik selama 1 menit",
    "options": {
     "lang": "id"
    },

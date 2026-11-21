@@ -123,15 +123,6 @@ const words = {
   // Every second hour, with something finer inside it.
   evenHours: 'pada jam genap',
   oddHours: 'pada jam ganjil',
-  // Positions counted from hours that are named: «pada menit ke-5 setelah
-  // pukul 09.00 dan 17.00».
-  afterTime: 'setelah',
-  // The same, after the hours themselves: «pukul 08.00 dan 12.00 serta
-  // pada menit ke-15 setelahnya».
-  afterThem: 'setelahnya',
-  // The last firing of a rhythm with several starts: «…, terakhir pukul
-  // 23.45».
-  lastAt: 'terakhir',
 
   // Clock.
   oClock: 'pukul',

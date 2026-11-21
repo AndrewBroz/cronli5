@@ -80,7 +80,7 @@ const rows = [
   ['0 0 1-14,16-31 6 *',
     'at 12 a.m. on every day in June except the 15th'],
   ['*/15 */6 * * *',
-    'every 15 minutes for one hour every 6 hours'],
+    'every 15 minutes for the whole hour, every 6 hours'],
   ['5,20,45 */6 * * *',
     'at 5, 20, and 45 minutes past the hour, every 6 hours']
 ];

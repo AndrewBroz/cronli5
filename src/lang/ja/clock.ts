@@ -107,6 +107,9 @@ interface Confinement {
   every: boolean;
   kind: TimeKind;
   named: string;
+  // Stretches said by a rule (偶数の時間帯, 3時間ごとの時台), which a
+  // cadence of minutes from the hour follows by its interval alone.
+  rule: boolean;
   text: string;
 }
 
@@ -441,6 +444,7 @@ function everyHour(hours: Facet): Confinement {
     every: true,
     kind: 'hourly',
     named: words.everyHour,
+    rule: false,
     text: ''
   };
 }
@@ -454,6 +458,7 @@ function namedHours(hours: number[], clock: Clock): Confinement {
     every: false,
     kind: 'clock',
     named: words.of,
+    rule: false,
     text: stretchDrops(hours, clock)
   };
 }
@@ -492,22 +497,25 @@ function ruleOf(cadence: Omit<Cadence, 'kind'>, hours: Facet, clock: Clock):
     ...namedHours([], clock),
     bare: words.runsAt,
     kind: 'rule',
+    rule: true,
     text: leftOut([stretchDrops(hours.dropped, clock)]) + when(!whole, ends) +
       [words.evenHours, words.oddHours][cadence.start % 2]
   };
 }
 
-// Any other cadence of hours that tiles the day, as stretches: one hour at
-// each interval, and the minutes inside it said as under every hour.
+// Any other cadence of hours that tiles the day, as stretches: the 時台 at
+// each interval, from the first where that is not 0時台, and the minutes
+// after them as after the even or odd hours.
 function cycleStretches(cycle: Cycle, clock: Clock): Confinement {
-  const first = cycle.start * hourSeconds;
-
   return {
-    ...everyHour(clock.hours),
+    ...namedHours([], clock),
+    bare: words.runsAt,
     dropped: cycle.dropped,
-    kind: first > 0 ? 'clock' : 'allDay',
-    text: cycleText(cycle, first, plainly, clock) + words.runsAt + 1 +
-      units.hourLength + words.eachGets + marks.comma + words.allTheWhile
+    kind: cycle.start > 0 ? 'clock' : 'rule',
+    rule: true,
+    text: when(cycle.start > 0, sayStretch(cycle.start, clock.style) +
+      words.from) + cycle.interval + units.hourLength + words.each +
+      words.of + units.hourStretch
   };
 }
 
@@ -552,7 +560,7 @@ const minuteWays: Array<Way<[Clock, Mode, Confinement], Rest>> = [
     // naming; after hours with 台, and after a rule where each minute is a
     // stretch of its own, a few minutes are named.
     fits: (clock, mode, hours) => clock.minutes.tile > 0 && isBare(mode) &&
-      (hours.every || hours.kind === 'rule' && !mode.stretch ||
+      (hours.every || hours.rule && !mode.stretch ||
       clock.minutes.count > mostPositions),
     say: (clock, mode, hours) => ({
       body: hours.text + hours.bare + (mode.fill || clock.minutes.tile) +
@@ -685,20 +693,15 @@ function evenSeconds(clock: Clock): number {
 }
 
 // For one minute after a single occasion; a minute for each of several,
-// which after a stray time is said of them all. Where その間は already
-// ties the minutes to an hour, the seconds are tied to その1分間, so that
-// the second is not read with the first.
+// which after a stray time is said of them all.
 function forOneMinute(clock: Clock, rest: Rest): string {
   const once = clock.minutes.count === 1 &&
     (clock.hours.count === 1 || clock.hours.core.kind === 'all');
-  const tie = rest.body.includes(words.allTheWhile) ?
-    words.allThatMinute :
-    words.allTheWhile;
 
   return once ?
     words.fromThen + words.forOneMinute + marks.comma :
     (rest.trails ? shared : words.runsAt) + words.forOneMinute +
-      words.eachGets + marks.comma + tie;
+      words.eachGets + marks.comma + words.allTheWhile;
 }
 
 // Seconds arranged inside one clock time: windows and times to the second.

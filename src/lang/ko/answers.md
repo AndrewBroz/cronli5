@@ -81,6 +81,10 @@ Things that run through everything:
   1·4·7·10시대에»), or «짝수 시», «홀수 시» when they are every second
   hour. Then the minutes: a rhythm bare («…에 15분마다»), marks after
   «각각» («…에 각각 15·45분»).
+* **Every third or fourth hour is its step, whatever the minutes**
+  (2026-11-20): «3시간마다 30분에», «4시간마다 15·45분에», «3시간마다
+  10분부터 20분까지 1분마다», «3시간마다 정각부터 45분까지 15분마다».
+  The minutes are said once, after the step, as in each such hour.
 * **A rhythm that starts at the top of its unit and tiles it is the step
   alone, wherever it stands**: «15분마다» alone, after a span's ends,
   after «오전 9시대에», after «짝수 시에». Only an off-beat or
@@ -400,11 +404,45 @@ said the exception and was corrected). With eleven times (`0,5,…,25,35,…,
 | a run | a span, «오전 9시부터 오후 5시까지 1시간마다», «오전 9시 30분부터 오후 5시 30분까지 1시간마다» |
 | every second hour | even hours at minute 0: the bare rhythm «2시간마다». Otherwise «짝수 시 30분», «홀수 시 정각», «홀수 시 23분» |
 | a cadence from 0 that tiles the day (`*/3`, `*/4`, `*/6`), minute 0 | bare, «3시간마다», «6시간마다» |
-| any other cadence, or that one at another minute | a span with both ends, «0시부터 오후 8시까지 5시간마다», «오전 1시부터 오후 10시까지 3시간마다», «0시 23분부터 오후 6시 23분까지 6시간마다» |
+| a cadence from 0 that tiles the day in five hours or more (`*/3`, `*/4`), another minute | the step and the minute, «3시간마다 30분에», «4시간마다 0분 15초에» (2026-11-20, below) |
+| any other cadence, or `*/6` at another minute | a span with both ends, «0시부터 오후 8시까지 5시간마다», «오전 1시부터 오후 10시까지 3시간마다», «0시 23분부터 오후 6시 23분까지 6시간마다» |
 | a cadence less one or two hours (item 7) | the cadence as in this table, then the removed times: «2시간마다(오전 8시 제외)», «짝수 시 30분(오전 8시 30분 제외)» |
 | pieces | each range piece its own span with «1시간마다», each list piece a list of clock times, joined with «, 그리고 »: «오전 9시부터 오후 5시까지 1시간마다, 그리고 오후 10시» |
 | `cadencePieces` | each part its own span: «0시부터 오후 9시까지 3시간마다, 그리고 오전 1시부터 오후 10시까지 3시간마다» |
 | past the list ceiling, nothing above | «매시 정각(… 제외)» with the removed times listed, as in A |
+
+**Every third or fourth hour at a minute other than 0** (2026-11-20).
+`30 */3 * * *` is «3시간마다 30분에», not «매일 0시 30분부터 오후 9시
+30분까지 3시간마다». Why: the reader of «3시간마다» already counts from
+0시, by the project's convention and by these answers' own rule that a
+rhythm filling its unit from the first value is said bare; the hours of
+`*/3` start on the day's first hour whatever the minute is. The first
+and last time made the reader hold two clock times and an end to check
+(«오후 9시 30분» is the last because 21 + 3 passes the day), where the
+step and one minute are two things, each recognised. «에» is part of the
+phrase: «3시간마다 30분» alone is the Korean way to say a length in
+each three hours («3시간마다 30분 휴식»), and «30분에» is the minute of
+the hour. The evidence (2026-11-20): a Korean crontab note writes `0 */2`
+as «매 2시간마다 정각에 실행» (conory.com, "리눅스 예약 실행 스케줄러
+crontab", opened), that is «N시간마다» and then the place in the hour
+with «에», the frame used here; itwiki's cron page gives `30 */6` as
+«매 6시간마다(00:30, 06:30, 12:30, 18:30) 실행» (opened), a writer who
+felt «매 6시간마다» alone dropped the minute and added it as sample
+times, which the project does not do. Searches for exact phrases
+(«3시간마다 30분에», «시간마다 30분에 실행») found no page, for this
+form or for a first and a last time; the evidence is thin and a native
+reviewer should look at it. The earlier answer (3.10) said that the
+minute said apart («6시간마다 23분에») is not Korean; the crontab note
+above is that form with «정각에», and the claim is withdrawn.
+
+`*/6` at another minute keeps its span («매일 0시 23분부터 오후 6시
+23분까지 6시간마다») for now: four hours sit on the line between a list
+and a rhythm, a separate choice not reopened on 2026-11-20. Under a
+named day the time part names no clock time, so the fill is «하루 종일»
+as for «3시간마다»: «매월 1일 하루 종일 3시간마다 30분에». A start
+alone, «0시 30분부터 3시간마다», was not taken: under a named day it is
+read as going on past that day (below), and it would leave the other
+kinds of minutes without a frame.
 
 A span keeps both its ends even where the hours tile the day from
 another start (`1/3`). The start alone, «오전 1시부터 3시간마다», is
@@ -453,6 +491,7 @@ break from the first hour to the last **(blind judge 3)**.
 | H | said as |
 | --- | --- |
 | every second hour | «짝수 시», «홀수 시» |
+| a cadence from 0 that tiles the day in five hours or more (`*/3`, `*/4`), or that less one or two hours | the step, «3시간마다», «4시간마다», and the removed hours at the end, «(낮 12시대 제외)» |
 | one run of three hours or more | «오전 9시대부터 오후 5시대까지» |
 | any other set of up to twelve hours | a list, written compactly (below), ending in «에»: «오전 9시대, 오후 5시대에», «0시대, 오전 4·8시대, 낮 12시대, 오후 4·8시대에» |
 | pieces with a run of three or more | the ranges and the lists in ascending order, joined with «, 그리고 »: «오전 9시대부터 오후 5시대까지, 그리고 오후 8·10시대에» |
@@ -474,6 +513,7 @@ style there are no markers and the whole list is one group:
 | after | a bare rhythm (all, or a cadence from 0 that tiles) | marks, a span inside the hour, pieces |
 | --- | --- | --- |
 | «짝수 시», «홀수 시» | «짝수 시에 15분마다», «홀수 시에 1분마다» | «짝수 시 15·45분», «짝수 시 정각부터 29분까지 1분마다», «짝수 시 5분부터 55분까지 10분마다» |
+| «3시간마다», «4시간마다» | no bare rhythm: its ends, «3시간마다 정각부터 45분까지 15분마다», «3시간마다 정각부터 59분까지 1분마다» | marks with «에», «3시간마다 5·35분에»; a span, «3시간마다 10분부터 20분까지 1분마다», «3시간마다 2분부터 18분까지 2분마다» |
 | one range, «…까지» | «…까지 15분마다», «…까지 1분마다» | «…까지 매시 5·20·45분», «…까지 매시 정각부터 29분까지 1분마다» |
 | a list or pieces | «…에 15분마다», «…에 1분마다» | «…에 각각 5·20·45분», «…에 각각 정각부터 29분까지 1분마다» |
 
@@ -490,8 +530,8 @@ four or fewer («…1분마다(오전 9시 29분, 오후 5시 29분 제외)»), 
 * `* 9,17 * * *`: «매일 오전 9시대, 오후 5시대에 1분마다».
 * `*/15 */6 * * 1-5`: «매주 월~금요일 0시대, 오전 6시대, 낮 12시대,
   오후 6시대에 15분마다».
-* `15,45 */4 * * *`: «매일 0시대, 오전 4·8시대, 낮 12시대, 오후
-  4·8시대에 각각 15·45분».
+* `15,45 */4 * * *`: «4시간마다 15·45분에».
+* `*/15 */3 * * *`: «3시간마다 정각부터 45분까지 15분마다».
 * `*/15 1/3 * * *`: «매일 오전 1·4·7·10시대, 오후 1·4·7·10시대에
   15분마다».
 * `*/15 */2 * * 1-5`: «매주 월~금요일 짝수 시에 15분마다».
@@ -519,6 +559,24 @@ the hour, the fault the schedule reader found in a trailing «부터».
 «…시대에 각각 15·45분» has one reading because the hours are containers
 and only the marks fire.
 
+**Every third or fourth hour** (2026-11-20). Under `*/3` and `*/4` the
+hours are the step, not eight or six whole hours named: `5,35 */3` is
+«3시간마다 5·35분에», where it was «매일 0시대, 오전 3·6·9시대, 낮
+12시대, 오후 3·6·9시대에 각각 5·35분». Eight hours are eight things to
+hold, and a reader has to see that they are every third hour to know
+the schedule at all; «3시간마다» says it as one, from 0시 by the
+convention (C, "Every third or fourth hour"). The minutes are said once
+after it. «3시간마다» is a moment that comes round, not a stretch to
+fill, so what happens in it says its ends: a bare «3시간마다 15분마다»
+would leave open whether the fifteen-minute rhythm runs for one hour or
+for all three, and «정각부터 45분까지» closes that. That is why a tiling
+rhythm, bare after «짝수 시에» and «…시대에», is not bare here. Marks
+take «에» for the reason given in C. A rhythm of seconds under these
+hours with every minute keeps the named hours («…시대에 10초마다»); it
+was not part of this change. Reading check, 2026-11-20: the 22 changed
+rows, 198 questions, three readers briefed only in Korean on each of
+two models; no answer wrong on either.
+
 Named hours have been read with one reading by every reader. (The four
 forms tried before them: history, "How whole hours came about".)
 
@@ -531,8 +589,10 @@ forms tried before them: history, "How whole hours came about".)
   15초», «짝수 시 5분 8초, 30분 8초»). Minute 0 is written «0분» before
   a second, never «정각». With M and H unrestricted it is «매분 30초». A
   bare rhythm then names its ends: `30 */15 * * * *` is «매시 0분
-  30초부터 45분 30초까지 15분마다», `15 0 */3 * * *` «매일 0시 0분
-  15초부터 오후 9시 0분 15초까지 3시간마다». Because the ends are
+  30초부터 45분 30초까지 15분마다»; every third or fourth hour is the
+  step and the moment in the hour, `15 0 */3 * * *` «3시간마다 0분
+  15초에» (2026-11-20; it was «매일 0시 0분 15초부터 오후 9시 0분
+  15초까지 3시간마다»). Because the ends are
   named, a missing first or last minute of the hour moves an end and is
   no exception: `30 0-58 * * * *` is «매시 0분 30초부터 58분 30초까지
   1분마다». With every minute and hours that are neither every hour nor
@@ -737,7 +797,8 @@ Because a minute or a second off the beat turns a bare hour rhythm into
 a phrase with clock hours (`0 */2` «2시간마다», `30 */2` «매일 짝수 시
 30분»; `0 */6` «6시간마다», `23 */6` «매일 0시 23분부터 오후 6시
 23분까지 6시간마다»), a minute or a second may change the fill as well
-as the time.
+as the time. Every third or fourth hour does not: `0 */3` «3시간마다»
+and `30 */3` «3시간마다 30분에» differ by the minute alone (2026-11-20).
 
 2.6 (not a question of the questionnaire) Declared fusions and joins.
 Each stays inside the calendar part and the fill.
@@ -767,7 +828,8 @@ Each stays inside the calendar part and the fill.
   hours (E). And minute 0 on the even hours, or on hours from 0 that
   tile the day, is the bare rhythm («2시간마다», «6시간마다») where any
   other minute names the hours («짝수 시 30분», «0시 23분부터 오후 6시
-  23분까지 6시간마다»). These are the only places where editing the
+  23분까지 6시간마다»); under every third or fourth hour the step stays
+  and the minutes follow it («3시간마다 30분에», «3시간마다 5·35분에»). These are the only places where editing the
   minute rewrites how the hours are said, and both are inside the time
   part.
 * **Hours that run through midnight** (2026-11-19). While no day,
@@ -907,8 +969,11 @@ from the cost of each.
   four times it was before: history, "Four hours off the beat".) A judgment, and
   the cost is real: the span names two of the four times and leaves two
   to be added. A start alone («0시 23분부터 6시간마다») is wrong under a
-  named day (C);
-  the minute said apart («6시간마다 23분에») is not Korean.
+  named day (C). (This entry also said that the minute said apart,
+  «6시간마다 23분에», is not Korean; that was withdrawn on 2026-11-20,
+  when every third or fourth hour became «3시간마다 30분에»: C, "Every
+  third or fourth hour". Four hours keep the span until that choice is
+  reopened.)
 * An exception: one or two.
 
 3.11 One, the last day of the month. Hours are no tie: `0 */12 * * *`
@@ -1484,6 +1549,25 @@ notes" is a record of what was tried and why it was replaced. **None of
 it is a rule.** A form quoted here is one the answers above no longer
 say, unless it is given as what stands "now"; where this record and the
 sections above differ, the sections above are the current choices.
+
+## What changed on 2026-11-20
+
+Every third or fourth hour (`*/3`, `*/4`: the hour cadences from 0 that
+tile the day in five hours or more, other than every second hour) is
+said by its step under every kind of minutes. Reason and evidence: C,
+"Every third or fourth hour", and E.
+
+| Before | Now |
+| --- | --- |
+| `30 */3`: «매일 0시 30분부터 오후 9시 30분까지 3시간마다» | «3시간마다 30분에» |
+| `5,35 */3`: «매일 0시대, 오전 3·6·9시대, 낮 12시대, 오후 3·6·9시대에 각각 5·35분» | «3시간마다 5·35분에» |
+| `*/15 */3`: «매일 0시대, … 오후 3·6·9시대에 15분마다» | «3시간마다 정각부터 45분까지 15분마다» |
+| `10-20 */3`: «… 각각 10분부터 20분까지 1분마다» | «3시간마다 10분부터 20분까지 1분마다» |
+| `* */3`: «… 1분마다» | «3시간마다 정각부터 59분까지 1분마다» |
+| `15 0 */3 * * *`: «매일 0시 0분 15초부터 오후 9시 0분 15초까지 3시간마다» | «3시간마다 0분 15초에» |
+
+The same under `*/4`. `*/6` at another minute, and `*/8`, `*/12`, are
+unchanged.
 
 ## What changed on 2026-11-19
 

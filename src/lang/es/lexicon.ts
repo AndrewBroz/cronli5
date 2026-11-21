@@ -104,7 +104,6 @@ const words = {
   onTheDot: 'en punto',
   onceEach: 'una vez cada',
   oncePer: 'una vez por',
-  oneHour: 'una hora',
   or: 'o',
   orIfItFallsOn: 'o, si cae en',
   penultimateDay: 'penúltimo día',
@@ -130,7 +129,8 @@ const words = {
   until: 'hasta',
   weekend: 'fin de semana',
   weekends: 'los fines de semana',
-  when: 'cuando'
+  when: 'cuando',
+  wholeHour: 'toda la hora'
 };
 
 const lexicon = {months, nthWords, twoDigits, units, weekdays, words};

@@ -443,9 +443,10 @@ const rows = [
     '2030年每天 00:00、01:00、02:00、22:00、23:00'],
   ['0 0,1,22,23 * * 1', '每週一 00:00、01:00、22:00、23:00'],
 
-  // Hours that tile the day from midnight are said bare; from a later
-  // start, or off the hour, only the first time is said; four or fewer
-  // such times are listed.
+  // Hours that tile the day from midnight are said bare; off the hour,
+  // five or more are their step and the minute (below); from a later
+  // start only the first time is said; four or fewer such times are
+  // listed.
   ['0 0-22/2 * * *', '每2小時一次'],
   ['0 */3 * * *', '每3小時一次'],
   ['0 0,6,12,18 * * *', '每6小時一次'],
@@ -476,8 +477,6 @@ const rows = [
     '每逢雙數時的15、45分'],
   ['15,45 */6 * * *',
     '每天0、6、12、18時的15、45分'],
-  ['5,10,20,30,50 */4 * * *',
-    '每天0、4、8、12、16、20時的05、10、20、30、50分'],
   ['*/15 */12 * * *',
     '每天 00:00～00:45、12:00～12:45，每15分鐘一次'],
   ['*/5 */2 * * *',
@@ -505,6 +504,29 @@ const rows = [
   ['*/20 */2 */2 */3 *',
     '每年1、4、7、10月的單數日，每逢雙數時的00、20、40分'],
   ['7 4-22/6 1 */2 *', '每年單數月1日 04:07、10:07、16:07、22:07'],
+
+  // Hours every third or fourth from midnight are their step, whatever
+  // the minutes: 每3小時 is counted from 0時, as the bare rate is, so the
+  // minutes are said once after it, the way they are after 雙數時, and
+  // no hour is named (2026-11-20: eight or six hours named, or a first
+  // time to add to, were more to hold than one step).
+  ['30 */3 * * *', '每3小時的30分'],
+  ['30 */4 * * *', '每4小時的30分'],
+  ['5,35 */3 * * *', '每3小時的05、35分'],
+  ['15,45 */4 * * *', '每4小時的15、45分'],
+  ['5,10,20,30,50 */4 * * *', '每4小時的05、10、20、30、50分'],
+  ['0,20,40 */3 * * *', '每3小時的00、20、40分'],
+  ['*/15 */3 * * *', '每3小時，整個小時內每15分鐘一次'],
+  ['*/10 */4 * * *', '每4小時，整個小時內每10分鐘一次'],
+  ['10-20 */3 * * *', '每3小時的10分至20分內每分鐘一次'],
+  ['0-29 */4 * * *', '每4小時的00分至29分內每分鐘一次'],
+  ['5-55/10 */3 * * *', '每3小時的05分至55分內每10分鐘一次'],
+  ['*/7 */4 * * *', '每4小時的00分至56分內每7分鐘一次'],
+  ['* */3 * * *', '每3小時，整個小時內每分鐘一次'],
+  ['* */4 * * *', '每4小時，整個小時內每分鐘一次'],
+  ['15 0 */3 * * *', '每3小時的00分15秒'],
+  ['*/15 */3 * * 1-5', '每週一至週五，每3小時，整個小時內每15分鐘一次'],
+  ['15,45 */3 * * *', '每3小時的15、45分', {lang: 'zh-Hant-HK'}],
 
   // Exceptions among the hours: what does not fire, first to last.
   ['0 0-2,4-23 * * *', '每小時整點（03:00 除外）'],
@@ -620,19 +642,22 @@ const rows = [
   // A rhythm with one or two times beside it stays the rhythm, and the
   // stray times follow it: clock times after 另加, positions inside the
   // hour or the minute after 另在.
+  // (2026-11-20: every third hour off the hour is its step and minute,
+  // as it is alone, no longer a first time to add to.)
   ['0 */2,13 * * *', '每2小時一次，另加 13:00'],
   ['0 */2,13,15 * * *', '每2小時一次，另加 13:00、15:00'],
   ['0 1/2,4 * * *', '每逢單數時整點，另加 04:00'],
-  ['30 */3,13 * * *', '每天 00:30 起每3小時一次，另加 13:30'],
+  ['30 */3,13 * * *', '每3小時的30分，另加 13:30'],
   ['0 */4,13 * * 1', '每週一，每4小時一次，另加 13:00'],
   ['0 */6,13 * * *', '每天 00:00、06:00、12:00、13:00、18:00'],
   // Where the hours hold several minutes, the hour beside the rhythm is
-  // named after it, and holds what the others hold.
+  // named after it, and holds what the others hold. (2026-11-20: every
+  // fourth hour is its step there too, not six hours named.)
   ['15,45 */2,13 * * *', '每逢雙數時的15、45分，13時亦同'],
   ['*/15 */2,13 * * *', '每逢雙數時，整個小時內每15分鐘一次，13時亦同'],
   ['15,45 0-16/2,19 * * *', '每天 00:15～16:45，每逢雙數時的15、45分，19時亦同'],
   ['5,20,45 */4,13,14 * * *',
-    '每天0、4、8、12、16、20時的05、20、45分，13、14時亦同'],
+    '每4小時的05、20、45分，13、14時亦同'],
   ['15,45 */2,13 * * *', '每逢雙數時的15、45分，下午1時亦同',
     {lang: 'zh-Hant-HK'}],
   ['*/2,45 9 * * *', '每天 09:00～09:58，每2分鐘一次，另加 09:45'],

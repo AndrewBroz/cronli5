@@ -23,6 +23,11 @@ const LONG_CADENCE = 5;
 // said bare; from a later start it needs a long cadence.
 const ROUND_THE_CLOCK = 3;
 
+// The fewest hours, none touching another, that are named once under
+// more than one minute of each, rather than a window or the clock times
+// of each hour.
+const NAMED_ONCE = 3;
+
 // At most this many clock times are listed whatever the fields look like,
 // and this many when minutes are a list over a list of hours.
 const TIMES_AT_A_GLANCE = 4;
@@ -50,6 +55,9 @@ interface Hours {
   // Whether no two hours touch.
   alone: boolean;
   form: Form;
+  // Hours named once whatever the unit inside them is: several, none
+  // touching another, and not a cadence said round the clock.
+  framed: boolean;
   // Every hour but one or two.
   nearly: boolean;
   // Every hour.
@@ -140,17 +148,23 @@ function hoursOf(set: FieldSet): Hours {
   const form = choose(set.candidates, HOURS,
     {cadence: longCadence, mixed: set.mixed});
   const runs = runsOf(set.candidates, HOURS);
+  const alone = runs.every(function single(run) {
+    return run.length === 1;
+  });
+  const nearly = form.kind === 'except' && form.base.kind === 'all';
+  const open = form.kind === 'all';
+  const tiling = tilingOf(set, form);
 
   return {
-    alone: runs.every(function single(run) {
-      return run.length === 1;
-    }),
+    alone,
     form,
-    nearly: form.kind === 'except' && form.base.kind === 'all',
-    open: form.kind === 'all',
+    framed: alone && set.values.length >= NAMED_ONCE && !open && !nearly &&
+      tiling === null,
+    nearly,
+    open,
     removed: (form as Exception).removed || [],
     runs,
-    tiling: tilingOf(set, form),
+    tiling,
     values: set.values
   };
 }
@@ -258,8 +272,21 @@ function sayWindows(rateWord: string, rate: Rate, work: Clockwork): TimeSaid {
   );
 }
 
+// A rate that fills each of hours named once: «ogni 15 minuti nelle ore
+// 1, 4, 9, 14 e 18», as «nelle ore pari» over every other hour.
+function sayRateInHours(rateWord: string, rate: Rate, work: Clockwork):
+  string {
+  const {hours, voice} = work;
+  const during = phrase(words.inHours, hourNumbers(hours.values, hours));
+
+  return rate.interval === 1 ?
+    phrase(voice.alone(voice.each, true), during) :
+    voice.alone(phrase(rateWord, during), false);
+}
+
 // A rate over the hours: alone when every hour fires, with the whole
-// hours left out when one or two do not, and with windows otherwise.
+// hours left out when one or two do not, said of hours named once, and
+// with windows otherwise.
 function sayRate(rateWord: string, rate: Rate, work: Clockwork): TimeSaid {
   const {hours, voice} = work;
   const {unit} = voice;
@@ -271,6 +298,7 @@ function sayRate(rateWord: string, rate: Rate, work: Clockwork): TimeSaid {
     hours.open && said(alone),
     hours.nearly &&
       said(alone, [hoursOut(hours.removed, work)]),
+    hours.framed && said(sayRateInHours(rateWord, rate, work)),
     sayWindows(rateWord, rate, work)
   ]);
 }
@@ -439,7 +467,7 @@ function sayInHour(form: Form, work: Clockwork): TimeSaid {
 function sayHourWindows(form: Form, work: Clockwork): TimeSaid | false {
   const {hours, speech, voice} = work;
   const [hour] = hours.values;
-  const usable = voice.windows && hours.alone;
+  const usable = voice.windows && hours.alone && !hours.framed;
 
   function span(from: number, to: number): string {
     return speech.span(voice.first(hour, from), voice.last(hour, to));
@@ -495,7 +523,7 @@ function sayRateLess(form: Form, work: Clockwork): TimeSaid | false {
   const {base, removed} = form as Exception;
   const rate = form.kind === 'except' && rateOf(base);
 
-  if (!rate) {
+  if (!rate || hours.framed && rate.first > FIRST) {
     return false;
   }
 
@@ -504,15 +532,17 @@ function sayRateLess(form: Form, work: Clockwork): TimeSaid | false {
     every(rate.interval, voice.unit.key);
   const whole = sayRate(rateWord, rate, work);
   const bounded = !hours.open && !hours.nearly;
-  const few = bounded &&
+  const few = bounded && !hours.framed &&
     removed.length * hours.values.length * voice.per <= TIMES_AT_A_GLANCE;
-  const left = few ?
-    list(hours.values.flatMap(function inHour(hour) {
+  const left = firstOf<string>([
+    few && list(hours.values.flatMap(function inHour(hour) {
       return removed.map(function time(value) {
         return voice.out(hour, value);
       });
-    })) :
-    `${voice.unitOut(removed)} ${voice.unit.ofEach}`;
+    })),
+    hours.framed && voice.unitOut(removed),
+    `${voice.unitOut(removed)} ${voice.unit.ofEach}`
+  ]);
 
   return said(whole.base, [...whole.exceptions, left],
     KIND_OF[String(base.kind === 'all' && 'range')]);
@@ -609,7 +639,8 @@ function tilingOut(stretched: boolean, work: Clockwork): string[] {
 // Hours that tile the day, said bare or from their start, and the unit
 // said apart from them, before a comma. Minute 0 alone is the hours
 // alone; a unit that runs from the top of each hour, or through every
-// minute of it, is a stretch of one hour.
+// minute of it, is a stretch: the even or odd hours, or the whole hour
+// and then, after the comma, the hours as under any other unit.
 function sayRoundTheClock(cadence: Cadence, work: Clockwork): TimeSaid {
   const {speech, voice} = work;
   const {unit} = voice;
@@ -626,7 +657,7 @@ function sayRoundTheClock(cadence: Cadence, work: Clockwork): TimeSaid {
   const parity = [words.evenHours, words.oddHours][cadence.start];
   const during = cadence.interval === 2 ?
     parity :
-    phrase(words.forAnHour, hours);
+    `${words.forTheWholeHour}, ${hours}`;
   const text = phrase(voice.within(form), voice.kept) +
     tailOf(form, voice);
 
@@ -689,12 +720,12 @@ function sayWithin(work: Clockwork): TimeSaid {
       return count === 1 && sayHourly(inner.values[0], work);
     },
     function smoothRate() {
-      return smooth && sayRate(
+      return smooth && !(hours.framed && smooth.first > FIRST) && sayRate(
         every(smooth.interval, voice.unit.key), smooth, work);
     },
     function listedTimes() {
       return form.kind === 'values' && times <= MOST_TIMES_LISTED &&
-        timesListed(work);
+        !hours.framed && timesListed(work);
     },
     function rateWithValuesOut() {
       return sayRateLess(form, work);
