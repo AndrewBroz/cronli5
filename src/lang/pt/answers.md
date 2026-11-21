@@ -52,7 +52,8 @@ What now holds is in rule 2 of the opening, 2.5, 3.7, 4.1 and 5.8: hours
 that tile the day are said bare, «de N em N horas», from a later start
 with «a partir da 01:00» and no end; a minute beside them is said apart
 from the step; stretches under them are «nas horas pares», «nas horas
-ímpares» or «durante uma hora, de N em N horas»; the same cadence with
+ímpares» or (since 2026-11-21, below) «durante a hora inteira, de N em
+N horas»; the same cadence with
 hours taken out is said bare with its exception, also without «todos os
 dias»; and no bracket shows a series of numbers.
 
@@ -94,6 +95,25 @@ hours the minutes fall in, «nas horas 1, 4, 9, 14 e 18», the same words
 under every kind of minutes. That is the language's existing confinement
 «nas horas pares» (usage notes 3.3) with the hours numbered, as «nos
 dias 1º, 10 e 20» numbers days and «nos minutos 5 e 35» numbers minutes.
+
+**Amended 2026-11-21: minutes that fill each hour of a step are «durante
+a hora inteira».** Before, every minute, or a cadence of minutes that
+tiles the hour, under a step of hours other than 2 was «a cada 15 minutos
+durante uma hora, de 3 em 3 horas», chosen as the duration of each
+stretch beside the step that says how often it comes. That reason does
+not hold for a reader who reads once. «Uma hora» is a length of time, not
+a place on the clock: it stacks a rhythm, a duration and a rhythm, and
+leaves the reader to work out which hour the sixty minutes are and
+whether the next :00 belongs to them. It was also said unlike every
+other minutes under the same step, which name a place inside the hour
+(«a cada minuto durante os primeiros 30 minutos, de 3 em 3 horas», «no
+minuto 30, de 3 em 3 horas»). What holds now is in 4.1: «a cada 15
+minutos durante a hora inteira, de 3 em 3 horas». «A hora inteira» is
+the clock hour the step names, as «os primeiros 30 minutos» are its first
+half, so editing the minutes from `0-29` to `*` changes only «os
+primeiros 30 minutos» to «a hora inteira». The same words close seconds
+that fill the hour (4.2, case 5), and match this rule book's «durante o
+minuto inteiro» (4.2).
 
 Shorthand: **M** is the set of minutes, **H** the set of hours, **S** the
 set of seconds. A **moment** is one firing inside a day.
@@ -436,7 +456,7 @@ The words for "every" are divided by scale, so that each does one job:
   which the rest happens: days, years, and hours said without clock
   times, the minute said apart (4.1) («de 2 em 2 dias», «de 4 em 4
   anos», «de 2 em 2 horas», «no minuto 30, de 2 em 2 horas», «a cada
-  minuto durante uma hora, de 6 em 6 horas»). «De 8 em 8 horas» is how
+  minuto durante a hora inteira, de 6 em 6 horas»). «De 8 em 8 horas» is how
   both countries say a step of hours in running text (usage notes 1.3,
   3.2); and since the minute phrase before it often begins «a cada» («a
   cada minuto durante os primeiros 30 minutos, de 2 em 2 horas»), two
@@ -832,7 +852,7 @@ from the step:
 | one other minute | «no minuto 30», a comma, the step: «no minuto 30, de 2 em 2 horas»; «no minuto 23, de 2 em 2 horas a partir da 01:00» |
 | anchored (a list, a run, pieces, a cadence with ends; case 5) | the minute phrase without «de cada hora», a comma, the step: «nos minutos 15 e 45, de 2 em 2 horas»; «a cada minuto durante os primeiros 30 minutos, de 2 em 2 horas»; «a cada 5 minutos, do minuto 5 ao 55, de 2 em 2 horas» |
 | continuous (case 3), step 2 | the lead, then «nas horas pares» or «nas horas ímpares»: «a cada minuto nas horas pares»; «a cada 15 minutos nas horas ímpares» |
-| continuous, any other step | the lead, «durante uma hora», a comma, the step: «a cada minuto durante uma hora, de 6 em 6 horas»; «a cada 15 minutos durante uma hora, de 3 em 3 horas a partir da 01:00» |
+| continuous, any other step | the lead, «durante a hora inteira», a comma, the step: «a cada minuto durante a hora inteira, de 6 em 6 horas»; «a cada 15 minutos durante a hora inteira, de 3 em 3 horas a partir da 01:00» |
 | any of these with a hole | the same cadence, said bare with no «todos os dias» (2.5), and the hole as an exception (3.9): «de 2 em 2 horas, exceto às 08:00»; «de 2 em 2 horas a partir da 01:00, exceto às 09:00»; «a cada minuto nas horas pares, exceto das 08:00 às 08:59». A hole is only inside the cadence; hours missing at its end do not tile the day and keep both ends: «a cada 2 horas das 00:00 às 20:00» |
 
 Why these forms:
@@ -844,11 +864,30 @@ Why these forms:
   countries (usage notes 3.3), as «nos dias ímpares» is for days (5.1),
   and they say at once that the whole hour is meant, which «a cada minuto,
   de 2 em 2 horas» does not.
-* For any other step, «durante uma hora» says how long each stretch
-  lasts; the step says how often it comes. The form that this rule book
-  once rejected, «a cada minuto durante uma hora, a cada 2 horas das 00:00
-  às 22:00», failed on its end, which was not the last moment; a cadence
-  that tiles has no end to name.
+* For any other step, «durante a hora inteira» (2026-11-21) says that
+  the whole of each hour the step names fires, as «durante os primeiros
+  30 minutos» says its first half: a place on the clock, with its own
+  end, the hour's last minute. «Durante uma hora», said before, was a
+  length of time with no place: the reader had to work out which sixty
+  minutes they were, and whether the next :00 was among them, and it was
+  the one kind of minutes under a step said as a duration, so an edit
+  from `0-29` to `*` changed the shape of the phrase as well as its
+  numbers. «A hora inteira» is the language's own phrase for the whole
+  of a unit, as «o dia inteiro» (usage notes 3.2) and this rule book's
+  «durante o minuto inteiro» (4.2); «durante toda a hora» was not chosen
+  because «a toda a hora» [PT] and «toda hora» [BR] mean "constantly"
+  (usage notes 3.2), too near to be safe in a hurry. *Evidence*: an open
+  web search on 2026-11-21 found no Portuguese schedule text for this
+  case in either form (no hits for «a cada 15 minutos durante a hora
+  inteira», nor for «durante uma hora, de 3 em 3 horas»); «durante todo
+  o dia», «o dia inteiro» are the dictionary pattern (Infopedia,
+  «durante»). The choice is the orchestrating model's, on the reader's
+  concern and continuity; a fluent reviewer may overturn it. The other
+  languages say the same thing with their own means (one hour in three;
+  each time through the whole hour; from the top of the hour to :45).
+* The form that this rule book once rejected, «a cada minuto durante uma
+  hora, a cada 2 horas das 00:00 às 22:00», failed on its end, which was
+  not the last moment; a cadence that tiles has no end to name.
 * No bracket follows: the step already says what the bracket listed.
 
 **The same minutes in several hours** (2026-11-20). Where the hours are
@@ -896,8 +935,9 @@ Why this form:
   cada 15 minutos das 09:00 às 09:45 e das 17:00 às 17:45»; under minutes
   that do not, a window for each hour, «da 01:05 à 01:35», is read as
   firing all through it, and is never said.
-* No two rhythms are stacked. «A cada 15 minutos durante uma hora, de 3 em
-  3 horas» stays only for a step that tiles the day, which needs no ends.
+* No two rhythms are stacked. «A cada 15 minutos durante a hora inteira,
+  de 3 em 3 horas» stays only for a step that tiles the day, which needs
+  no ends.
 * «Nas horas» confines, as «nas horas pares» and «nas horas ímpares» do,
   which the usage notes give as current in both countries (3.3); the
   numbers follow it as they follow «nos dias» and «nos minutos». A clock
@@ -958,7 +998,7 @@ hours are one window. Every window is closed on its last moment.
 | H | Confinement |
 | --- | --- |
 | every hour | none |
-| hours that tile the day | as at the head of 4.1: «a cada minuto nas horas pares»; «a cada 15 minutos durante uma hora, de 6 em 6 horas» |
+| hours that tile the day | as at the head of 4.1: «a cada minuto nas horas pares»; «a cada 15 minutos durante a hora inteira, de 6 em 6 horas» |
 | up to two windows | each window: «a cada minuto das 09:00 às 09:59»; «a cada 15 minutos das 09:00 às 17:45 e das 22:00 às 22:45»; «a cada 15 minutos das 00:00 às 00:45 e das 12:00 às 12:45» |
 | more than two windows, the hours named once (above) | «nas horas …»: «a cada minuto nas horas 8, 12 e 18»; «a cada 15 minutos nas horas 6, 9, 12, 15 e 18»; «a cada 15 minutos nas horas ímpares de 5 a 23» |
 | more than two windows otherwise (runs with strays, more than seven hours) | each window |
@@ -1054,7 +1094,7 @@ minutes.** The seconds are said in place of «a cada minuto»:
   hours that tile the day there is no time for it to ride in, and it is
   said here: «no segundo 30 de cada minuto, nas horas pares».) Under
   hours that tile the day the hours are said as at the head of 4.1: «a
-  cada segundo nas horas pares»; «a cada 15 segundos durante uma hora, de
+  cada segundo nas horas pares»; «a cada 15 segundos durante a hora inteira, de
   6 em 6 horas».
 
 **Case 6. Seconds that step inside named clock times, or inside one
@@ -1545,7 +1585,7 @@ not spoken.
 6.5 a cada, de … em …, à, às, da, das, de, do, dos, a, ao, aos, em, no,
 na, nos, nas, num, e, ou, e também, durante, exceto, todos os, todas as,
 todos os dias, de cada, sempre, repetindo, o minuto inteiro, vezes, no
-horário exato, primeiros, últimos, em ponto, uma hora, horas pares,
+horário exato, primeiros, últimos, em ponto, a hora inteira, horas pares,
 horas ímpares, depois de, antes do, que fica, mais próxima, do mesmo mês, do mês, se cair, que não seja, nem, a
 partir de, bissextos, nunca, não tem, não têm, Nunca ocorre.
 
@@ -1598,7 +1638,7 @@ inside it: «em junho, todas as sextas e também no dia 1º, sempre às
 
 8.3 `confinement-vs-juxtaposition` — A confinement is a window («das … às
 …»), «nas horas pares», «nas horas ímpares», the hours named, «nas horas
-1, 4 e 9» (4.1), or «durante uma hora, de N em N horas», which says how long each stretch lasts. Seconds are bound to the time
+1, 4 e 9» (4.1), or «durante a hora inteira, de N em N horas», which says that each hour the step names fires all through. Seconds are bound to the time
 by «repetindo», or counted from each moment. No two cadences are ever
 joined by a bare comma.
 
