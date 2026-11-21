@@ -386,9 +386,21 @@ const rows = [
     'todos os dias, a cada minuto durante os primeiros 30 minutos, nas ' +
     'horas ímpares de 5 a 23'],
   ['* 0-23/2 * * *', 'a cada minuto nas horas pares'],
-  ['* 0-23/6 * * *', 'a cada minuto durante uma hora, de 6 em 6 horas'],
+  // Minutes that fill each hour of a step are «durante a hora inteira»:
+  // the clock hour the step names, where «durante uma hora» was a stretch
+  // the reader had to place and close (4.1, 2026-11-21).
+  ['* 0-23/6 * * *', 'a cada minuto durante a hora inteira, de 6 em 6 horas'],
   ['*/15 1/3 * * *',
-    'a cada 15 minutos durante uma hora, de 3 em 3 horas a partir da 01:00'],
+    'a cada 15 minutos durante a hora inteira, de 3 em 3 horas a partir da ' +
+    '01:00'],
+  ['* 1/3 * * *',
+    'a cada minuto durante a hora inteira, de 3 em 3 horas a partir da 01:00'],
+  ['* */3 * * *', 'a cada minuto durante a hora inteira, de 3 em 3 horas'],
+  ['*/10 */6 * * *', 'a cada 10 minutos durante a hora inteira, de 6 em 6 horas'],
+  ['*/15 * */6 * * *',
+    'a cada 15 segundos durante a hora inteira, de 6 em 6 horas'],
+  ['* * 1/3 * * *',
+    'a cada segundo durante a hora inteira, de 3 em 3 horas a partir da 01:00'],
   ['15 0 1/2 * * *', 'de 2 em 2 horas a partir da 01:00, 15 segundos depois'],
   ['* * */2 * * *', 'a cada segundo nas horas pares'],
   ['30 * */2 * * *', 'no segundo 30 de cada minuto, nas horas pares'],
@@ -417,8 +429,8 @@ const rows = [
     'a cada minuto nas horas ímpares, exceto das 09:00 às 09:59'],
   ['0 0,3,6,12,15,18,21 * * *', 'de 3 em 3 horas, exceto às 09:00'],
   ['* 0,3,6,12,15,18,21 * * *',
-    'a cada minuto durante uma hora, de 3 em 3 horas, exceto das 09:00 às ' +
-    '09:59'],
+    'a cada minuto durante a hora inteira, de 3 em 3 horas, exceto das ' +
+    '09:00 às 09:59'],
   ['0 0-20/2 1 * *', 'no dia 1º de cada mês, a cada 2 horas das 00:00 às 20:00'],
   ['*/15 */12 * * *',
     'todos os dias, a cada 15 minutos das 00:00 às 00:45 e das 12:00 às ' +
@@ -447,7 +459,9 @@ const rows = [
     'todos os dias, nos minutos 5, 20 e 45, nas horas 9, 17 e 22'],
   ['* 8,10,13,15,20 * * *',
     'todos os dias, a cada minuto nas horas 8, 10, 13, 15 e 20'],
-  ['*/15 */3 * * *', 'a cada 15 minutos durante uma hora, de 3 em 3 horas'],
+  // The clock hour, not a stretch of «uma hora» (4.1, 2026-11-21).
+  ['*/15 */3 * * *',
+    'a cada 15 minutos durante a hora inteira, de 3 em 3 horas'],
 
   // The article before a time is singular for hour 1 («à», «da») and plural
   // for every other hour, the zero hour included.

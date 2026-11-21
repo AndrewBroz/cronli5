@@ -168,13 +168,14 @@ function parityHours(start: number): string {
 }
 
 // Stretches on a cadence of hours that tiles the day: every second hour by
-// its number being even or odd, any other step as an hour at each step.
+// its number being even or odd, any other step as the whole of each hour
+// it names.
 function stretchHours(c: Moments): string {
   const said = c.hours.said as Cadence;
 
   return said.interval === 2 ?
     parityHours(said.start) :
-    `${words.during} ${words.anHour}, ${hourStep(c, true)}`;
+    `${words.during} ${words.wholeHour}, ${hourStep(c, true)}`;
 }
 
 // Whether the hours are named once, as the hours the minutes fall in:
