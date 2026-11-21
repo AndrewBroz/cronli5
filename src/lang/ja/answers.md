@@ -30,9 +30,8 @@ the words before it say, as noise. Now:
   does (2時間ごと（8:00を除く）; 毎月1日、2時間ごと（8:00を除く）; 8時台
   を除く偶数の時間帯に1分ごと), with no window and no 毎日.
 * **Such hours as stretches** under finer minutes are 偶数の時間帯 or 奇
-  数の時間帯 when the interval is 2, and 6時間ごとに1時間ずつ、その間は…
-  otherwise, the device this book already used for a minute on a
-  cadence (3時間ごとに1分間ずつ、その間は10秒ごと). Under either, a
+  数の時間帯 when the interval is 2, and 6時間ごとの時台 otherwise
+  (amended 2026-11-21, 4.1; it was 6時間ごとに1時間ずつ、その間は…). Under either, a
   cadence of minutes that tiles the hour from 0 is its interval (偶数の時
   間帯に15分ごと), not its minutes one by one: it starts on the hour, which
   needs no saying, for the same reason as above.
@@ -45,7 +44,7 @@ the words before it say, as noise. Now:
   と carried two words that add nothing: a cadence said bare already runs
   round the clock. They are 毎月1日、2時間ごと, 毎月1日、15分ごと and 毎年6
   月、5分ごと, for cadences of hours that tile the day (with the even or
-  odd hours, 6時間ごとに1時間ずつ and the forms with hours left out) and
+  odd hours, 6時間ごとの時台 and the forms with hours left out) and
   for cadences of minutes or seconds through every hour alike, so that
   the two do not differ (2.5, 2.6). The reader evidence recorded for 終日
   was a preference for added words, and is overruled with the rest. A first time keeps its join and, under a month, its
@@ -307,10 +306,10 @@ the weekday is restricted and either of these holds:
 
 Otherwise it is not said: 毎時30分; 15分ごと; 1分ごと; 毎年6月の毎時30分;
 2030年の毎時0分; 2時間ごと; 1:00から2時間ごと; 偶数の時間帯に1分ごと; 6時間
-ごとに1時間ずつ、その間は1分ごと. **A bare cadence that runs round the
+ごとの時台に1分ごと. **A bare cadence that runs round the
 clock**, of minutes or seconds through every hour (15分ごと, 1分ごと, 10秒
-ごと) or of hours that tile the day (2時間ごと, 偶数の時間帯, 6時間ごとに1時
-間ずつ, with or without what is left out), needs no 毎日 under a month or a
+ごと) or of hours that tile the day (2時間ごと, 偶数の時間帯, 6時間ごとの時
+台, with or without what is left out), needs no 毎日 under a month or a
 year either: running round the clock is what saying it bare says, and the
 month or year is joined to it by 、 (2.6): 毎年6月、5分ごと; 毎年1月、1分ご
 と; 2030年、5分ごと; 毎年6月、3時間ごと; 毎年6月、偶数の時間帯に1分ごと.
@@ -342,7 +341,7 @@ before it, the second on how the time begins.
 | a day part that contains a range of dates, or is a date and a weekday together | 、いずれも |
 | 毎日, before a time that begins with a digit, 午前 or 午後 | nothing |
 | 毎日, before a time that begins with 毎時 or 毎分 | の |
-| anything, before a time that begins with 偶数の時間帯 or 奇数の時間帯, or with the を除く in front of one, or with an interval of hours that tiles the day (2時間ごと; 6時間ごとに1時間ずつ) | 、 (after 、いずれも, nothing more); a month or a year with no day after it takes 、 in place of its の |
+| anything, before a time that begins with 偶数の時間帯 or 奇数の時間帯, or with the を除く in front of one, or with an interval of hours that tiles the day (2時間ごと; 6時間ごとの時台) | 、 (after 、いずれも, nothing more); a month or a year with no day after it takes 、 in place of its の |
 | anything else | の |
 
 **Second half: a bare cadence.** Before a time that is a cadence of
@@ -370,7 +369,7 @@ followed: 毎月1日、終日15分ごと.)
   金曜日、偶数の時間帯に15分ごと; 毎月1日、奇数の時間帯に15分ごと; 毎週月曜
   日〜金曜日、8時台を除く偶数の時間帯に15分ごと; 毎月1日、2時間ごと; 毎週月
   曜日〜金曜日、2時間ごと; 毎月1日、2時間ごと（8:00を除く）; 毎週月曜日〜金
-  曜日、6時間ごとに1時間ずつ、その間は15分ごと; 水曜日を除く毎日、2時間ご
+  曜日、6時間ごとの時台に15分ごと; 水曜日を除く毎日、2時間ご
   と; after a month or a year with no day, in place of its の: 毎年6月、3時間
   ごと; 毎年6月、偶数の時間帯に1分ごと; 2030年、2時間ごと. After いずれも:
   毎月1日および毎週金曜日、いずれも2時間ごと.
@@ -754,7 +753,7 @@ reader confirmed that 5日おき is taken by some for every sixth day and 4
   cadence: the interval, from its first time where that is not 0:00,
   then what is left out in brackets, or in front of the even or odd hours:
   2時間ごと（8:00を除く）; 1:00から2時間ごと（7:00を除く）; 8時台を除く偶数
-  の時間帯に1分ごと; 3時間ごとに1時間ずつ、その間は1分ごと（6時台を除く）.
+  の時間帯に1分ごと; 3時間ごとの時台に1分ごと（6時台を除く）.
   The first or the last hour is never the one left out (3.9): the set is
   then a shorter cadence of its own that does not tile, with both ends
   (毎日2:00から22:00まで2時間ごと; 毎日0:00から20:00まで2時間ごと; 毎日1:00
@@ -943,8 +942,8 @@ the alternative; it is longer and has no counterpart for minutes.)
   (毎時0分（3:00を除く）; 毎時30分（3:30を除く）; 2時間ごと（8:00を除く）;
   0:30から2時間ごと（8:30を除く）; 1:00から2時間ごと（7:00を除く）) and the
   hour as a stretch where they are filled (10分ごと（3時台を除く）; 1分ごと
-  （3時台を除く）; 毎時5分・20分・45分（3時台を除く）; 3時間ごとに1時間ず
-  つ、その間は1分ごと（6時台を除く））.
+  （3時台を除く）; 毎時5分・20分・45分（3時台を除く）; 3時間ごとの時台に1分
+  ごと（6時台を除く））.
 * An hour taken out of the even or odd hours stands in front of them,
   because they are a rule, which Japanese modifies from the front as it
   does 毎日: 8時台を除く偶数の時間帯に1分ごと; 8時台を除く偶数の時間帯に
@@ -1010,7 +1009,7 @@ The hours come first, as a confinement, and then the minutes.
 | two windows | 9:00から9:59までと17:00から17:59まで、それぞれ1分ごと; 9:00から17:45までと22:00から22:45まで、それぞれ15分ごと |
 | three or more windows, at least one longer than an hour | each a window: 9:00から17:59までと20:00から20:59までと22:00から22:59まで、それぞれ1分ごと |
 | every second hour, tiling the day | 偶数の時間帯 or 奇数の時間帯 (5.5), に, then the interval: 偶数の時間帯に1分ごと; 奇数の時間帯に15分ごと |
-| any other cadence tiling the day (3.7) | N時間ごとに1時間ずつ、その間は, then the minutes as under every hour: 6時間ごとに1時間ずつ、その間は1分ごと; 3時間ごとに1時間ずつ、その間は15分ごと; from a later first hour, its first moment and から before it: 1:00から3時間ごとに1時間ずつ、その間は1分ごと |
+| any other cadence tiling the day (3.7) | N時間ごとの時台, に, then the interval, as after 偶数の時間帯: 6時間ごとの時台に1分ごと; 3時間ごとの時台に15分ごと; from a later first hour, its 時台 and から before it: 1時台から3時間ごとの時台に1分ごと |
 | three to eight separate hours and nothing longer | the hours with 台, then the minutes (below): 8時台・12時台・18時台、1分ごと; 9時台・10時台・14時台、1分ごと |
 | every second hour over part of the day, more than eight of them | its ends and 偶数の時間帯 or 奇数の時間帯 (5.5), then the minutes (below): 6時台から22時台までの偶数の時間帯に1分ごと |
 | every hour with exceptions | 10分ごと（3時台を除く） |
@@ -1021,24 +1020,51 @@ after の: 8時台・12時台・18時台の0分・15分・30分・45分; 8時台
 台 it follows a comma (8時台・12時台・18時台、5分ごと; …、1分ごと). The
 minutes are named where they can be because a fluent reader hesitated
 over whether 8時台・12時台・18時台、15分ごと starts at minute 0. **After 偶
-数の時間帯 or 奇数の時間帯, and after その間は, a cadence tiling the hour
-from 0 is always the interval**, after に or straight on: 偶数の時間帯に15
-分ごと; 6時間ごとに1時間ずつ、その間は15分ごと. (Where each minute is
+数の時間帯 or 奇数の時間帯, and after N時間ごとの時台, a cadence tiling the
+hour from 0 is always the interval**, after に: 偶数の時間帯に15
+分ごと; 6時間ごとの時台に15分ごと. (Where each minute is
 itself a stretch for seconds to run in, 4.2, a few minutes after a rule
 are named, as after 台: 偶数の時間帯の0分・30分に1分間ずつ、その間は1秒ご
-と, not two に in a row.) A rule or 1時間ずつ names
+と, not two に in a row.) A rule or N時間ごとの時台 names
 stretches that start on the hour, and a cadence that starts there is not
 qualified (README, "Description Accuracy"); the comma after a list of 時台
 is what gave the reader pause, and these have none. (Until 2026-11-14 the
 minutes were named here too: 偶数の時間帯（0時台・2時台…22時台）の0分・15
 分・30分・45分.)
 
-The stretch of a cadence of hours other than every second hour is 1時間ず
-つ after the interval, as a minute on a cadence is 1分間ずつ (4.2): 6時間ご
-とに1時間ずつ says that each occasion lasts one hour, and その間は ties the
-minutes to it. It replaces the list of 時台 (0時台・6時台・12時台・18時台、1
-分ごと), so that the hours read as they do under minute 0 (6時間ごと), and
-the list of eight for `*/3` is gone.
+The stretches of a cadence of hours other than every second hour are
+its 時台: the interval, ごとの, and 時台, from the first 時台 where that is
+not 0時台 (6時間ごとの時台; 1時台から3時間ごとの時台). They are then said
+as 偶数の時間帯 is, with に before an interval of minutes and の before
+minutes named or a run: 3時間ごとの時台に15分ごと; 6時間ごとの時台に1分
+ごと; 4時間ごとの時台の15分・45分; 3時間ごとの時台の0分から29分まで1分ご
+と. So editing the minutes changes only the words after 時台, and the
+every-second-hour and every-third-hour sentences are built alike.
+
+**Amended 2026-11-21** (by Claude Opus 5.5). From 2026-11-14 these
+stretches were 1時間ずつ after the interval, with その間は before the
+minutes: 3時間ごとに1時間ずつ、その間は15分ごと; 4時間ごとに1時間ずつ、そ
+の間は毎時15分・45分. The reason given was that it matched the minute on a
+cadence (1分間ずつ, 4.2) and replaced a list of eight 時台 for `*/3`. That
+reason does not hold against 時台. The old form makes the reader assemble
+three things (a rhythm of hours, a length of one hour, a rhythm of
+minutes) and work out for themselves which hour the length is and
+whether its end, the next :00, fires; 時台 is the word Japanese already
+has for exactly the hour from :00 to :59 (usage notes 3.2: 「9時台」＝
+9:00～9:59, in daily use on timetables), so it says which hour and where
+it ends with no length to add. It is shorter (3時間ごとの時台に15分ごと
+against 3時間ごとに1時間ずつ、その間は15分ごと), names one thing fewer, and
+has the same shape as 偶数の時間帯に15分ごと and 9時台・17時台の5分・20分・
+45分, which this book already uses. Evidence: no web page was found for
+1時間ずつ、その間は, nor for N時間ごとの時台 (searches 2026-11-21 found
+timetables listing minutes per 時台, and 時台 as a noun in counts by hour,
+各時台); neither form is attested, and the choice rests on 時台 being the
+everyday word for the hour and on the cost to the reader. Readers briefed
+only in Japanese were asked about the :00 after each hour and the minutes
+around it (reading check, 2026-11-21). The seconds inside a minute on
+these hours now take その間は as they do after the even or odd hours
+(4時間ごとの時台の0分・25分・50分に1分間ずつ、その間は2秒ごと), and その1
+分間は, which only kept two その間は apart, is gone.
 
 One or two separate hours are windows, which name the moments that fire.
 Three or more are named once each.
@@ -1058,7 +1084,7 @@ minute phrase of section 3 follows:
 | a range | the hours as stretches, a comma, then 毎時: 9時台から17時台まで、毎時5分・20分・45分; 9時台から17時台まで、毎時0分から29分まで1分ごと; 9時台から17時台まで、毎時0分から29分まで1分ごと、および45分; 9時台から17時台まで、毎時0分から56分まで7分ごと |
 | pieces | 9時台から17時台までと22時台、毎時5分・20分・45分 |
 | every second hour, tiling the day | 偶数の時間帯の15分・45分; 偶数の時間帯の0分から29分まで1分ごと |
-| any other cadence tiling the day | N時間ごとに1時間ずつ、その間は, then the minute phrase with 毎時: 4時間ごとに1時間ずつ、その間は毎時15分・45分; 1:00から3時間ごとに1時間ずつ、その間は毎時0分から29分まで1分ごと |
+| any other cadence tiling the day | N時間ごとの時台, の, and the minute phrase without 毎時, as after 偶数の時間帯: 4時間ごとの時台の15分・45分; 3時間ごとの時台の0分から29分まで1分ごと; 1時台から3時間ごとの時台の0分から29分まで1分ごと |
 | up to eight separate hours, or hours on another cadence | the hours with 台, の, and the minute phrase without 毎時: 9時台・17時台の5分・20分・45分; 0時台・5時台・10時台・15時台・20時台の15分・45分; 8時台・12時台・18時台の0分から56分まで7分ごと |
 | every second hour over part of the day, more than eight of them | 6時台から22時台までの偶数の時間帯の15分・45分 |
 | every hour with exceptions | 毎時5分・20分・45分（3時台を除く） |
@@ -1121,10 +1147,10 @@ the rest. The cases, in order:
      17:45まで15分ごとに1分間ずつ、その間は1秒ごと; 15分ごとに1分間ずつ、そ
      の間は1秒ごと; 毎日9:00・17:00に1分間ずつ、その間は1秒ごと; 毎時30分・42
      分に1分間ずつ、その間は1秒ごと; 0:24から3時間ごとに1分間ずつ、その間
-     は10秒ごと; 2時間ごとに1分間ずつ、その間は1秒ごと. Where その間は
-     already ties the minutes to an hour (4.1), the seconds take その1分間は
-     instead, so that the second is not read with the first: 4時間ごとに1
-     時間ずつ、その間は毎時0分・25分・50分に1分間ずつ、その1分間は2秒ごと. ずつ says that each occasion gets its own
+     は10秒ごと; 2時間ごとに1分間ずつ、その間は1秒ごと. After hours as
+     stretches the minutes are named first: 4時間ごとの時台の0分・25分・50
+     分に1分間ずつ、その間は2秒ごと (until 2026-11-21 その1分間は, beside an
+     earlier その間は that is gone, 4.1). ずつ says that each occasion gets its own
      minute, and その間は ties the seconds to it; 15分ごとに、各1分間、1秒ご
      と was understood only on a second reading, and a reader who skims
      took it as every second throughout.
@@ -1618,7 +1644,7 @@ as written.
 月; 年. There are no plural forms. 1分間 is "for one minute".
 
 6.5 毎 (in 毎時, 毎分 before a second, 毎日, 毎週, 毎月, 毎年), ごと, から,
-まで, からの, の, と, および, いずれも, それぞれ, ずつ, その間は, その1分間は, に,
+まで, からの, の, と, および, いずれも, それぞれ, ずつ, その間は, に,
 のある月, のある年, のみ, は, が, で, ただし, の場合は, 直前の, 直後の, う
 るう年, 以降, を除く, 翌日, 翌月, 翌年, 第, 最終, 末日, 前日, 日前, 奇数
 日, 偶数日, 奇数月, 偶数月, 奇数年, 偶数年, 奇数の時間帯, 偶数の時間帯, ご
@@ -1660,8 +1686,8 @@ inside the pair.
 
 8.3 `confinement-vs-juxtaposition` — A confinement is a window before the
 interval (9:00から17:59まで1分ごと), hours with 台 (8時台・12時台・18時台、1
-分ごと), 偶数の時間帯に, からの1分間、, に1分間ずつ、その間は or に1
-時間ずつ、その間は.
+分ごと), 偶数の時間帯に, N時間ごとの時台に, からの1分間、 or に1分間ず
+つ、その間は.
 
 8.4 `redundancy` — 毎月 is not said after a named month or months before
 a date. 毎週 is said once for a list or a range. No part is quantified
