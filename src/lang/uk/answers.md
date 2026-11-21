@@ -1085,9 +1085,12 @@ under every hour a phrase ends «після початку кожної годи
 * **The threshold** is three hours. Two hours are said as one hour is,
   each on its own: up to six clock times (`5,20,45 9,17` is «о 9:05,
   9:20, 9:45, 17:05, 17:20 та 17:45») or two windows («щохвилини з 9:00
-  до 9:59 і з 17:00 до 17:59»). Two windows are two pictures on the
-  clock face, each held as one thing; from three on, the windows repeat
-  the minutes more than they name hours.
+  до 9:59 і з 17:00 до 17:59»). Past six clock times a list of minutes
+  in two hours is named once, as in three: `5,20,40,50 9,17` is «щодня
+  через 5, 20, 40 та 50 хвилин після 9:00 та 17:00», four counts and
+  two hours where eight clock times would be listed (3.10). Two windows
+  are two pictures on the clock face, each held as one thing; from three
+  on, the windows repeat the minutes more than they name hours.
 * **Past five hours a cadence is a series**: its first three hours and
   «і так далі до» its last, «включно», as days of the month are (3.7):
   «щохвилини протягом години після 5:00, 7:00, 9:00 і так далі до 23:00

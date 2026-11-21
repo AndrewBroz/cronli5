@@ -432,6 +432,13 @@ const rows = [
   ['5,20,45 9-17,22 * * *',
     'tous les jours, aux minutes 5, 20 et 45 de chaque heure, de 9 h 05 à ' +
     '17 h 45 et de 22 h 05 à 22 h 45'],
+  // Hours in pieces under two runs of minutes: the minute phrase and a
+  // window for each run of hours names fewer things than a window for
+  // each run of minutes in each hour.
+  ['5-10,15-20 8,15,16 * * *',
+    'tous les jours, toutes les minutes de la minute 5 à la minute 10 et ' +
+    'de la minute 15 à la minute 20 de chaque heure, de 8 h 05 à 8 h 20 ' +
+    'et de 15 h 05 à 16 h 20'],
   // The minutes once, then the hours once (2026-11-20: the minute phrase
   // and then a window for each hour).
   ['5,20,45 8,10,13,16,19 * * *',

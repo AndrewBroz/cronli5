@@ -3460,6 +3460,13 @@
    "pattern": "5,20,45 9-17,22 * * *"
   },
   {
+   "expected": "tous les jours, toutes les minutes de la minute 5 à la minute 10 et de la minute 15 à la minute 20 de chaque heure, de 8 h 05 à 8 h 20 et de 15 h 05 à 16 h 20",
+   "options": {
+    "lang": "fr"
+   },
+   "pattern": "5-10,15-20 8,15,16 * * *"
+  },
+  {
    "expected": "tous les jours, aux minutes 5, 20 et 45, pendant les heures de 8 h, 10 h, 13 h, 16 h et 19 h",
    "options": {
     "lang": "fr"

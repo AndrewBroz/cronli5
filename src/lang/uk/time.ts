@@ -353,12 +353,10 @@ const steppedLeads: Table<Stepped, string[], [Level]> = {
   values: () => []
 };
 
-// The stretches of slots that windows are said for: a cadence is one,
-// from its first slot to its last.
+// The stretches of slots that windows are said for. A cadence of slots
+// never has windows: it is said as its cycle or named once.
 function stretches(coarse: Described, level: Level): number[][] {
-  return coarse.kind === 'cadence' ?
-    [[coarse.start, coarse.last]] :
-    runsOf(walk(coarse, level.slots), level.slots);
+  return runsOf(walk(coarse, level.slots), level.slots);
 }
 
 // Each stretch of slots from its first firing to its last.
@@ -416,11 +414,8 @@ function timesIn(slots: number[], fine: Fine, level: Level): Said {
 function positioned(coarse: Plain, fine: Fine, level: Level): Said {
   const position = positionsOf(fine, level);
   const slots = walk(coarse, level.slots);
-  const lead = coarse.kind === 'cadence' ?
-    everyN(coarse.interval, units.hour) :
-    level.lead;
   const head = fine.description.kind === 'values' ?
-    `${lead} ${position}` :
+    `${level.lead} ${position}` :
     anchored(position, [level.each, `${words.afterStartOf} ${level.each}`]);
 
   if (slots.length * fine.values.length <= 6) {

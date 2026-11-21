@@ -4141,6 +4141,13 @@
    "pattern": "5,20,35 1,4,9,14,18 * * *"
   },
   {
+   "expected": "tutti i giorni, ai minuti 5, 7, 20, 33, 41, 50 e 52 delle ore 9 e 17",
+   "options": {
+    "lang": "it"
+   },
+   "pattern": "5,7,20,33,41,50,52 9,17 * * *"
+  },
+  {
    "expected": "tutti i giorni, ogni 15 minuti nelle ore 1, 4, 9, 14 e 18",
    "options": {
     "lang": "it"

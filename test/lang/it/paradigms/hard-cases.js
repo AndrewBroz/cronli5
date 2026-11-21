@@ -631,6 +631,10 @@ const rows = [
     'tutti i giorni, ai minuti 5 e 35 delle ore 1, 4, 9, 14 e 18'],
   ['5,20,35 1,4,9,14,18 * * *',
     'tutti i giorni, ai minuti 5, 20 e 35 delle ore 1, 4, 9, 14 e 18'],
+  // Two hours alone under a list past eight clock times: case D.6 (a),
+  // the hours in place of «di ogni ora».
+  ['5,7,20,33,41,50,52 9,17 * * *',
+    'tutti i giorni, ai minuti 5, 7, 20, 33, 41, 50 e 52 delle ore 9 e 17'],
   ['*/15 1,4,9,14,18 * * *',
     'tutti i giorni, ogni 15 minuti nelle ore 1, 4, 9, 14 e 18'],
   ['10-20 1,4,9,14,18 * * *',

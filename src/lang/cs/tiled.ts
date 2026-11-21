@@ -299,7 +299,7 @@ function piecesOnce(found: CadencePieces): string {
 // part; the full hour is said by the named hours.
 function singlesOnce(part: CadencePieces['parts'][number], index: number):
   string {
-  const later = ((part as {values: number[]}).values || []).filter(Boolean);
+  const later = (part as {values: number[]}).values.filter(Boolean);
 
   return later.length && spaced(index && words.still || '',
     counted(later, units.minute)) || '';
