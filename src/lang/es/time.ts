@@ -618,8 +618,8 @@ const forms: {[form in Form]: (scene: Scene) => string} = {
   },
   // Hours that tile the day, by their rule, the minutes apart before it:
   // «cada 2 horas»; «en el minuto 30, cada 2 horas desde la 1:00»;
-  // filled, «cada minuto durante una hora cada 3 horas», and every second
-  // hour «cada minuto en las horas pares».
+  // filled, «cada minuto durante toda la hora, cada 3 horas», and every
+  // second hour «cada minuto en las horas pares».
   rhythm(scene) {
     const {clock, facts, hours, minutes, voice} = scene;
     const rule = spaced([
@@ -631,7 +631,7 @@ const forms: {[form in Form]: (scene: Scene) => string} = {
     ]);
     const filled = pick([
       [`${words.in} ${parityHours(hours)}`, everyOther(hours)],
-      [`${words.during} ${words.oneHour} ${rule}`, true]
+      [`${words.during} ${words.wholeHour}, ${rule}`, true]
     ]);
 
     return pick([

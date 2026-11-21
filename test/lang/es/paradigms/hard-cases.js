@@ -234,9 +234,12 @@ const rows = [
   ['0-24,28-59 9,17 * * *',
     'todos los días, cada minuto de 9:00 a 9:59 y de 17:00 a 17:59, ' +
     'excepto en los minutos 25, 26 y 27 de cada hora'],
+  // Minutes filling the hour under a cadence of hours keep the hours'
+  // rule as other minutes do, «durante toda la hora, cada 6 horas», not
+  // two cadences stacked (2026-11-21).
   ['0-28,30-59 */6 * * *',
-    'cada minuto durante una hora cada 6 horas, excepto en el minuto 29 de ' +
-    'cada hora'],
+    'cada minuto durante toda la hora, cada 6 horas, excepto en el minuto ' +
+    '29 de cada hora'],
   ['* 28-24 9 * * *',
     'todos los días, cada segundo de 9:00:00 a 9:59:59, excepto de 9:25:00 ' +
     'a 9:27:59'],
@@ -244,8 +247,8 @@ const rows = [
     'todos los días, cada segundo de 9:00:00 a 9:59:59, excepto de 9:10:00 ' +
     'a 9:10:59 y de 9:20:00 a 9:20:59'],
   ['* 0-28,30-59 */6 * * *',
-    'cada segundo durante una hora cada 6 horas, excepto durante el minuto ' +
-    '29 de cada hora'],
+    'cada segundo durante toda la hora, cada 6 horas, excepto durante el ' +
+    'minuto 29 de cada hora'],
 
   // Years with a hole in a cadence, and every year but one.
   ['0 0 9 * * * 2000-2028/2,2032-2098/2',
@@ -502,7 +505,11 @@ const rows = [
   // Hours as a confinement. A cadence of hours that does not tile names
   // its hours, by parity or by when they begin, and the minutes are said
   // once inside them: never fused into the window's last time, never
-  // «durante una hora» between two cadences (2026-11-20).
+  // «durante una hora» between two cadences (2026-11-20). Under a cadence
+  // that tiles the day, minutes filling the hour are «durante toda la
+  // hora», then the hours' rule, as the minutes of a run are «durante los
+  // primeros 30 minutos, cada 3 horas»: one minute phrase, one rhythm of
+  // hours, not «durante una hora cada 3 horas» (2026-11-21).
   ['*/15 8-18/2 * * *',
     'todos los días, cada 15 minutos en las horas pares de 8:00 a 18:00'],
   ['* 5/2 * * *',
@@ -512,8 +519,20 @@ const rows = [
     'todos los días, cada 15 minutos durante las horas que empiezan a las ' +
     '2:00, 5:00, 8:00, 11:00, 14:00, 17:00 y 20:00'],
   ['15 * */2 * * *', 'en el segundo 15 de cada minuto, en las horas pares'],
-  ['* 0-23/6 * * *', 'cada minuto durante una hora cada 6 horas'],
-  ['* */8 * * *', 'cada minuto durante una hora cada 8 horas'],
+  ['* 0-23/6 * * *', 'cada minuto durante toda la hora, cada 6 horas'],
+  ['* */8 * * *', 'cada minuto durante toda la hora, cada 8 horas'],
+  ['*/15 */3 * * *', 'cada 15 minutos durante toda la hora, cada 3 horas'],
+  ['*/10 */6 * * *', 'cada 10 minutos durante toda la hora, cada 6 horas'],
+  ['*/30 */4 * * *', 'cada 30 minutos durante toda la hora, cada 4 horas'],
+  ['*/20 */12 * * *',
+    'todos los días, cada 20 minutos de 0:00 a 0:40 y de 12:00 a 12:40'],
+  ['* 1/3 * * *',
+    'cada minuto durante toda la hora, cada 3 horas desde la 1:00'],
+  ['*/15 1/3 * * *',
+    'cada 15 minutos durante toda la hora, cada 3 horas desde la 1:00'],
+  ['*/5 2/3 * * 1-5',
+    'de lunes a viernes, cada 5 minutos durante toda la hora, cada 3 horas ' +
+    'desde las 2:00'],
   ['*/15 1/2 * * *',
     'cada 15 minutos en las horas impares'],
   ['0 9-17,20,22 * * *',
@@ -574,7 +593,8 @@ const rows = [
   // (2026-11-20).
   ['* * 5/2 * * *',
     'todos los días, cada segundo en las horas impares de 5:00 a 23:00'],
-  ['* * */3 * * *', 'cada segundo durante una hora cada 3 horas'],
+  ['* * */3 * * *', 'cada segundo durante toda la hora, cada 3 horas'],
+  ['*/10 * */3 * * *', 'cada 10 segundos durante toda la hora, cada 3 horas'],
   ['10-20 30 9 * * *',
     'todos los días, cada segundo de 9:30:10 a 9:30:20'],
   ['*/10 30 9 * * *', 'todos los días, cada 10 segundos de 9:30:00 a 9:30:50'],
@@ -587,7 +607,7 @@ const rows = [
   ['* * 9 * * *', 'todos los días, cada segundo de 9:00:00 a 9:59:59'],
   ['* * 9-17 * * *', 'todos los días, cada segundo de 9:00:00 a 17:59:59'],
   ['* 0-29 9 * * *', 'todos los días, cada segundo de 9:00:00 a 9:29:59'],
-  ['* */3 * * *', 'cada minuto durante una hora cada 3 horas'],
+  ['* */3 * * *', 'cada minuto durante toda la hora, cada 3 horas'],
   ['30 0 9-17 * * *', 'todos los días, cada hora de 9:00:30 a 17:00:30'],
   ['* 0 * * * *', 'cada segundo durante el minuto 0 de cada hora'],
   ['30 0 * * * *', 'a los 30 segundos de cada hora en punto'],
