@@ -69,7 +69,7 @@ are and said what each sentence meant to them. The last round changed
 only forms a reader could not place, or placed wrongly; forms that were
 understood at first reading and merely graded stiff were left. Every choice
 here was made for Japanese; where a reader's evidence decided it, the
-note says so. No fluent human has reviewed these answers yet.
+note says so.
 
 After the renderer was built, an independent reader ran it over some 3,500
 patterns beside their fire times, read each sentence cold, and compared the

@@ -4,8 +4,8 @@ Answered by the orchestrating model (Claude Fable 5.2), 2026-11-12, and
 revised three times the same day, each time after blind reads: three
 fluency judges in turn, and a reader who checked every row against its
 schedule. Where the judges disagree the form is contested; the views are
-recorded with the reason for the choice, so a fluent reviewer can overrule
-it. No fluent human has reviewed these answers yet.
+recorded with the reason for the choice, so it can be tested again, by
+readers or by corpus evidence.
 
 Amended 2026-11-13 after an adversarial read of the renderer built from
 them, of its output over some 2,900 patterns beside their fire times, and

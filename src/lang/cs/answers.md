@@ -150,8 +150,8 @@ directory: how Czech already writes times that recur, written by someone
 who knew nothing of cron. Where these answers rest on it they say
 **(usage §n)**; where they leave it, the last section says so and why.
 Every example is what a careful writer would put on a screen. Reasons
-are given, with the alternative that was rejected, so a fluent reviewer
-can overturn a call.
+are given, with the alternative that was rejected, so that a call can be
+tested again, by readers or by corpus evidence.
 
 This is a seventh version. The first was read by an adversarial reader
 who worked every row against its pattern **(schedule reader)** and by a
@@ -167,8 +167,7 @@ from general rules. A
 second adversarial read of the fourth version, rows and rule book
 **(schedule reader 2)**, led to the fifth, and a fourth blind fluency
 read **(judge 4)** to the sixth, and a fifth **(judge 5)**, who
-understood all but a handful of sentences, to this one. No fluent human has read these answers
-yet.
+understood all but a handful of sentences, to this one.
 
 Shorthand: **M** is the set of minutes, **H** the set of hours, **S** the
 set of seconds.

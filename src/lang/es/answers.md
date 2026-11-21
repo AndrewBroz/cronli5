@@ -154,7 +154,7 @@ Answered by the orchestrating model (Claude Fable 5.2), 2026-11-12, for
 Spanish as written in Spain by default, with a Mexican and United States
 variant for the clock. Every example is what a careful writer would put on
 a screen. Reasons are given, with the alternative that was rejected, so a
-fluent reviewer can overturn a call.
+call can be tested again, by readers or by corpus evidence.
 
 These answers are a third version. The first put the time before the
 day and leaned on arithmetic words («las horas pares», «los meses
@@ -338,7 +338,7 @@ stop («lun.», «jun.»); they are the unpunctuated forms of calendar
 headers and narrow columns, and the authority for this one style is that
 practice **(schedule reader:** "not a sentence anyone writes"**)**. The
 style is for a caller short of room; with full stops a list would read
-«los lun., mié. y vie.». A fluent reviewer may prefer the stops.
+«los lun., mié. y vie.».
 
 With `hour12: true`, 0:00 and 12:00 are «12:00 a. m.» and «12:00 p. m.».
 The *Diccionario panhispánico de dudas* advises against both as doubtful
@@ -1284,7 +1284,7 @@ cada mes»). «Y además» is their word; «y también» was called the seam of
 a template. Their rewrites usually ended «aunque caiga en fin de semana»,
 which is true only when the weekdays are Monday to Friday; the general
 «caiga en el día que caiga» was considered and left out, because after a
-complete clause «y además» already adds. A fluent reviewer may want it.
+complete clause «y además» already adds.
 
 The cost to continuity is declared (2.1, 2.7): restricting the weekday of
 a dated schedule moves the date phrase from before the time to after it,
@@ -1765,8 +1765,9 @@ The departures, each with its reason:
    their ends («de 9:00 a 17:45», «de 9:00 a 17:59»), and three blind
    readers took the hourly window exactly. The gloss would repeat the end
    already named in the most common sentences. This is a judgment of the
-   notes' writer against the readings of three others; a fluent reviewer
-   may still want «(la última, a las 17:00)».
+   notes' writer against the readings of three others; a reader who
+   misreads the end of such a window would reopen «(la última, a las
+   17:00)».
 2. **The night of two days.** The notes say a careful text writes «la
    noche del viernes al sábado» and not «sábados de 0:00 a 2:00». A
    pattern's hours belong to the day it names: `0 22-2 * * 1` fires in

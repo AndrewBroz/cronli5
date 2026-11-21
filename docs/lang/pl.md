@@ -25,9 +25,8 @@ descriptions. Every row was read by an adversarial schedule reader, and
 the sentences by blind readers briefed only in Polish and asked for every
 reading of each; the renderer was built by an agent that saw no other
 renderer and none of the held-out rows, then audited independently.
-**No fluent human has reviewed it.**
 
-What a native reviewer should check first:
+Where the evidence is thinnest:
 
 * **One missing moment inside the hour** is said exactly, and heavily:
   `cronli5('0-28,30-59 * * * *', {lang: pl}) // 'co minutę, oprócz chwili wypadającej 29 minut po każdej pełnej godzinie'`

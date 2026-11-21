@@ -4,6 +4,18 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). This project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.2]
+
+### Changed
+
+- **Docs: review is recorded as evidence, not as a missing human.** The
+  pipeline is built to reach quality without human review, so the
+  language guides, notes and changelog no longer present its absence as a
+  caveat. Lists of the choices resting on the least evidence are kept,
+  under "Where the evidence is thinnest". The language status table loses
+  its "Human review" column: each language's `status.json` now has one
+  `review` record, where a maintainer's ruling is evidence like any other.
+
 ## [1.3.1]
 
 ### Changed
@@ -30,9 +42,6 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   "every minute for the first 30 minutes of the hour, every 3 hours".
   Japanese now says 3時間ごとの時台に15分ごと.
 
-No fluent human has reviewed the new forms; each was checked by readers
-briefed only in its language and scored against the true schedule.
-
 ## [1.3.0]
 
 ### Added
@@ -45,9 +54,7 @@ briefed only in its language and scored against the true schedule.
   월~금요일 오전 9시 30분» and `*/15 9-17 * * 1-5` is «매주 월~금요일 오전
   9시부터 오후 5시 45분까지 15분마다». One style, `ko` (region `KR`), with
   two fields: `hour12` (`false` gives «17시 30분») and `short` (`true`
-  gives «매주 월·수·금»). No fluent human has reviewed it; «짝수 시» and
-  «홀수 시» for every second hour are the first thing a native reviewer
-  should check. See `docs/lang/ko.md`.
+  gives «매주 월·수·금»). See `docs/lang/ko.md`.
 - **Indonesian (`id`)**, at beta: `import id from 'cronli5/lang/id'`, or
   `{lang: 'id'}` from `cronli5/all`. Written from usage notes in Indonesian
   by a writer told nothing of cron, then answers to the language
@@ -58,9 +65,7 @@ briefed only in its language and scored against the true schedule.
   «setiap Senin sampai Jumat pukul 09.30», and `*/15 9-17 * * 1-5` is
   «setiap Senin sampai Jumat, setiap 15 menit dari pukul 09.00 sampai
   17.45». Three style fields: `hour12` («pukul 5.30 sore»), `separator`
-  (`'.'` or `':'`) and `short` (Sen, Jun). No fluent human has reviewed
-  it; «jam genap» and «jam ganjil» for every second hour are the first
-  thing a native reviewer should check
+  (`'.'` or `':'`) and `short` (Sen, Jun)
   ([docs/lang/id.md](./docs/lang/id.md)).
 - **Polish (`pl`)**, at beta: `import pl from 'cronli5/lang/pl'`, or
   `{lang: 'pl'}` from `cronli5/all`. It was written from usage notes in
@@ -73,7 +78,6 @@ briefed only in its language and scored against the true schedule.
   1-5` is «od poniedziałku do piątku co 15 minut od 9:00 do 17:45». Style
   fields: `short` («od pon. do pt. co 15 min …», «1 VI»), `separator`
   («9.30») and `hour12` (the colloquial «9:30 rano»); one region, `PL`.
-  No fluent human has reviewed it.
 - **Traditional Chinese (`zh-Hant`)**, at beta: a language of its own,
   `import zhHant from 'cronli5/lang/zh-hant'`, written from usage notes in
   Traditional Chinese by a writer told nothing of cron, then answers,
@@ -81,8 +85,7 @@ briefed only in its language and scored against the true schedule.
   blind reads, and a renderer built without sight of any other, the
   Simplified one included. Two styles: `tw` (Taiwan, the default), as in
   「每週一至週五 09:00～17:45，每15分鐘一次」, and `hk` (Hong Kong, also
-  used for Macau), as in 「每星期一至五上午9時至下午5時45分，每15分鐘一次」.
-  No fluent human has reviewed it. See
+  used for Macau), as in 「每星期一至五上午9時至下午5時45分，每15分鐘一次」. See
   [docs/lang/zh-hant.md](./docs/lang/zh-hant.md).
 - **Russian (`ru`)**, at beta: `import ru from 'cronli5/lang/ru'`, or
   `{lang: 'ru'}` from `cronli5/all`. It is Russian as it is written in
@@ -95,7 +98,7 @@ briefed only in its language and scored against the true schedule.
   месяца, в 0:00». Written from usage notes in the language by a writer
   told nothing of cron, then answers, hand-written expected descriptions,
   an adversarial schedule read and blind readers, and a renderer built
-  without sight of any other. No fluent human has reviewed it.
+  without sight of any other.
 
 ### Changed
 
@@ -153,7 +156,7 @@ briefed only in its language and scored against the true schedule.
 - **Traditional Chinese says ten kinds of schedule more plainly**, after
   its sentences were set beside those of Simplified Chinese, which was
   written independently. No schedule was said wrongly before; each form
-  is the language's own, and none has yet been read by a fluent human.
+  is the language's own.
   - A rhythm with a time or two beside it stays the rhythm:
     `0 */2,13 * * *` is 「每2小時一次，另加 13:00」, where it was
     「每天 12:00～14:00，每小時一次，另加」 and ten clock times;

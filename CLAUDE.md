@@ -334,8 +334,18 @@ renderer change.
   independent, adversarial read of the rows and of the renderer is part of
   the process, not an extra.
 
-`src/lang/<code>/status.json` records who has reviewed what, honestly.
-Review is tracked; it does not gate a release.
+`src/lang/<code>/status.json` holds a language's status and, in
+`review`, a dated record of how it was built and checked and on whose
+rulings, honestly. Review is tracked; it does not gate a release.
+
+Human review is not part of the pipeline: the pipeline exists to reach
+quality without it. A maintainer's ruling is evidence and is recorded in
+`review` with the rest; no field or column records its absence. So
+"no fluent human has reviewed this" is never a finding, a doubt or a
+caveat. Do not write it into reports, recaps, doubt lists, changelogs,
+answers or docs, and do not frame a thin spot as "for a native reviewer
+to check". Say what a choice rests on (readers, corpus, usage notes) and
+what check in the pipeline would test it.
 
 ## Before you finish
 

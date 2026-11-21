@@ -43,9 +43,8 @@ schedule, and three blind readers briefed only in Traditional Chinese
 read samples for second readings and for Mainland wording, before the
 renderer was built by an agent that saw no other renderer. An independent
 audit then read the renderer's sentences beside their firing times.
-**No fluent human has reviewed it.**
 
-What a native reviewer should check first:
+Where the evidence is thinnest:
 
 * **雙數時 and 單數時** for every second hour that holds minutes (「每逢雙數
   時的00、15、30、45分」). No published source was found for the words, and

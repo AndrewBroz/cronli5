@@ -8,8 +8,8 @@ three fluent Brazilian readers; this version answers those readings.
 Where the fluency readers disagreed the form is marked **contested** and
 the choice is argued. The last round changed only what a reader could not
 tell, told wrongly, or told on a second reading; a form that was merely
-called stiff and understood at once was left alone. Reasons are given so a fluent reviewer can overturn a
-call.
+called stiff and understood at once was left alone. Reasons are given so a call can be tested again, by readers or by
+corpus evidence.
 
 An audit on 2026-11-13 read the renderer against these answers and every
 sentence against its schedule. It found one wrong schedule, in a row as
@@ -882,7 +882,7 @@ Why these forms:
   inteira», nor for «durante uma hora, de 3 em 3 horas»); «durante todo
   o dia», «o dia inteiro» are the dictionary pattern (Infopedia,
   «durante»). The choice is the orchestrating model's, on the reader's
-  concern and continuity; a fluent reviewer may overturn it. The other
+  concern and continuity; readers or corpus evidence may overturn it. The other
   languages say the same thing with their own means (one hour in three;
   each time through the whole hour; from the top of the hour to :45).
 * The form that this rule book once rejected, «a cada minuto durante uma
@@ -966,7 +966,7 @@ documentation translated into Portuguese (Zabbix's custom intervals)
 lists clock times instead («todos os dias às 9:10, 9:40, 10:10, 10:40»),
 the form this replaces beyond four. «Nas horas 1, 4, 9 …» is therefore
 an extension of an existing confinement, chosen by the orchestrating
-model, and a fluent reviewer may overturn it; the alternative is «nos
+model, and readers or corpus evidence may overturn it; the alternative is «nos
 minutos 5 e 35 das horas 1, 4, 9 …», which follows «de cada hora» but
 would change its preposition with the kind of minutes.
 
@@ -1733,8 +1733,7 @@ judgment, and much of what bears on these choices is the second kind.
   numbered anyway («do minuto 10 ao 40», «durante o minuto 29»); and one
   blind reader took «aos 30 minutos de cada hora» for "every 30 minutes".
   Two ways of naming a minute in one sentence would be worse than one
-  that is a little stiff. This is the first thing a fluent reviewer
-  should rule on; the alternative is «aos 30 minutos de cada hora», «aos
+  that is a little stiff. This is where the evidence is thinnest; the alternative is «aos 30 minutos de cada hora», «aos
   5, 20 e 45 minutos de cada hora», with «no minuto 1» kept for that one
   value.
 * **«Todas as segundas»** (3.2), where the notes call «às segundas» the

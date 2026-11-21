@@ -2,7 +2,8 @@
 
 Answered by the orchestrating model (Claude Fable 5.2), 2026-11-11, for US
 English as the default style. Every example is what a speaker would say
-aloud. Reasons are given so a fluent reviewer can overturn a call.
+aloud. Reasons are given so a call can be tested again, by readers or by
+corpus evidence.
 
 Amended 2026-11-13 after an adversarial read of the rules, the rows and
 the renderer's output against each schedule's fire times. Each amendment

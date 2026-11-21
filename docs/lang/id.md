@@ -18,7 +18,7 @@ cronli5('30 9 * * MON-FRI', {lang: 'id'}); // 'setiap Senin sampai Jumat pukul 0
 
 ## Status
 
-**Beta. No fluent human has reviewed it.**
+**Beta.**
 
 Built from usage notes written in Indonesian by a writer told nothing of
 cron ([usage.md](../../src/lang/id/usage.md)), from written answers to the
@@ -30,7 +30,7 @@ Indonesian, who were asked for every reading of each sentence. The renderer
 was then built by an agent that saw no other renderer and no held-out row,
 and audited against an independent answer key.
 
-What a native reviewer should check first:
+Where the evidence is thinnest:
 
 * **«jam genap» and «jam ganjil»** (every second hour, with something finer
   inside it) **have no corpus support for hours.** Web searches found the

@@ -18,7 +18,7 @@ cronli5('30 9 * * MON-FRI', {lang: 'ko'}); // '매주 월~금요일 오전 9시 
 
 ## Status
 
-**Beta. No fluent human has reviewed it.**
+**Beta.**
 
 Built from usage notes written in Korean by a writer told nothing of cron
 ([usage.md](../../src/lang/ko/usage.md)), from the notes on each choice
@@ -29,8 +29,8 @@ schedule by an adversarial reader (a model), and samples were read by
 blind readers (models) briefed only in Korean, who were asked for every
 reading of each sentence.
 
-The first thing a native reviewer should check is «짝수 시» and «홀수 시»
-for every second hour:
+The evidence is thinnest for «짝수 시» and «홀수 시» for every second
+hour:
 
 ```js
 cronli5('*/15 */2 * * *', {lang: ko}); // '매일 짝수 시에 15분마다'
