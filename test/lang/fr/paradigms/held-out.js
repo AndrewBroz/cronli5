@@ -100,12 +100,14 @@ const rows = [
     'du lundi au vendredi, toutes les 15 minutes de 0 h à 0 h 45'],
   ['*/15 9 * * 1-5',
     'du lundi au vendredi, toutes les 15 minutes de 9 h à 9 h 45'],
+  // Separate hours are named once, as the hours the minutes fall in: a
+  // window for each said the same minutes again (2026-11-20).
   ['*/15 9,17 * * 1-5',
-    'du lundi au vendredi, toutes les 15 minutes de 9 h à 9 h 45 et de 17 ' +
-    'h à 17 h 45'],
+    'du lundi au vendredi, toutes les 15 minutes, pendant les heures de ' +
+    '9 h et de 17 h'],
   ['*/15 8,12,18 * * 1-5',
-    'du lundi au vendredi, toutes les 15 minutes de 8 h à 8 h 45, de 12 h ' +
-    'à 12 h 45 et de 18 h à 18 h 45'],
+    'du lundi au vendredi, toutes les 15 minutes, pendant les heures de ' +
+    '8 h, 12 h et 18 h'],
   ['*/15 */2 * * 1-5',
     'du lundi au vendredi, toutes les 15 minutes, une heure sur deux'],
   ['*/15 */6 * * 1-5',
@@ -267,9 +269,10 @@ const rows = [
 
   // open / hour
   ['* 12 * * *', 'tous les jours, toutes les minutes de 12 h à 12 h 59'],
+  // Named once, as the hours the minutes fall in (2026-11-20).
   ['* 8,12,18 * * *',
-    'tous les jours, toutes les minutes de 8 h à 8 h 59, de 12 h à 12 h 59 ' +
-    'et de 18 h à 18 h 59'],
+    'tous les jours, toutes les minutes, pendant les heures de 8 h, 12 h ' +
+    'et 18 h'],
   ['* 9-17 * * *', 'tous les jours, toutes les minutes de 9 h à 17 h 59'],
   ['* */2 * * *', 'toutes les minutes, une heure sur deux'],
   ['* */6 * * *', 'toutes les minutes, une heure sur six'],

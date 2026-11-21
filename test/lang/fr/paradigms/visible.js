@@ -178,9 +178,11 @@ const rows = [
 
   // open / hour
   ['* 0 * * *', 'tous les jours, toutes les minutes de 0 h à 0 h 59'],
+  // Separate hours are named once, as the hours the minutes fall in: a
+  // window for each said the same minutes again (2026-11-20).
   ['* 9,17 * * *',
-    'tous les jours, toutes les minutes de 9 h à 9 h 59 et de 17 h à 17 h ' +
-    '59'],
+    'tous les jours, toutes les minutes, pendant les heures de 9 h et de ' +
+    '17 h'],
   ['* 9-17,22 * * *',
     'tous les jours, toutes les minutes de 9 h à 17 h 59 et de 22 h à 22 h ' +
     '59'],

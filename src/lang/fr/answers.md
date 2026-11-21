@@ -1,5 +1,20 @@
 # French: answers to the language questionnaire
 
+**Amended 2026-11-20**, by Claude Opus 5.5: **the same minutes in
+several hours are said once, and the hours once** (4.1, « Several
+hours »). Before, `5,35 1,4,9,14,18 * * *` was ten clock times, `*/15`
+under the same hours five windows that differed only in their hour, and
+under a cadence of hours (`6-18/3`) the first two hours were shown, each
+with its minutes, then « et ainsi de suite toutes les 3 heures jusqu'à
+18 h 35 ». The book's reasons were that windows read right at once
+(judges 2 and 3, « clair mais long ») and that the times need no working
+out. Both hold for one or two hours; neither for five, where the reader
+is handed the same minutes five times and has to find the pattern the
+sentence did not state. French now does what its timetables do in a
+grid (the hours as headings, the minutes beneath): the minutes first,
+closed on nothing as beside a cadence that tiles the day, then « pendant
+les heures de 1 h, 4 h, 9 h, 14 h et 18 h ».
+
 **Amended 2026-11-14 on the maintainer's rulings**, by Claude Opus 5.5.
 What this book said before, and why it was wrong:
 
@@ -924,10 +939,10 @@ by H as a confinement.
 | every hour | none |
 | one hour | « toutes les minutes de 9 h à 9 h 59 »; « toutes les 15 minutes de 9 h à 9 h 45 » |
 | a range | « toutes les minutes de 9 h à 17 h 59 »; « toutes les 15 minutes de 9 h à 17 h 45 » |
-| separate hours and runs that are not a cadence, however many (hours in a row are one window); and a cadence of four hours or fewer | each a window: « toutes les 15 minutes de 8 h à 8 h 45, de 12 h à 12 h 45 et de 18 h à 18 h 45 »; « toutes les minutes de 9 h à 17 h 59, de 20 h à 20 h 59 et de 22 h à 22 h 59 » |
+| two or more separate hours (no two in a row), and a cadence that does not tile the day | the hours named once (« Several hours » below): « toutes les 15 minutes, pendant les heures de 8 h, 12 h et 18 h »; « toutes les minutes, pendant les heures de 9 h et de 17 h » |
+| separate hours and runs together, that are not a cadence (hours in a row are one window) | each a window: « toutes les minutes de 9 h à 17 h 59, de 20 h à 20 h 59 et de 22 h à 22 h 59 » |
 | a cadence that tiles the day | none: the minutes, then « une heure sur » and the interval in words, with the start when it is not midnight: « toutes les minutes, une heure sur deux »; « toutes les 15 minutes, une heure sur six »; « toutes les 15 minutes, une heure sur deux à partir de 1 h » |
 | a cadence that tiles the day, with exceptions | the form above, then the stretches taken out: « toutes les 15 minutes, une heure sur deux, sauf de 8 h à 8 h 45 »; « toutes les minutes, une heure sur deux, sauf de 8 h à 8 h 59 » |
-| any other cadence of more than four hours, whatever its start, interval and end | the windows of its first two hours, then « , et ainsi de suite toutes les N heures jusqu'à » and the last time that fires: « toutes les 15 minutes de 0 h à 0 h 45, de 2 h à 2 h 45, et ainsi de suite toutes les 2 heures jusqu'à 22 h 45 »; « toutes les 15 minutes de 8 h à 8 h 45, de 10 h à 10 h 45, et ainsi de suite toutes les 2 heures jusqu'à 18 h 45 » |
 | every hour with exceptions | « toutes les 10 minutes, sauf de 3 h à 3 h 50 » |
 | any other cadence of hours with exceptions | the form above, then the exception |
 
@@ -944,8 +959,10 @@ midnight none is said now. Minutes that do not fill the hour keep the
 cadence of points: « toutes les minutes pendant les 30 premières minutes
 de l'heure, toutes les 2 heures ».
 
-What follows is the record for cadences that do not tile the day. The
-windows are settled: judge 1 chose them over « les heures commençant
+What follows is the record for cadences that do not tile the day, as
+it stood before 2026-11-20 (« Several hours » below replaces it for a
+single cadence; it still holds for hours in several parts). The
+windows were settled: judge 1 chose them over « les heures commençant
 à » and « entre 8 h et 9 h », and judges 2 and 3 read them right at once
 (« clair mais long »). The cadence of stretches took four tries.
 « Pendant les heures paires » made judge 1 stop (« 0 h est-elle
@@ -981,7 +998,8 @@ anywhere; and each part after the first follows « , puis »:
   jusqu'à 10 h 45, puis de 11 h à 11 h 45, de 14 h à 14 h 45, et ainsi de
   suite toutes les 3 heures jusqu'à 23 h 45 »
 
-**How an hour is shown under a cadence.** There are three ways, in this
+**How an hour is shown under a cadence, in hours of several parts**
+(two cadences, or a cadence with a hole). There are three ways, in this
 order: a window for each stretch of minutes; the clock times; the minute
 phrase followed by one window for each hour. The one that names the
 fewest things over the hours shown is said (two hours for each cadence),
@@ -1001,11 +1019,13 @@ be shown).
 **M is a single run of minutes and H is one hour.** A window of clock
 times: « toutes les minutes de 9 h à 9 h 29 »; « de 9 h 10 à 9 h 40 ». A
 run with a stray minute: « toutes les minutes de 9 h à 9 h 29, puis à
-9 h 45 ». With two hours, two windows: « toutes les minutes de 9 h à
-9 h 29 et de 17 h à 17 h 29 ».
+9 h 45 ». With two separate hours, the hours are named once
+(« Several hours » below): « toutes les minutes pendant les 30 premières
+minutes de l'heure, pendant les heures de 9 h et de 17 h ».
 
 **M is stretches of minutes (one run, several runs, or a cadence too long
-to list) and H is separate hours.** Each stretch is a window in each
+to list) and H is separate hours.** Replaced on 2026-11-20 by « Several
+hours » below; what follows is the record of what it said. Each stretch is a window in each
 hour, while that names no more things than the minute phrase followed by
 one window an hour would (a window is two things; the minute phrase is
 counted as in the opening section). One run is always windows. Two runs
@@ -1036,10 +1056,87 @@ is followed by H:
 | a cadence that tiles the day | the phrase closed on nothing (« de l'heure » after a count of minutes), a comma and the bare cadence: « aux minutes 5, 20 et 45, toutes les 3 heures »; « toutes les minutes de la minute 10 à la minute 40, toutes les 2 heures »; « toutes les minutes pendant les 30 premières minutes de l'heure, toutes les 2 heures » |
 | a range | a comma and a window from the first time that fires to the last: « aux minutes 5, 20 et 45 de chaque heure, de 9 h 05 à 17 h 45 »; « toutes les minutes pendant les 30 premières minutes de chaque heure, de 9 h à 17 h 29 ». (A window of hours, « de 9 h à 17 h », would be read as stopping before the last hour's minutes.) |
 | pieces | windows the same way, two hours in a row being one window: « aux minutes 5, 20 et 45 de chaque heure, de 9 h 05 à 17 h 45 et de 22 h 05 à 22 h 45 » |
-| separate hours, or a cadence of four hours or fewer | no minute phrase: the clock times are listed, while there are at most twelve (« à 9 h 05, 9 h 20, 9 h 45, 17 h 05, 17 h 20 et 17 h 45 »). Beyond twelve, each hour is a window as a piece is: « aux minutes 5, 20 et 45 de chaque heure, de 8 h 05 à 8 h 45, de 10 h 05 à 10 h 45, … et de 19 h 05 à 19 h 45 » |
-| any other cadence of more than four hours, with a list of minutes | no minute phrase: the clock times of its first hour, those of its second, then « et ainsi de suite » as for continuous minutes, ending on the last time that fires: « à 5 h 15 et à 5 h 45, à 7 h 15 et à 7 h 45, et ainsi de suite toutes les 2 heures jusqu'à 23 h 45 ». (One cadence per minute, « toutes les 4 heures de 0 h 15 à 20 h 15 et de 0 h 45 à 20 h 45 », was first seen by judge 3 as two windows that overlap.) |
-| any other cadence of more than four hours, with any other minute phrase | no minute phrase: the first two hours as windows, then « et ainsi de suite »: « toutes les minutes de 5 h à 5 h 29, de 7 h à 7 h 29, et ainsi de suite toutes les 2 heures jusqu'à 23 h 29 » |
+| two or more separate hours, or a cadence that does not tile the day | the phrase closed on nothing, a comma and the hours named once (« Several hours » below): « aux minutes 5, 20 et 45, pendant les heures de 8 h, 10 h, 13 h, 16 h et 19 h »; « toutes les minutes pendant les 30 premières minutes de l'heure, pendant les heures de 6 h, 9 h, 12 h, 15 h et 18 h ». The clock times compete, and win while they name no more (« à 9 h 05, 9 h 20, 17 h 05 et 17 h 20 »). (One cadence per minute, « toutes les 4 heures de 0 h 15 à 20 h 15 et de 0 h 45 à 20 h 45 », was first seen by judge 3 as two windows that overlap; it is not said.) |
 | every hour with exceptions | « aux minutes 5, 20 et 45 de chaque heure, sauf de 3 h 05 à 3 h 45 » |
+
+**Several hours** (amended 2026-11-20). When two or more hours that are
+not in a row (a list, `1,4,9,14,18`; a cadence that does not tile the
+day, `6-18/3`, `8-18/2`, `*/12`) each carry the same minutes, and those
+minutes are more than one moment, the minutes are said once and the
+hours once. The minutes come first, closed on nothing (« de l'heure »
+after a count of minutes) exactly as beside a cadence that tiles the
+day, then a comma and « pendant les heures de » with the hours:
+
+* `5,35 1,4,9,14,18 * * *` — « tous les jours, aux minutes 5 et 35,
+  pendant les heures de 1 h, 4 h, 9 h, 14 h et 18 h »
+* `*/15 1,4,9,14,18 * * *` — « tous les jours, toutes les 15 minutes,
+  pendant les heures de 1 h, 4 h, 9 h, 14 h et 18 h »
+* `0-29 6-18/3 * * *` — « tous les jours, toutes les minutes pendant les
+  30 premières minutes de l'heure, pendant les heures de 6 h, 9 h, 12 h,
+  15 h et 18 h »
+* `* 9,17 * * *` — « tous les jours, toutes les minutes, pendant les
+  heures de 9 h et de 17 h » (two hours each take « de », as two times
+  each take « à »)
+
+Editing the minutes changes only what comes before the comma, and the
+hours are said the same way under every kind of minutes; beside a
+cadence that tiles the day the same minute phrase is followed by
+« toutes les 3 heures » or « une heure sur trois » instead.
+
+A cadence of more than six hours that does not tile the day (`5/2`, ten
+hours) names its first two hours and says how the rest go on, to the
+last hour, which is one the minutes fall in: « aux minutes 5 et 35,
+pendant les heures de 5 h, 7 h, et ainsi de suite toutes les 2 heures
+jusqu'à celle de 23 h ». « Celle de » says that the last hour is one of
+them, whole; « jusqu'à 23 h » alone would end at 23 h 00. Six hours or
+fewer are named: six even hours are read at a glance, and a series that
+shows two of them saves little. One minute under hours is still clock
+times or the cadence with its ends (« toutes les 3 heures de 6 h 30 à
+18 h 30 »), as the table at the head of this section says: there the
+minute is carried inside each time and nothing is said twice.
+
+*Why.* A person holds about four things. Ten clock times, or five
+windows that differ only in their hour, say the same minutes five
+times and leave the reader to find the pattern; the series under a
+cadence said them twice and made the reader carry them on in step with
+the hours. Named once, the minutes are one or two things and the hours
+are recognised at a glance. French timetables do the same in a grid
+(the RATP's « fiches horaires » put the hours as headings and the
+minutes under each), and the usage notes (3.4) show no received prose
+idiom for minutes against the hour beyond the shown times.
+
+*Words.* « L'heure de 9 h » is the hour that 9 h opens, as « le journal
+de 13 h » is the news at 13 h; « pendant » makes it a stretch, so that
+« les heures » are not heard as clock times (« les heures de passage »).
+Two other ways were weighed. « Les heures qui commencent à 1 h, 4 h … »
+(Spanish and Polish say it so) has one reading too, but is five
+syllables longer for nothing a reader lacks; judge 1 had already put
+« les heures commençant à » behind windows. The clock times followed by
+the minutes (« à 1 h, 4 h, 9 h, 14 h et 18 h, aux minutes 5 et 35 »)
+has « à 1 h » heard first as 1 h 00, and the minutes then undo it.
+« Tranche » and « créneau » are out: « la tranche de 1 h » is first a
+slot one hour long.
+
+*Threshold.* The clock times compete by the count of things named, as
+everywhere (next paragraph), the list winning a tie. The frame names
+the minute phrase's things and one for each hour, so two minutes in two
+hours stay four clock times (« à 9 h 05, 9 h 20, 17 h 05 et 17 h 20 »:
+four is about what a reader holds), and three minutes in two hours, or
+two in three, are the frame. Under minutes that fill the hour the frame
+is cheaper still: `0,30 9,17 * * *` is « toutes les 30 minutes, pendant
+les heures de 9 h et de 17 h », one rhythm and two hours, where it was
+four times. Hours in a row among others keep their windows (« toutes les
+minutes de 9 h à 17 h 59, de 20 h à 20 h 59 et de 22 h à 22 h 59 »): a
+run of hours is a stretch, and a stretch is said as one.
+
+*Evidence.* Searches of the open web (2026-11-20) for « dans l'heure de
+9 h », « pendant l'heure de 9 h » and « au cours de l'heure de 9 h »
+found no prose use; timetables state minutes against the hour only in
+grids, and spoken Quebec French « à et 10 pis et 40 » (a francisation
+course transcript) names the minutes once for every hour. So no idiom
+was found, and the form was chosen on the reader's costs above. Readers
+briefed only in French, of two models, read the new rows; see the
+record in « Reader checks » at the end of this book.
 
 **A list of clock times is also sayable** whenever neither M nor H is
 every value and there are at most 24 times: « à 9 h 05, 9 h 20 et
@@ -1047,8 +1144,9 @@ every value and there are at most 24 times: « à 9 h 05, 9 h 20 et
 the count of things named. On a tie the list of times wins. `0,30 9 * *
 *` is « à 9 h et à 9 h 30 »; `*/15 9 * * *` is « toutes les 15 minutes de
 9 h à 9 h 45 » (three things against four times); `*/20 9 * * *` is « à
-9 h, 9 h 20 et 9 h 40 » (a tie); `*/30 */12 * * *` is « à 0 h, 0 h 30,
-12 h et 12 h 30 ». Beside a cadence that tiles the day the list never
+9 h, 9 h 20 et 9 h 40 » (a tie); `*/30 */12 * * *` is « toutes les 30
+minutes, pendant les heures de 0 h et de 12 h » (three things against
+four times; it was the four times before 2026-11-20). Beside a cadence that tiles the day the list never
 wins: it names at least three hours for every minute, and the bare
 cadence one thing (`*/30 */8 * * *` is « toutes les 30 minutes, une
 heure sur huit »; `15,45 */6 * * *` « aux minutes 15 et 45, toutes les
@@ -1723,7 +1821,8 @@ une heure sur, à la seconde, aux secondes, de la seconde,
 en, pendant, sauf, puis, puis de nouveau, plus tard, après le début,
 cette fois,
 jusqu'à, jusqu'à la fin de la minute, et à chaque fois, de nouveau,
-avec … de décalage, et ainsi de suite, chaque, tous les, toutes les,
+avec … de décalage, et ainsi de suite, pendant les heures de, jusqu'à
+celle de, chaque, tous les, toutes les,
 tous les jours, à partir de, après le début de chaque minute,
 premières, dernières, avant le dernier jour, d'un mois de 31 jours, les
 années bissextiles, ou, s'il tombe, qui précède, qui suit, le plus
@@ -1777,13 +1876,15 @@ que le 1er ».
 
 8.3 `confinement-vs-juxtaposition` — A confinement is a window (« de … à
 … »), « et ainsi de suite toutes les N heures jusqu'à … », « une heure
-sur N », or the clause of seconds. The commas of a sentence are those of 2.6 and 2.8, the one
+sur N », « pendant les heures de … », or the clause of seconds. The commas of a sentence are those of 2.6 and 2.8, the one
 before « sauf », the one before « et ainsi de suite », the one before
 « avec N secondes de décalage », the one before « puis », the
 one before a window that follows « de chaque heure », the one between
 minutes and a cadence of hours that tiles the day (« à la minute 30,
-toutes les 2 heures »; « toutes les minutes, une heure sur deux »), and
-the one before a clause of seconds.
+toutes les 2 heures »; « toutes les minutes, une heure sur deux »), the
+same one before hours named once (« aux minutes 5 et 35, pendant les
+heures de 1 h, 4 h, 9 h, 14 h et 18 h »), and the one before a clause
+of seconds.
 
 8.4 `redundancy` — « De chaque mois » is not said beside a named month.
 « Toutes les minutes » is not said under « toutes les secondes ». A
@@ -1943,3 +2044,18 @@ Each departure below is kept, with its reason. The notes' claims marked
     day (« toutes les minutes » is what the notes themselves say
     suffices); « midi » and « minuit » in the default style (5.3; they
     are the spoken clock's words, 1.2).
+
+## Reader checks
+
+2026-11-20, hours named once (4.1, « Several hours »): the 34 rows
+changed or added were read as sentences by readers briefed only in
+French, three of claude-sonnet-5-5 and three of claude-opus-5-5, each
+asked whether the task runs at chosen moments (true firings and near
+misses, from `tooling/scripts/reading/probes.mjs`, scored by the
+oracle). Of 302 questions, one answer by one reader was wrong (« 0-29
+4/3 », 22 h 30: one Sonnet reader said it runs); asked again alone, with
+`5,35 5/2`, all six readers answered all eighteen questions right. No
+question was misread by most readers. A pre-check of « pendant les
+heures de » against « pendant les heures qui commencent à » (ten
+sentences, four readers of two models) found no wrong answer for
+either, so the shorter was kept.

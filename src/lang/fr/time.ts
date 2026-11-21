@@ -511,8 +511,37 @@ function hourlyForms(
   return forms.filter((form) => form[0]).map((form) => form[1]);
 }
 
+// Several hours named once, as the hours the minutes fall in, after the
+// minutes said once and closed on nothing, as beside a cadence that tiles
+// the day: «aux minutes 5 et 35, pendant les heures de 1 h, 4 h, 9 h,
+// 14 h et 18 h». A cadence of more than six hours shows its first two and
+// says how the rest go on, to the last hour.
+function onNamed(c: Context, beat: Beat, hours: number[]): Said {
+  const long = hours.length > 6;
+  const names = hours.map(
+    (hour) => written({hour, minute: 0, second: 0}, c.style));
+  // On the spoken clock «de» is repeated before every hour, as «à» is
+  // before every time.
+  const listed = c.style.hour12 ?
+    conjoin(names.map(led(w.from))) :
+    series(names, led(w.from));
+  const onward = phrase(w.from, `${names[0]},`,
+    given(c.style.hour12, w.from), `${names[1]},`, w.andSoOn,
+    every(hours[1] - hours[0], units.hour), w.untilThatOf,
+    names[names.length - 1]);
+
+  return {
+    clock: false,
+    count: beat.count + (long ? 3 : hours.length),
+    loose: true,
+    text: `${beat.phrase(loose)}, ` +
+      phrase(w.duringTheHours, long ? onward : listed)
+  };
+}
+
 // Hours that are values, a range or pieces. With one minute, two hours in
-// a row are two times. With more, the first way that can be said is said,
+// a row are two times. Several separate hours under more are named once.
+// Otherwise the first way that can be said is said,
 // unless that is a window for each stretch of minutes in each hour and
 // the minute phrase with one window for each run of hours names fewer
 // things.
@@ -532,6 +561,11 @@ function onStretches(
   }
 
   const runs = stretchesOf(description, runsOf);
+
+  if (runs.length > 1 && runs.every(isSingle)) {
+    return onNamed(c, beat, c.hours.values);
+  }
+
   const [first, ...others] = hourlyForms(c, beat,
     {apart: apart.every(isSingle), count: apart.length, limit: 12})
     .map(function said(form): Said {
@@ -632,15 +666,14 @@ function onTiling(c: Context, beat: Beat, cadence: Cadence): Said {
   };
 }
 
-// Hours on a cadence too long to list. One minute is the cadence with
-// both ends. Anything more shows the first two hours and says how the
-// rest go on.
+// Hours on a cadence too long to list that does not tile the day. One
+// minute is the cadence with both ends. Anything more names the hours.
 function onCadence(c: Context, beat: Beat, cadence: Cadence): Said {
   return beat.ticks.length === 1 ?
     hourPieces(c, beat,
       [{from: cadence.start, kind: 'range', to: cadence.last}],
       cadence.interval) :
-    onParts(c, beat, [cadence]);
+    onNamed(c, beat, denote(cadence, c.hours.domain));
 }
 
 // Whether hours may be said as a simpler set «sauf» some: only when
@@ -916,7 +949,8 @@ function clockPart(read: Context): Said {
   const said = minuteException(c, beat, say(hours, hourForms(c, beat)));
   const rest = choose(c.seconds, restCounts);
   const more = !beat.consumed && c.seconds.values.length > 1 && !seconds;
-  const late = given(!beat.consumed && c.offset > 0 && roundDay(hours),
+  const late = given(!beat.consumed && c.offset > 0 &&
+    (roundDay(hours) || said.loose === true),
     phrase(w.with, counted(c.offset, units.second), w.late));
   const again = given(more,
     phrase(given(!c.once, w.andEachTime), say(rest, restSayers(c))));
