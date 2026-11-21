@@ -337,6 +337,14 @@ renderer change.
 `src/lang/<code>/status.json` records who has reviewed what, honestly.
 Review is tracked; it does not gate a release.
 
+Human review is not part of the pipeline: the pipeline exists to reach
+quality without it, and `status.json` already records its absence. So
+"no fluent human has reviewed this" is never a finding, a doubt or a
+caveat. Do not write it into reports, recaps, doubt lists, changelogs,
+answers or docs, and do not frame a thin spot as "for a native reviewer
+to check". Say what a choice rests on (readers, corpus, usage notes) and
+what check in the pipeline would test it.
+
 ## Before you finish
 
 CI, the pre-push hook, and you all run the same single gate:
