@@ -1,5 +1,65 @@
 # German: answers to the language questionnaire
 
+**Amended 2026-11-21: a step of hours hands each hour its minutes with
+«jeweils»** (by Claude Opus 5.5). Until this date, under a step of hours
+that comes round the day, minutes that run through the whole hour were
+said as two rhythms with a length between them: «alle 3 Stunden eine
+Stunde lang alle 15 Minuten», «ab 1:00 Uhr alle 3 Stunden eine Stunde
+lang jede Minute». The reason recorded for it (4.1, the opening rules)
+was that «eine Stunde lang» is the one length besides «eine Minute
+lang» that cannot be miscounted. The length is not the trouble; the
+joint is. Read once, in order, the three phrases stack: a rhythm, a
+length, a rhythm, with nothing to say that the length belongs to each
+time the step comes round, so the reader must assemble which hour is
+meant. And the same minutes were said otherwise one edit of the hours
+away: under named hours and under a bounded step German already says
+«um 6, 9, 12, 15 und 18 Uhr, jeweils eine Stunde lang alle 15
+Minuten», «von 2 bis 20 Uhr alle 3 Stunden, jeweils eine Stunde lang
+jede Minute», and seconds under a step of minutes «alle 5 Minuten,
+jeweils eine Minute lang jede Sekunde».
+
+Now **the step is said as under any other minutes, then a comma,
+«jeweils» and the minutes that fill the hour** (4.1):
+
+* `*/15 */3` — «alle 3 Stunden, jeweils eine Stunde lang alle 15
+  Minuten»; `* */6` «alle 6 Stunden, jeweils eine Stunde lang jede
+  Minute»; `*/15 1/3` «ab 1:00 Uhr alle 3 Stunden, jeweils eine Stunde
+  lang alle 15 Minuten»; `*/10 * */3 * * *` «alle 3 Stunden, jeweils
+  eine Stunde lang alle 10 Sekunden».
+* Every second hour keeps its name, «in den geraden Stunden alle 15
+  Minuten»; four hours or fewer from a later start keep their list
+  («um 2, 8, 14 und 20 Uhr, jeweils …»). Neither is reopened here.
+
+Continuity: the step «alle 3 Stunden» (with «ab 1:00 Uhr») is said
+exactly as under `30 */3` and `0-29 */3`; an edit of the minutes changes
+only what follows it, and an edit of the hours from a list or a bounded
+step to a step that comes round the day changes only the hours, since
+the minutes after «jeweils» are now the same words in all three.
+
+**Evidence.** The usage notes give «jeweils» as the word that shares one
+statement out over every member («dienstags und donnerstags, jeweils von
+14 bis 16 Uhr», notes 5); here the members are the times the step comes
+round. Web searches on 2026-11-21 for «alle drei Stunden jeweils eine
+Stunde», «alle 3 Stunden, jeweils» and «die ganze Stunde lang alle 15
+Minuten» found no page with the phrase: German writers rarely state such
+a schedule at all. Timer and home-automation forums phrase the nearest
+cases as an interval and then a length that belongs to each time, «jede
+volle Stunde für 15 Minuten» (ioBroker forum), and explain `0 */3 * * *`
+as «jeder dritten Stunde, also um 00:00 Uhr, 03:00 Uhr». «In jeder
+dritten Stunde» was weighed and refused: it would change the hour part
+on an edit of the minutes, and «die dritte Stunde» of a day can be heard
+as 2:00 to 3:00. «Die volle Stunde» was refused because «zur vollen
+Stunde» means :00. The 13 changed rows and four that already used the
+form were read on 2026-11-21 by three isolated German readers of each of
+two models (`tooling/scripts/reading/run.mjs`, Sonnet 5.5 and Opus 5.5),
+144 questions each, among them the :00 after the last hour held (22:00
+under `*/15 */3`, 23:00 under `* 1/3`, 0:00 under `*/10 2/3`) and the
+minute past the last firing: no answer was wrong, so there was nothing
+for `recheck.mjs`. By the cost model (`cost.mjs de`) the new form is two
+syllables longer with the same objects, and is marked with a product of
+hours and minutes; the stacked form asked for the same product without
+saying so.
+
 **Amended 2026-11-20: the same minutes in several hours are said once**
 (by Claude Opus 5.5). Until this date how the hours were said depended
 on the minutes alone. Under listed minutes German already named the
@@ -240,7 +300,7 @@ Four rules run through everything:
   window ends at a moment when nothing fires. A cadence that comes round
   its cycle is no stretch: «alle 15 Minuten», «alle 2 Stunden», «ab 1:00
   Uhr alle 2 Stunden» name no end, because there is none. Hours of such
-  a cadence held for the whole hour are «eine Stunde lang» (4.1), the
+  a cadence held for the whole hour are «jeweils eine Stunde lang» (4.1), the
   one length besides «eine Minute lang» (4.2) that cannot be miscounted
   in a way that matters.
 
@@ -935,7 +995,7 @@ way they are said against every hour, with the cadence in the place of
 | minute 0 | «alle 2 Stunden»; «alle 6 Stunden»; «ab 1:00 Uhr alle 2 Stunden» |
 | places in the hour | «alle 2 Stunden zur Minute 30»; «alle 2 Stunden zu den Minuten 15 und 45»; «ab 1:00 Uhr alle 2 Stunden zur Minute 23»; «alle 3 Stunden zu den Minuten 5, 20 und 45» (until 2026-11-14 «täglich um 0, 3, 6 … und 21 Uhr, jeweils …») |
 | a run, pieces, or a cadence that is bounded or off the beat | «alle 2 Stunden in den Minuten 0 bis 29 jede Minute»; «alle 2 Stunden in den Minuten 0 bis 29 und 45 jede Minute» |
-| continuous (every minute, or a tiling cadence from 0): the hours are stretches | every second hour has a name: «in den geraden Stunden jede Minute»; «in den ungeraden Stunden alle 15 Minuten»; any other step is held for one hour: «alle 6 Stunden eine Stunde lang jede Minute»; «alle 3 Stunden eine Stunde lang alle 15 Minuten»; «ab 1:00 Uhr alle 3 Stunden eine Stunde lang jede Minute» |
+| continuous (every minute, or a tiling cadence from 0): the hours are stretches | every second hour has a name: «in den geraden Stunden jede Minute»; «in den ungeraden Stunden alle 15 Minuten»; any other step, then «jeweils eine Stunde lang» and the minutes: «alle 6 Stunden, jeweils eine Stunde lang jede Minute»; «alle 3 Stunden, jeweils eine Stunde lang alle 15 Minuten»; «ab 1:00 Uhr alle 3 Stunden, jeweils eine Stunde lang jede Minute» (until 2026-11-21 without the comma and «jeweils», «alle 3 Stunden eine Stunde lang alle 15 Minuten») |
 | with hours taken away | the exception follows, as for every hour: «alle 2 Stunden, außer um 8:00 Uhr»; «alle 2 Stunden zu den Minuten 15 und 45, außer in der Stunde 8»; «in den geraden Stunden alle 15 Minuten, außer von 8:00 bis 8:45 Uhr» |
 
 «In den geraden Stunden» and «in den ungeraden Stunden» are said only
