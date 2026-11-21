@@ -5,7 +5,9 @@
 import type {ScheduleFacts} from '../../core/schedule.js';
 import {candidatesAs, domainOf} from '../../core/index.js';
 import lexicon from './lexicon.js';
-import {minutesOf, minutesOfTheHour, scopedInside} from './inside.js';
+import {
+  insideOf, minutesOf, minutesOfNamedHours, minutesOfTheHour, scopedInside
+} from './inside.js';
 import {amount, between, clausal, list, spaced} from './names.js';
 import type {Choosing, Described, Exception, Rule} from './sets.js';
 import {
@@ -156,4 +158,30 @@ function rhythmInScatteredHours(given: Hours): Time {
   };
 }
 
-export {hoursAtMinute, hoursForEachMinute, hoursOf, rhythmInScatteredHours};
+// Hours none of which is next to another, under minutes that are more than
+// one moment: the hours named once, as the stretches they are, and what
+// happens in each of them said once for all: «в 1, 4, 9, 14 и 18 часов, на
+// 5-й и 35-й минуте часа», «в 6, 9, 12, 15 и 18 часов, каждые 15 минут».
+function minutesInNamedHours(given: Hours): Time {
+  const {minuteSet} = given;
+  const rhythm = isBare(minuteSet, domainOf('minute'));
+  const inEach = (rhythm ? insideOf : scopedInside)(minuteSet,
+    minutesOfNamedHours).text;
+
+  return {
+    ...timeOf('', 'minutes'),
+    clause() {
+      return inEach;
+    },
+    everyMinuteInHours: minuteSet.kind === 'all',
+    tail(clock) {
+      return spaced(words.in, clock.hours(given.hours));
+    },
+    windows: false
+  };
+}
+
+export {
+  hoursAtMinute, hoursForEachMinute, hoursOf, minutesInNamedHours,
+  rhythmInScatteredHours
+};
