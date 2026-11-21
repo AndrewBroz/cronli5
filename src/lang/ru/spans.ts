@@ -24,6 +24,9 @@ export interface Time {
   asStretch: string;
   // Whether no clock time is named.
   bare: boolean;
+  // Whether hours named apart are followed by «каждую минуту», which the
+  // seconds take the place of: «в 1, 4 и 9 часов, каждую секунду».
+  everyMinuteInHours: boolean;
   clause(clock: Clock): string;
   // Whether a comma stands between the lead and what follows it.
   comma: boolean;
@@ -39,7 +42,7 @@ export interface Time {
 }
 
 /** Which place of a sentence a clock time stands in. */
-export type Place = keyof Clock;
+export type Place = Exclude<keyof Clock, 'hours'>;
 
 /** The unit a set of clock times steps through. */
 export interface Level {
@@ -198,6 +201,7 @@ function timeOf(lead: string, mode: Time['mode']): Time {
   return {
     asStretch: '',
     bare: true,
+    everyMinuteInHours: false,
     clause: nothing,
     comma: false,
     lead,

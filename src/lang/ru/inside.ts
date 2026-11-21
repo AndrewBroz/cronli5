@@ -229,6 +229,12 @@ const minutesOfTheHour: Inside = {
   wholeRest: words.forAnHour
 };
 
+/**
+ * Minutes of each of the hours named before them, «в 1, 4 и 9 часов»: a
+ * rhythm that tiles the hour bare, everything else with the scope «часа».
+ */
+const minutesOfNamedHours: Inside = minutesOf(words.ofTheHour);
+
 /** Seconds of every minute. */
 const secondsOfEachMinute: Inside =
   {...minutesOf(words.ofEachMinute), unit: 'second'};
@@ -252,6 +258,7 @@ const secondsOfFirstMinute: Inside = {
 };
 
 export {
-  insideOf, leftOut, minutesOf, minutesOfTheHour, scopedInside,
+  insideOf, leftOut, minutesOf, minutesOfNamedHours, minutesOfTheHour,
+  scopedInside,
   secondsEachTime, secondsOfEachMinute, secondsOfFirstMinute
 };

@@ -23,6 +23,9 @@ export type WeekdayCase =
  */
 export interface Clock {
   at(hour: number, minute: number, second?: number): string;
+  // Hours named as the stretches they are, not as moments: «1, 4 и 9
+  // часов».
+  hours(values: number[]): string;
   but(hour: number, minute: number, second?: number): string;
   from(hour: number, minute: number, second?: number): string;
   to(hour: number, minute: number, second?: number): string;
@@ -163,6 +166,15 @@ function clockOf(style: RussianStyle, seconds: number[] = []): Clock {
     },
     but(hour, minute, second = first) {
       return clockTime(timeOf(hour, minute, second), true, style);
+    },
+    hours(values) {
+      return style.hour12 ?
+        list(values.map(function said(hour) {
+          return hour > 0 ? spoken([hour, 0], false, style) :
+            amount(hour, units.hour);
+        })) :
+        spaced(list(values.map(String)),
+          counted(values[values.length - 1], units.hour));
     },
     from(hour, minute, second = first) {
       return clockTime(timeOf(hour, minute, second), true, style);
