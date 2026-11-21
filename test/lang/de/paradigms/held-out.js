@@ -110,8 +110,10 @@ const rows = [
     'alle 15 Minuten'],
   ['*/15 */2 * * 1-5',
     'montags bis freitags in den geraden Stunden alle 15 Minuten'],
+  // «jeweils» hands the hour to each step (2026-11-21).
   ['*/15 */6 * * 1-5',
-    'montags bis freitags alle 6 Stunden eine Stunde lang alle 15 Minuten'],
+    'montags bis freitags alle 6 Stunden, jeweils eine Stunde lang alle 15 ' +
+    'Minuten'],
   ['*/15 0,2,4,6,10,12,14,16,18,20,22 * * 1-5',
     'montags bis freitags in den geraden Stunden alle 15 Minuten, außer von ' +
     '8:00 bis 8:45 Uhr'],
@@ -273,7 +275,9 @@ const rows = [
     'täglich um 8, 12 und 18 Uhr, jeweils eine Stunde lang jede Minute'],
   ['* 9-17 * * *', 'täglich von 9:00 bis 17:59 Uhr jede Minute'],
   ['* */2 * * *', 'in den geraden Stunden jede Minute'],
-  ['* */6 * * *', 'alle 6 Stunden eine Stunde lang jede Minute'],
+  // «jeweils» hands the hour to each step (2026-11-21; until then the
+  // two rhythms were stacked round «eine Stunde lang»).
+  ['* */6 * * *', 'alle 6 Stunden, jeweils eine Stunde lang jede Minute'],
   ['* 0,2,4,6,10,12,14,16,18,20,22 * * *',
     'in den geraden Stunden jede Minute, außer von 8:00 bis 8:59 Uhr'],
   ['* 22-2 * * *',

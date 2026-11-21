@@ -710,14 +710,31 @@ const rows = [
   ['0 1/6 * * *', 'täglich um 1:00, 7:00, 13:00 und 19:00 Uhr'],
   ['0 5/2 * * *', 'täglich von 5:00 bis 23:00 Uhr alle 2 Stunden'],
   ['* 0-22/2 * * *', 'in den geraden Stunden jede Minute'],
-  ['* 0-18/6 * * *', 'alle 6 Stunden eine Stunde lang jede Minute'],
-  ['* 1/3 * * *', 'ab 1:00 Uhr alle 3 Stunden eine Stunde lang jede Minute'],
-  ['*/15 */3 * * *', 'alle 3 Stunden eine Stunde lang alle 15 Minuten'],
+  // Minutes that run through the whole hour, under a step: «jeweils»
+  // hands the hour to each time the step comes round, as under listed
+  // hours and as seconds under a step of minutes (2026-11-21; until then
+  // «alle 3 Stunden eine Stunde lang alle 15 Minuten», three rhythms
+  // stacked with nothing to say which hour the duration is).
+  ['* 0-18/6 * * *', 'alle 6 Stunden, jeweils eine Stunde lang jede Minute'],
+  ['* */3 * * *', 'alle 3 Stunden, jeweils eine Stunde lang jede Minute'],
+  ['* 1/3 * * *',
+    'ab 1:00 Uhr alle 3 Stunden, jeweils eine Stunde lang jede Minute'],
+  ['*/15 */3 * * *', 'alle 3 Stunden, jeweils eine Stunde lang alle 15 Minuten'],
+  ['*/15 */6 * * *', 'alle 6 Stunden, jeweils eine Stunde lang alle 15 Minuten'],
+  ['*/15 1/3 * * *',
+    'ab 1:00 Uhr alle 3 Stunden, jeweils eine Stunde lang alle 15 Minuten'],
+  ['*/30 */4 * * *', 'alle 4 Stunden, jeweils eine Stunde lang alle 30 Minuten'],
+  ['*/10 2/3 * * *',
+    'ab 2:00 Uhr alle 3 Stunden, jeweils eine Stunde lang alle 10 Minuten'],
+  ['* */8 * * *', 'alle 8 Stunden, jeweils eine Stunde lang jede Minute'],
+  ['*/10 * */3 * * *',
+    'alle 3 Stunden, jeweils eine Stunde lang alle 10 Sekunden'],
   ['0-29 */2 * * *', 'alle 2 Stunden in den Minuten 0 bis 29 jede Minute'],
   ['* 10-40 */2 * * *',
     'alle 2 Stunden in den Minuten 10 bis 40 jede Sekunde'],
   ['0-28,30-59 */6 * * *',
-    'alle 6 Stunden eine Stunde lang jede Minute, außer zur Minute 29'],
+    'alle 6 Stunden, jeweils eine Stunde lang jede Minute, außer zur ' +
+    'Minute 29'],
   ['15,45 0,2,4,6,10,12,14,16,18,20,22 * * *',
     'alle 2 Stunden zu den Minuten 15 und 45, außer in der Stunde 8'],
   // No bracket of numbers after odd or even days.

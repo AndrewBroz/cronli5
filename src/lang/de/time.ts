@@ -638,9 +638,10 @@ function roundTheDay(hours: Sayable): Round[] {
 
 // The time part where the hours come round the day. Minute 0 is the
 // cadence alone. Minutes that run through each hour make the hours
-// stretches: every second hour has a name, and any other step is held
-// for one hour. Any other minutes are said as against every hour, with
-// the cadence in the place of «stündlich». Hours taken away follow.
+// stretches: every second hour has a name, and any other step hands
+// each hour it comes round to «jeweils eine Stunde lang». Any other
+// minutes are said as against every hour, with the cadence in the place
+// of «stündlich». Hours taken away follow.
 function roundTheClock(
   work: Clockwork,
   each: string,
@@ -649,8 +650,9 @@ function roundTheClock(
 ): Said {
   const {M, hours, minutes, voice} = work;
   const cadence = cadenceOfHours(round, voice);
-  const stretched = [`${cadence} ${words.oneHourLong}`, words.inEvenHours,
-    words.inOddHours][Number(round.interval === 2) * (round.start + 1)];
+  const stretched = [`${cadence}, ${words.eachTime} ${words.oneHourLong}`,
+    words.inEvenHours, words.inOddHours][
+    Number(round.interval === 2) * (round.start + 1)];
   const said = spread(minutes,
     {...minuteLevel(work, each), absorbed: false, lead: `${cadence} `});
   const gone = [restOf(hours).removed].filter(nonEmpty).map(
