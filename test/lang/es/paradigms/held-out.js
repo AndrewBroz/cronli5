@@ -106,8 +106,10 @@ const rows = [
     'las 8:00, 12:00 y 18:00'],
   ['*/15 */2 * * 1-5',
     'de lunes a viernes, cada 15 minutos en las horas pares'],
+  // Minutes filling the hour, then the hours' rule (2026-11-21).
   ['*/15 */6 * * 1-5',
-    'de lunes a viernes, cada 15 minutos durante una hora cada 6 horas'],
+    'de lunes a viernes, cada 15 minutos durante toda la hora, cada 6 ' +
+    'horas'],
   ['*/15 0,2,4,6,10,12,14,16,18,20,22 * * 1-5',
     'de lunes a viernes, cada 15 minutos en las horas pares, ' +
     'excepto de 8:00 a 8:45'],
@@ -258,7 +260,8 @@ const rows = [
     '8:00, 12:00 y 18:00'],
   ['* 9-17 * * *', 'todos los días, cada minuto de 9:00 a 17:59'],
   ['* */2 * * *', 'cada minuto en las horas pares'],
-  ['* */6 * * *', 'cada minuto durante una hora cada 6 horas'],
+  // every minute of every sixth hour (2026-11-21)
+  ['* */6 * * *', 'cada minuto durante toda la hora, cada 6 horas'],
   ['* 0,2,4,6,10,12,14,16,18,20,22 * * *',
     'cada minuto en las horas pares, excepto de 8:00 a 8:59'],
   ['* 22-2 * * *', 'todos los días, cada minuto de 22:00 a 2:59'],

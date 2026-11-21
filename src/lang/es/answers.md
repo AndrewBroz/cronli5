@@ -36,7 +36,8 @@ Three more rulings the same day, for the same aim (concise and natural):
   minutos en las horas impares». «Cada minuto durante una hora cada 2
   horas» stacked two «cada», and the parity of an hour is as plain to a
   reader as the parity of a day once there is a finer field to fill it.
-  Longer intervals keep «durante una hora cada N horas». Reader 1's doubt
+  Longer intervals kept «durante una hora cada N horas» (until 2026-11-21,
+  below). Reader 1's doubt
   whether hour 0 is even ("el lector duda de si las 0 cuentan") is
   overruled with the other reader evidence (above). (4.1)
 * **Named seconds at minute 0 beside every hour or a tiling cadence are
@@ -104,6 +105,50 @@ writer composes: it says that each hour is a stretch and where it
 begins, and it has one reading. It stays, as the one frame. It is long;
 a fluent reader may yet find a shorter frame, and that would replace it
 everywhere at once.
+
+**Amended 2026-11-21: minutes that fill the hour, under a cadence of
+hours that tiles the day** (by Claude Opus 5.5). Until this date they
+were the minutes' cadence, «durante una hora» and the hours' cadence in
+one breath: `*/15 */3` «cada 15 minutos durante una hora cada 3 horas»,
+`* */6` «cada minuto durante una hora cada 6 horas», `*/15 1/3` «… cada
+3 horas desde la 1:00». The 2026-11-14 ruling chose it because it «says
+for how long and how often for any interval» (4.1). That reason does not
+hold for a person reading once: the sentence stacks three things to
+assemble (a rhythm, a duration, a rhythm), «durante una hora» does not
+say which hour it is or whether its end, the next :00, fires, and the
+two «cada» run together with nothing between them. It was also said
+unlike the same hours under every other kind of minutes: `0-29 */3` is
+«cada minuto durante los primeros 30 minutos, cada 3 horas», `10-20 */4`
+«cada minuto del minuto 10 al 20, cada 4 horas», `30 */3` «en el minuto
+30, cada 3 horas», so editing only the minutes changed the hours' words
+too. Now the minutes are said in their own phrase, which says what of
+the hour they fill, and the hours' rule follows after the comma exactly
+as it does under those minutes: «cada 15 minutos durante toda la hora,
+cada 3 horas»; «cada minuto durante toda la hora, cada 6 horas»; «cada
+15 minutos durante toda la hora, cada 3 horas desde la 1:00»; seconds
+that fill the minute under minutes that fill the hour the same, «cada
+10 segundos durante toda la hora, cada 3 horas». «Durante toda la hora»
+is the run «durante los primeros 30 minutos» grown to the whole hour:
+the reader takes the hour as one stretch, from its :00, and the next
+hour belongs to the rule of hours. Every second hour keeps «en las
+horas pares» and «en las horas impares» (4.1), and hours named by when
+they begin (`* 2/6`, four hours) are unchanged.
+
+Evidence, 2026-11-21. The frame «cada N minutos durante <un periodo>» is
+how Spanish writes a cadence inside a stretch: post-operative protocols
+write the checks «cada 15 minutos» in «la primera hora», «cada 30» in
+«la segunda» (Junta de Andalucía, protocolo quirúrgico, anexo 12).
+Searches for the exact fragments «cada 15 minutos durante toda la hora»,
+«cada minuto durante toda la hora» and «durante toda la hora, cada»
+found no page either way (the search engine returned only loose
+matches), so the call is one of taste, made against the usage notes
+(«cada N» inside a larger unit is counted from the hour «en punto»:
+usage.md, on «cada N» dentro de una unidad mayor) and against the run of
+minutes beside it. Rejected: «cada 15 minutos, una hora de cada tres»,
+which a native writer might say, but which would say the hours
+differently under these minutes alone; «cada 15 minutos de la hora,
+cada 3 horas», where «de la hora» names no stretch; a list of the eight
+hours, where one rule does.
 
 Answered by the orchestrating model (Claude Fable 5.2), 2026-11-12, for
 Spanish as written in Spain by default, with a Mexican and United States
@@ -217,8 +262,8 @@ named, only on how many there are and how they are arranged.
   and one phrase. Until 2026-11-20 the line was four hours for windows
   and twelve times for a list, and a cadence of hours filled by minutes
   was «durante una hora cada 3 horas». A bare cadence of hours is said by
-  its rule however few hours it has: «cada minuto durante una hora cada 6
-  horas» (2026-11-14).
+  its rule however few hours it has: «cada minuto durante toda la hora,
+  cada 6 horas» (2026-11-14; the minutes' phrase 2026-11-21).
 * **A run of exactly two values is listed**, not said as a range («los
   domingos y lunes»; «a las 9:00 y 10:00»). Outside the weekdays, two
   values that wrap are listed in ascending order: «a las 0:00 y 23:00»;
@@ -428,8 +473,8 @@ Nor is it said when the hours are a cadence that tiles the day, said
 bare or by its start alone (3.7), with or without exceptions: the
 schedule runs round the clock, and «todos los días» would add nothing
 (2026-11-14): `0 */2 * * *` is «cada 2 horas»; `0 1/2 * * *` «cada 2 horas
-desde la 1:00»; `* */6 * * *` «cada minuto durante una hora cada 6
-horas»; `0 0-6/2,10-22/2 * * *` «cada 2 horas, excepto a las 8:00». Until
+desde la 1:00»; `* */6 * * *` «cada minuto durante toda la hora, cada
+6 horas»; `0 0-6/2,10-22/2 * * *` «cada 2 horas, excepto a las 8:00». Until
 then it was «todos los días, cada 2 horas de 0:00 a 22:00». A named day of
 either kind, or a Quartz form, replaces it. An edit to the hours may add
 or remove «todos los días», and with it the join; no other field's words
@@ -647,8 +692,9 @@ one hour is two windows: «cada minuto de 9:00 a 9:10 y de 9:50 a 9:59».
 
 3.8 Where the hours of a cadence are filled by minutes (M is every minute
 or a bare cadence), they are not points and take the forms of 4.1: a
-cadence that tiles the day is the rule «durante una hora cada N horas»,
-or for every second hour «en las horas pares» or «en las horas
+cadence that tiles the day is the minutes' phrase «durante toda la hora»
+and then the rule, «cada minuto durante toda la hora, cada 3 horas»
+(2026-11-21), or for every second hour «en las horas pares» or «en las horas
 impares»; one that does not tile names its hours, «durante las horas que
 empiezan a las 6:00, 9:00, 12:00, 15:00 y 18:00», or for every second
 hour «en las horas pares de 8:00 a 18:00» (2026-11-20).
@@ -857,14 +903,16 @@ minute phrase.
 | continuous (every minute, or a bare cadence) | «cada minuto en las horas pares»; «cada 15 minutos en las horas pares» | «cada 15 minutos en las horas impares» |
 
 The same for every interval that tiles: `23 */6` is «en el minuto 23,
-cada 6 horas»; `* */6`, «cada minuto durante una hora cada 6 horas» (every
-second hour alone takes the parity, since an even or odd hour is one in
-two; any other interval keeps «durante una hora cada N horas»); `15,45
+cada 6 horas»; `* */6`, «cada minuto durante toda la hora, cada 6 horas»
+(every second hour alone takes the parity, since an even or odd hour is
+one in two; any other interval says the minutes «durante toda la hora»
+and then the rule, as the minutes of a run say «durante los primeros 30
+minutos» before it: 2026-11-21); `15,45
 */4`, «en los minutos 15 y 45, cada 4 horas». An excepted hour follows as
 it does anywhere (3.9): «cada 2 horas, excepto a las 8:00»; «cada minuto
 en las horas pares, excepto de 8:00 a 8:59»; an excepted minute
-is of each hour, «cada minuto durante una hora cada 6 horas, excepto en el
-minuto 29 de cada hora».
+is of each hour, «cada minuto durante toda la hora, cada 6 horas, excepto
+en el minuto 29 de cada hora».
 
 Until 2026-11-14 these hours were listed or named both their ends and
 carried the minute («cada 2 horas de 0:30 a 22:30»; «a las 0:23, 6:23,
@@ -902,6 +950,7 @@ hours, and an hour standing alone, is a window.
 | a range | «cada minuto de 9:00 a 17:59»; «cada 15 minutos de 9:00 a 17:45» |
 | pieces, at least one of them a run | each a window: «cada 15 minutos de 9:00 a 17:45 y de 22:00 a 22:45»; «cada minuto de 9:00 a 17:59, de 20:00 a 20:59 y de 22:00 a 22:59» |
 | two separate hours | each a window: «cada minuto de 9:00 a 9:59 y de 17:00 a 17:59»; hours 0 and 12, «cada 15 minutos de 0:00 a 0:45 y de 12:00 a 12:45» |
+| a cadence of hours that tiles the day, other than every second hour | the minutes over the whole hour, then the hours' rule after a comma, as under a run of minutes: «cada 15 minutos durante toda la hora, cada 3 horas»; «cada minuto durante toda la hora, cada 6 horas»; «cada 15 minutos durante toda la hora, cada 3 horas desde la 1:00» (2026-11-21) |
 | a cadence of hours that does not tile | the hours named, as under anchored minutes (below), with «durante» before hours that begin and «en» before a parity: `*/15 6-18/3` is «cada 15 minutos durante las horas que empiezan a las 6:00, 9:00, 12:00, 15:00 y 18:00»; `*/15 8-18/2`, «cada 15 minutos en las horas pares de 8:00 a 18:00»; `* 5/2`, «cada minuto en las horas impares de 5:00 a 23:00» (2026-11-20) |
 | three separate hours or more | the hours by when they begin: «cada 15 minutos durante las horas que empiezan a las 8:00, 12:00 y 18:00»; «cada minuto durante las horas que empiezan a las 6:00, 8:00, 12:00, 18:00 y 20:00» (from three, 2026-11-20) |
 | every hour with exceptions | «cada 10 minutos, excepto de 3:00 a 3:50» |
@@ -912,9 +961,11 @@ las 0:00»: "no dice cuánto dura cada tramo" (reader 2). Three windows and
 «y así sucesivamente hasta las 22:59»: reader 3 had to re-read. Readers 2
 and 3 then wrote a rule with a bracket of stretches, «(de 0:00 a 0:59, de
 2:00 a 2:59… hasta las 22:59)», which the rule book said until
-2026-11-14. «Durante una hora cada N horas» says for how long and how
-often for any interval, and «en las horas pares» or «en las horas
-impares» says the same in fewer words for every second hour, the one
+2026-11-14. «Durante una hora cada N horas» was then chosen to say for
+how long and how often for any interval; since 2026-11-21 the minutes
+say «durante toda la hora» and the rule follows after a comma (opening
+note). «En las horas pares» or «en las horas impares» says it in fewer
+words for every second hour, the one
 interval whose hours a reader knows by their number; from 0:00 it needs no anchor, from a later start
 that tiles the day it takes «desde» and its start, and otherwise the
 window of its first and last moments. The bracket repeated all of that in
@@ -1085,8 +1136,8 @@ phrase says when inside each of those minutes (8.5).
    punto, cada 2 horas»; `8 5,30 */2 * * *`, «en el segundo 8 de los
    minutos 5 y 30, cada 2 horas»; `*/10 24 */3 * * *`, «cada 10 segundos
    durante el minuto 24, cada 3 horas»; `* * */2 * * *`, «cada segundo en
-   las horas pares»; `* * */3 * * *`, «cada segundo durante una hora cada
-   3 horas»; `* 10-40 */2 * * *`, «cada segundo del minuto 10 al 40, cada
+   las horas pares»; `* * */3 * * *`, «cada segundo durante toda la
+   hora, cada 3 horas» (2026-11-21); `* 10-40 */2 * * *`, «cada segundo del minuto 10 al 40, cada
    2 horas». Until then these hours were points and carried the second
    («cada 2 horas de 0:00:15 a 22:00:15»), or a bracket written to the
    second.
@@ -1640,8 +1691,8 @@ single year follows a month's name only when the months are one piece
 «y» that joins the last piece (2.1).
 
 8.3 `confinement-vs-juxtaposition` — A confinement is a window («de … a
-…»), «en las horas pares» and «en las horas impares», «durante una hora
-cada N horas», «durante las
+…»), «en las horas pares» and «en las horas impares», «durante toda la
+hora, cada N horas», «durante las
 horas que empiezan a las …», or «durante todo ese minuto». The commas
 are those of 2.1, the one before a window after «de cada hora», and the
 one before the seconds clause.
