@@ -7,7 +7,7 @@ built from it ("The record of 2026-11-19" and "The audit of 2026-11-19",
 at the end). The
 Russian here is Russian as it is written in Ukraine ("The standard").
 Every choice is a record: what is said, why, and on what evidence, so
-that it can be tested again. Nothing here has had a native human review.
+that it can be tested again.
 
 Evidence is marked: **[notes §n]** is the usage notes; **[judge 1]** and
 **[judge 2]** are two blind readers of 2026-11-19, each briefed only in

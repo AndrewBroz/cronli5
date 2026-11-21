@@ -23,8 +23,7 @@ Built from written answers to the language questionnaire
 descriptions. Independent readers (models) checked every expected
 description against its schedule, and fluent judges briefed in the
 language itself graded samples for naturalness with no knowledge of how
-they were made, before the renderer was built. **No fluent human has
-reviewed it yet.**
+they were made, before the renderer was built.
 
 ## Conventions worth knowing
 

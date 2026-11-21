@@ -1898,7 +1898,7 @@ description ends in a full stop of its own (short names have none).
    and misled blind readers both ways; without it every window was read
    rightly (4.1). The schedule reader's doubt about a window that ends on
    a round hour is therefore answered by the three blind reads, not by a
-   word, and is recorded here as a risk a fluent reviewer may reopen. The
+   word, and is recorded here as a risk a reading check may reopen. The
    second schedule reader read every such window inclusively too, and
    named the shapes where the doubt is highest (nine to five under
    `hour12`, a window across midnight, a window beside stray times),

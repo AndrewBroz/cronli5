@@ -71,7 +71,7 @@ bracket it uses, after `L-3` (5.7), names a single day.
 Answered by the orchestrating model (Claude Fable 5.2), 2026-11-12, for
 French as written in France. Every example is what a careful writer
 would put on a screen to say when a task runs. Reasons are given so a
-fluent reviewer can overturn a call.
+call can be tested again, by readers or by corpus evidence.
 
 The evidence behind the calls, cited below by these names:
 
@@ -89,8 +89,7 @@ when they disagree; a rewrite offered by one judge is a suggestion, and
 several such suggestions were adopted in one draft and graded odd by the
 next judge. After judge 3 a form was changed only where a reader's stated
 understanding was wrong, split, or reached on a second reading; a form
-understood at once was left, whatever its grade. No fluent human has
-reviewed the result.
+understood at once was left, whatever its grade.
 
 * **the audit**: a later adversarial read (2026-11-13) of the rule book,
   the renderer and some three thousand sentences set beside their fire

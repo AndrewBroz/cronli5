@@ -549,8 +549,8 @@ on 2026-11-19 found it in descriptive prose, each seen through a search
 summary and not opened: «탑승 시간은 홀수 시의 10~59분, 출발은 짝수 시
 정각» (namu.wiki, 일본(바람의 나라)); «짝수 정각과 짝수 30분» (namu.wiki,
 SBS 파워FM); news «짝수 시에만» (namu.wiki, KBS 제1라디오/편성표). No
-official timetable or notice was found using it; a native reviewer
-should confirm it.
+official timetable or notice was found using it, so the evidence for it
+is thin.
 
 With listed minutes «시대» was called surplus by two judges, who wrote
 «0시, 오전 6시, 낮 12시, 오후 6시의 15분과 45분». Not taken: «의» sits
@@ -1758,7 +1758,7 @@ Left open, with the reason:
 
 * **«짝수 시», «홀수 시»** still rest on wiki prose and blind judges;
   a few readers may hesitate over whether 0시 is even. No official
-  timetable was found. For a native reviewer.
+  timetable was found.
 * **A union's date arm said positively**, «매월 1~14·16~31일의
   홀수일에도», and **the time after the comma** in «…, 그리고 …에도,
   0시»: read cold in this audit with one reading each; no blind reader

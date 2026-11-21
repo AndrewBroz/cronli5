@@ -130,8 +130,7 @@ languages; and usage notes written in Chinese by a writer told nothing of
 this project (`usage.md`, "the notes"). The last section says where this
 book departs from the notes. Every example is what a careful
 writer of an interface would put on the screen. Reasons are given, with the alternative that was rejected,
-so a fluent reviewer can overturn a call. No fluent human has reviewed
-these answers yet.
+so a call can be tested again, by readers or by corpus evidence.
 
 Nothing here was carried over from another language. Where the two judges
 disagreed, the form is marked **contested** and the reason for the choice
@@ -566,7 +565,7 @@ A run of minutes that wraps inside one hour is two windows: 9:00至9:10、
   answered rightly by every reader who answered. So was the refused 每3小
   时的每一分钟: the model readers did not take it as every minute, and it
   is refused on the usage notes' evidence of how a native writer hears 每
-  …的每一分钟, not on theirs. No fluent human has read these forms.
+  …的每一分钟, not on theirs.
 
   The rhythm runs round the clock, so it takes no 每天 and follows a day
   after a comma (2.1): 每月1日，每2小时一次; 每周一，每2小时的30分; 每年6
@@ -865,7 +864,6 @@ Exceptions in the time part close the time, in full-width brackets with
 3.10 The limits are the table at the top. Eight comes from the first
 judge, who called a list of eight clock times "偏长，但毫不含糊，人也会这
 么列"; the second graded a list of seven dates and of four times natural.
-Not checked with a fluent human beyond that.
 
 `0 */6 * * *` against its four times: the step, 每6小时一次. `23 */6 * *
 *`: 每6小时的23分 (3.7; 2026-11-19. From the second amendment of

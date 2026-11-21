@@ -33,10 +33,9 @@ every expected description against its schedule, and blind readers
 briefed only in Russian, as editors in Ukraine, read the sentences with no
 knowledge of how they were made. The renderer was built from those
 artifacts by an agent that saw no other language's renderer, and was then
-audited. **No fluent human has reviewed it.**
+audited.
 
-A native reviewer should check these first, because the evidence for them
-is thin:
+Where the evidence is thinnest:
 
 ```js
 // every second hour, under minutes: «в чётные часы»

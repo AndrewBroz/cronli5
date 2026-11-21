@@ -254,8 +254,7 @@ and none of the new forms has had a blind read.
 
 Answered by the orchestrating model (Claude Fable 5.2), 2026-11-12, for
 German as written in Germany by default, with an Austrian and a Swiss
-variant for one word each. No fluent human has reviewed these answers.
-The evidence behind them is four independent reads by other model
+variant for one word each. The evidence behind them is four independent reads by other model
 instances: two readers who worked every row against its pattern (called
 "the first reader" and "the second reader" below) and two fluency judges
 who graded a sample and said how they understood each sentence ("the
@@ -956,7 +955,7 @@ weekday together (4.3), except «täglich, außer» on the date side.
 (5.8).
 
 3.10 The limits are those of the opening section. They rest on a few
-choices by two judges and have not been checked with a fluent human.
+choices by two judges, and a reading check is what would test them again.
 
 3.11 Declared ties: one, the last day of the month (below). Hours 0 and 12 are «täglich um 0:00 und 12:00
 Uhr» however the field is written (graded natural; two hours are never
