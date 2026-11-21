@@ -102,9 +102,12 @@ const rows = [
     '12:45 oraz od 18:00 do 18:45'],
   ['*/15 */2 * * 1-5',
     'od poniedziałku do piątku co 15 minut w godzinach parzystych'],
+  // 2026-11-20: four hours of a rhythm of minutes are named once, «od
+  // każdej z godzin … do 45 minut po niej»; four windows said the same
+  // minutes four times.
   ['*/15 */6 * * 1-5',
-    'od poniedziałku do piątku co 15 minut od 0:00 do 0:45, od 6:00 do ' +
-    '6:45, od 12:00 do 12:45 oraz od 18:00 do 18:45'],
+    'od poniedziałku do piątku co 15 minut od każdej z godzin 0:00, 6:00, ' +
+    '12:00 i 18:00 do 45 minut po niej'],
   ['*/15 0,2,4,6,10,12,14,16,18,20,22 * * 1-5',
     'od poniedziałku do piątku co 15 minut w godzinach parzystych, oprócz ' +
     'godziny 8'],
@@ -266,9 +269,11 @@ const rows = [
     'do 18:59'],
   ['* 9-17 * * *', 'codziennie co minutę od 9:00 do 17:59'],
   ['* */2 * * *', 'co minutę w godzinach parzystych'],
+  // 2026-11-20: four hours named once, as under a list of minutes; four
+  // windows said the same hour four times.
   ['* */6 * * *',
-    'codziennie co minutę od 0:00 do 0:59, od 6:00 do 6:59, od 12:00 do ' +
-    '12:59 oraz od 18:00 do 18:59'],
+    'codziennie co minutę od każdej z godzin 0:00, 6:00, 12:00 i 18:00 do ' +
+    '59 minut po niej'],
   ['* 0,2,4,6,10,12,14,16,18,20,22 * * *',
     'co minutę w godzinach parzystych, oprócz godziny 8'],
   ['* 22-2 * * *', 'codziennie co minutę od 22:00 do 2:59'],

@@ -464,9 +464,12 @@ const rows = [
   ['0 1/12 * * *', 'codziennie o 1:00 i 13:00'],
   ['*/15 */12 * * *',
     'codziennie co 15 minut od 0:00 do 0:45 oraz od 12:00 do 12:45'],
+  // 2026-11-20: the same frame as every other kind of minutes under these
+  // hours, «każdej z godzin»; «w godzinach rozpoczynających się o» was a
+  // second frame for one kind of minutes only.
   ['*/15 8-18/2 * * *',
-    'codziennie co 15 minut w godzinach rozpoczynających się o 8:00, ' +
-    '10:00, 12:00, 14:00, 16:00 i 18:00'],
+    'codziennie co 15 minut od każdej z godzin 8:00, 10:00, 12:00, 14:00, ' +
+    '16:00 i 18:00 do 45 minut po niej'],
   ['*/20 */3 * * *',
     'co 3 godziny, za każdym razem co 20 minut przez całą godzinę'],
   ['*/15 */3 * * *',
@@ -570,9 +573,11 @@ const rows = [
   ['0-29,45 9,17 * * *',
     'codziennie co minutę od 9:00 do 9:29 i o 9:45 oraz co minutę od 17:00 ' +
     'do 17:29 i o 17:45'],
+  // 2026-11-20: five hours named once; five windows said the same hour
+  // five times.
   ['* 6,8,12,18,20 * * *',
-    'codziennie co minutę od 6:00 do 6:59, od 8:00 do 8:59, od 12:00 do ' +
-    '12:59, od 18:00 do 18:59 oraz od 20:00 do 20:59'],
+    'codziennie co minutę od każdej z godzin 6:00, 8:00, 12:00, 18:00 i ' +
+    '20:00 do 59 minut po niej'],
   ['*/5 * * 6 *', 'w czerwcu co 5 minut'],
   ['0 */6 * 6 *', 'w czerwcu co 6 godzin'],
   ['30 * * 6 *', 'w czerwcu, 30 minut po każdej pełnej godzinie'],
@@ -888,6 +893,103 @@ const rows = [
   ['0,5,10,20-40 * * * *',
     'o każdej pełnej godzinie, 5 i 10 minut później oraz co minutę od 20 ' +
     'do 40 minut po niej'],
+
+  // The same minutes in several hours, said once: past five hours, or
+  // past six clock times however the minutes are said (a window counts
+  // two), the hours are named once after «każdej z godzin» and the
+  // minutes follow in their own form inside one hour, both ends named
+  // where they are a stretch. A list of hours and a rhythm of hours that
+  // does not tile the day are said alike under every kind of minutes.
+  // (2026-11-20: rhythms, windows and every minute were five windows
+  // under a list, and «w godzinach rozpoczynających się o» under a
+  // rhythm, while two or three minutes already took this frame.)
+  ['5,35 1,4,9,14,18 * * *',
+    'codziennie 5 i 35 minut po każdej z godzin 1:00, 4:00, 9:00, 14:00 ' +
+    'i 18:00'],
+  ['5,25,45 1,4,9,14,18 * * *',
+    'codziennie 5, 25 i 45 minut po każdej z godzin 1:00, 4:00, 9:00, ' +
+    '14:00 i 18:00'],
+  ['0,30 1,4,9,14,18 * * *',
+    'codziennie o każdej z godzin 1:00, 4:00, 9:00, 14:00 i 18:00 oraz ' +
+    '30 minut później'],
+  ['*/15 1,4,9,14,18 * * *',
+    'codziennie co 15 minut od każdej z godzin 1:00, 4:00, 9:00, 14:00 ' +
+    'i 18:00 do 45 minut po niej'],
+  ['5/10 1,4,9,14,18 * * *',
+    'codziennie co 10 minut od 5 do 55 minut po każdej z godzin 1:00, ' +
+    '4:00, 9:00, 14:00 i 18:00'],
+  ['*/7 1,4,9,14,18 * * *',
+    'codziennie co 7 minut od każdej z godzin 1:00, 4:00, 9:00, 14:00 i ' +
+    '18:00 do 56 minut po niej'],
+  ['10-20 1,4,9,14,18 * * *',
+    'codziennie co minutę od 10 do 20 minut po każdej z godzin 1:00, ' +
+    '4:00, 9:00, 14:00 i 18:00'],
+  ['0-29 1,4,9,14,18 * * *',
+    'codziennie co minutę od każdej z godzin 1:00, 4:00, 9:00, 14:00 i ' +
+    '18:00 do 29 minut po niej'],
+  ['10-40/10 1,4,9,14,18 * * *',
+    'codziennie 10, 20, 30 i 40 minut po każdej z godzin 1:00, 4:00, ' +
+    '9:00, 14:00 i 18:00'],
+  ['0-29,45 1,4,9,14,18 * * *',
+    'codziennie co minutę od każdej z godzin 1:00, 4:00, 9:00, 14:00 i ' +
+    '18:00 do 29 minut po niej, a potem raz 45 minut po niej'],
+  ['* 1,4,9,14,18 * * *',
+    'codziennie co minutę od każdej z godzin 1:00, 4:00, 9:00, 14:00 i ' +
+    '18:00 do 59 minut po niej'],
+  ['0-28,30-59 1,4,9,14,18 * * *',
+    'codziennie co minutę od każdej z godzin 1:00, 4:00, 9:00, 14:00 i ' +
+    '18:00 do 59 minut po niej, oprócz chwili wypadającej 29 minut po ' +
+    'niej'],
+  ['5,35 6-18/3 * * *',
+    'codziennie 5 i 35 minut po każdej z godzin 6:00, 9:00, 12:00, ' +
+    '15:00 i 18:00'],
+  ['5,25,45 6-18/3 * * *',
+    'codziennie 5, 25 i 45 minut po każdej z godzin 6:00, 9:00, 12:00, ' +
+    '15:00 i 18:00'],
+  ['0,30 6-18/3 * * *',
+    'codziennie o każdej z godzin 6:00, 9:00, 12:00, 15:00 i 18:00 oraz ' +
+    '30 minut później'],
+  ['*/15 6-18/3 * * *',
+    'codziennie co 15 minut od każdej z godzin 6:00, 9:00, 12:00, 15:00 ' +
+    'i 18:00 do 45 minut po niej'],
+  ['5/10 6-18/3 * * *',
+    'codziennie co 10 minut od 5 do 55 minut po każdej z godzin 6:00, ' +
+    '9:00, 12:00, 15:00 i 18:00'],
+  ['*/7 6-18/3 * * *',
+    'codziennie co 7 minut od każdej z godzin 6:00, 9:00, 12:00, 15:00 ' +
+    'i 18:00 do 56 minut po niej'],
+  ['10-20 6-18/3 * * *',
+    'codziennie co minutę od 10 do 20 minut po każdej z godzin 6:00, ' +
+    '9:00, 12:00, 15:00 i 18:00'],
+  ['0-29 6-18/3 * * *',
+    'codziennie co minutę od każdej z godzin 6:00, 9:00, 12:00, 15:00 i ' +
+    '18:00 do 29 minut po niej'],
+  ['10-40/10 6-18/3 * * *',
+    'codziennie 10, 20, 30 i 40 minut po każdej z godzin 6:00, 9:00, ' +
+    '12:00, 15:00 i 18:00'],
+  ['0-29,45 6-18/3 * * *',
+    'codziennie co minutę od każdej z godzin 6:00, 9:00, 12:00, 15:00 i ' +
+    '18:00 do 29 minut po niej, a potem raz 45 minut po niej'],
+  ['* 6-18/3 * * *',
+    'codziennie co minutę od każdej z godzin 6:00, 9:00, 12:00, 15:00 i ' +
+    '18:00 do 59 minut po niej'],
+  ['0-28,30-59 6-18/3 * * *',
+    'codziennie co minutę od każdej z godzin 6:00, 9:00, 12:00, 15:00 i ' +
+    '18:00 do 59 minut po niej, oprócz chwili wypadającej 29 minut po ' +
+    'niej'],
+  ['10-20 1,4,9,14 * * *',
+    'codziennie co minutę od 10 do 20 minut po każdej z godzin 1:00, ' +
+    '4:00, 9:00 i 14:00'],
+  ['*/15 9,13,17 * * *',
+    'codziennie co 15 minut od 9:00 do 9:45, od 13:00 do 13:45 oraz od ' +
+    '17:00 do 17:45'],
+  ['30 * 1,4,9,14,18 * * *',
+    'codziennie co minutę od każdej z godzin 1:00, 4:00, 9:00, 14:00 i ' +
+    '18:00 do 59 minut po niej, za każdym razem 30 sekund po pełnej ' +
+    'minucie'],
+  ['* * 6-18/3 * * *',
+    'codziennie co sekundę od każdej z godzin 6:00, 9:00, 12:00, 15:00 ' +
+    'i 18:00 do 59 minut i 59 sekund po niej'],
 
   // Up to four moments with seconds are listed, in one clock time or
   // several.
