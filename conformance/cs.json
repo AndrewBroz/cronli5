@@ -975,7 +975,7 @@
    "pattern": "*/15 9,17 * * 1-5"
   },
   {
-   "expected": "od pondělí do pátku každých 15 minut od 8:00 do 8:45, od 12:00 do 12:45 a od 18:00 do 18:45",
+   "expected": "od pondělí do pátku každých 15 minut, vždy po dobu jedné hodiny od 8:00, 12:00 a 18:00",
    "options": {
     "lang": "cs"
    },
@@ -1500,7 +1500,7 @@
    "pattern": "* 12 * * *"
   },
   {
-   "expected": "denně každou minutu od 8:00 do 8:59, od 12:00 do 12:59 a od 18:00 do 18:59",
+   "expected": "denně každou minutu, vždy po dobu jedné hodiny od 8:00, 12:00 a 18:00",
    "options": {
     "lang": "cs"
    },
@@ -3011,32 +3011,200 @@
    "pattern": "0,20,40 9,17 * * *"
   },
   {
-   "expected": "denně v 8:00, 8:30, 12:00, 12:30, 18:00 a 18:30",
+   "expected": "denně každých 30 minut, vždy po dobu jedné hodiny od 8:00, 12:00 a 18:00",
    "options": {
     "lang": "cs"
    },
    "pattern": "0,30 8,12,18 * * *"
   },
   {
-   "expected": "denně v 8:05, 8:20, 8:45, 12:05, 12:20, 12:45, 18:05, 18:20 a 18:45",
+   "expected": "denně 5, 20 a 45 minut po 8:00, 12:00 a 18:00",
    "options": {
     "lang": "cs"
    },
    "pattern": "5,20,45 8,12,18 * * *"
   },
   {
-   "expected": "denně v 8:00, 8:15, 8:45, 12:00, 12:15, 12:45, 18:00, 18:15 a 18:45",
+   "expected": "denně v 8:00, 12:00 a 18:00 a vždy 15 a 45 minut po nich",
    "options": {
     "lang": "cs"
    },
    "pattern": "0,15,45 8,12,18 * * *"
   },
   {
-   "expected": "každé pondělí v 8:05, 8:20, 8:45, 12:05, 12:20, 12:45, 18:05, 18:20 a 18:45",
+   "expected": "každé pondělí vždy 5, 20 a 45 minut po 8:00, 12:00 a 18:00",
    "options": {
     "lang": "cs"
    },
    "pattern": "5,20,45 8,12,18 * * 1"
+  },
+  {
+   "expected": "denně 5 a 35 minut po 9:00, 13:00 a 17:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5,35 9,13,17 * * *"
+  },
+  {
+   "expected": "denně v 9:05, 9:35, 17:05 a 17:35",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5,35 9,17 * * *"
+  },
+  {
+   "expected": "denně v 9:00 a 17:00 a vždy 5, 10, 15, 20 a 25 minut po nich",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-29/5 9,17 * * *"
+  },
+  {
+   "expected": "denně 5 a 35 minut po 1:00, 4:00, 9:00, 14:00 a 18:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5,35 1,4,9,14,18 * * *"
+  },
+  {
+   "expected": "denně 5, 20 a 35 minut po 1:00, 4:00, 9:00, 14:00 a 18:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5,20,35 1,4,9,14,18 * * *"
+  },
+  {
+   "expected": "denně každých 15 minut, vždy po dobu jedné hodiny od 1:00, 4:00, 9:00, 14:00 a 18:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 1,4,9,14,18 * * *"
+  },
+  {
+   "expected": "denně každou minutu, vždy po dobu jedné hodiny od 1:00, 4:00, 9:00, 14:00 a 18:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* 1,4,9,14,18 * * *"
+  },
+  {
+   "expected": "denně každou minutu v prvních 30 minutách po 1:00, 4:00, 9:00, 14:00 a 18:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-29 1,4,9,14,18 * * *"
+  },
+  {
+   "expected": "denně každou minutu od 10 do 40 minut včetně po 1:00, 4:00, 9:00, 14:00 a 18:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "10-40 1,4,9,14,18 * * *"
+  },
+  {
+   "expected": "denně každých 10 minut od 5 do 55 minut včetně po 1:00, 4:00, 9:00, 14:00 a 18:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5-55/10 1,4,9,14,18 * * *"
+  },
+  {
+   "expected": "denně každých 7 minut, vždy po dobu jedné hodiny od 1:00, 4:00, 9:00, 14:00 a 18:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/7 1,4,9,14,18 * * *"
+  },
+  {
+   "expected": "denně každou minutu od 45 do 59 minut včetně po 1:00, 4:00, 9:00, 14:00 a 18:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "45-59 1,4,9,14,18 * * *"
+  },
+  {
+   "expected": "denně každých 6 minut v prvních 43 minutách po 1:00, 4:00, 9:00, 14:00 a 18:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-42/6 1,4,9,14,18 * * *"
+  },
+  {
+   "expected": "denně každou minutu v prvních 30 minutách a pak ještě 45 minut po 1:00, 4:00, 9:00, 14:00 a 18:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-29,45 1,4,9,14,18 * * *"
+  },
+  {
+   "expected": "denně v 1:00, 4:00, 9:00, 14:00 a 18:00 a vždy každou minutu od 35 do 59 minut včetně po nich",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0,35-59 1,4,9,14,18 * * *"
+  },
+  {
+   "expected": "denně každé 2 minuty v prvních 21 minutách a pak každé 3 minuty od 21 do 57 minut včetně po 1:00, 4:00, 9:00, 14:00 a 18:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-20/2,21-59/3 1,4,9,14,18 * * *"
+  },
+  {
+   "expected": "denně 5 a 35 minut po 1:00, 4:00, 9:00, 14:00 a 18:00, pokaždé 15 sekund po začátku minuty",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "15 5,35 1,4,9,14,18 * * *"
+  },
+  {
+   "expected": "denně každou minutu, vždy po dobu jedné hodiny od 1:00, 4:00, 9:00, 14:00 a 18:00, kromě každé celé hodiny a okamžiku 59 minut po ní",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "1-58 1,4,9,14,18 * * *"
+  },
+  {
+   "expected": "od pondělí do pátku každých 15 minut, vždy po dobu jedné hodiny od 1:00, 4:00, 9:00, 14:00 a 18:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 1,4,9,14,18 * * 1-5"
+  },
+  {
+   "expected": "denně 5 a 35 minut po 6:00, 9:00, 12:00, 15:00 a 18:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5,35 6-18/3 * * *"
+  },
+  {
+   "expected": "denně každých 15 minut, vždy po dobu jedné hodiny od 6:00, 9:00, 12:00, 15:00 a 18:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "*/15 6-18/3 * * *"
+  },
+  {
+   "expected": "denně každou minutu, vždy po dobu jedné hodiny od 6:00, 9:00, 12:00, 15:00 a 18:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "* 6-18/3 * * *"
+  },
+  {
+   "expected": "denně každou minutu v prvních 30 minutách po 6:00, 9:00, 12:00, 15:00 a 18:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "0-29 6-18/3 * * *"
+  },
+  {
+   "expected": "denně každých 10 minut od 5 do 55 minut včetně po 6:00, 9:00, 12:00, 15:00 a 18:00",
+   "options": {
+    "lang": "cs"
+   },
+   "pattern": "5-55/10 6-18/3 * * *"
   },
   {
    "expected": "denně v 1:00",
@@ -3634,7 +3802,7 @@
    "pattern": "0-28,30-59 0 9 * * *"
   },
   {
-   "expected": "denně každých 15 minut od 8:00 do 8:45, od 10:00 do 10:45 a tak dále každé 2 hodiny až do 18:45",
+   "expected": "denně každých 15 minut, vždy po dobu jedné hodiny od 8:00, 10:00, 12:00, 14:00, 16:00 a 18:00",
    "options": {
     "lang": "cs"
    },
@@ -3676,14 +3844,14 @@
    "pattern": "5,20,45 9-17,22 * * *"
   },
   {
-   "expected": "denně každou minutu od 8:00 do 8:29, od 12:00 do 12:29 a od 18:00 do 18:29",
+   "expected": "denně každou minutu v prvních 30 minutách po 8:00, 12:00 a 18:00",
    "options": {
     "lang": "cs"
    },
    "pattern": "0-29 8,12,18 * * *"
   },
   {
-   "expected": "denně každou minutu od 6:00 do 6:59, od 8:00 do 8:59, od 12:00 do 12:59, od 18:00 do 18:59 a od 20:00 do 20:59",
+   "expected": "denně každou minutu, vždy po dobu jedné hodiny od 6:00, 8:00, 12:00, 18:00 a 20:00",
    "options": {
     "lang": "cs"
    },
@@ -4449,7 +4617,7 @@
    "pattern": "0 0 1-7 * *"
   },
   {
-   "expected": "denně každých 15 minut od 1:00 do 2:45, od 5:00 do 5:45, od 7:00 do 7:45, od 11:00 do 11:45, od 13:00 do 13:45, od 17:00 do 17:45, od 19:00 do 19:45 a od 23:00 do 23:45",
+   "expected": "denně každých 15 minut, vždy po dobu jedné hodiny od 1:00, 2:00, 5:00, 7:00, 11:00, 13:00, 17:00, 19:00 a 23:00",
    "options": {
     "lang": "cs"
    },
@@ -4785,28 +4953,28 @@
    "pattern": "5,10,20,25,35,40,50,55 * * * * *"
   },
   {
-   "expected": "denně v 0:00, 0:25 a 0:50 a tak dále každých 5 hodin až do 20:50",
+   "expected": "denně v 0:00, 5:00, 10:00, 15:00 a 20:00 a vždy 25 a 50 minut po nich",
    "options": {
     "lang": "cs"
    },
    "pattern": "*/25 */5 * * *"
   },
   {
-   "expected": "denně každých 15 minut od 2:00 do 2:45, od 8:00 do 8:45, od 14:00 do 14:45 a od 20:00 do 20:45",
+   "expected": "denně každých 15 minut, vždy po dobu jedné hodiny od 2:00, 8:00, 14:00 a 20:00",
    "options": {
     "lang": "cs"
    },
    "pattern": "*/15 2/6 * * *"
   },
   {
-   "expected": "denně každých 15 minut od 0:00 do 0:45, od 5:00 do 5:45 a tak dále každých 5 hodin až do 20:45",
+   "expected": "denně každých 15 minut, vždy po dobu jedné hodiny od 0:00, 5:00, 10:00, 15:00 a 20:00",
    "options": {
     "lang": "cs"
    },
    "pattern": "*/15 */5 * * *"
   },
   {
-   "expected": "vždy 1. dne v měsíci každou minutu od 0:00 do 0:59, od 5:00 do 5:59 a tak dále každých 5 hodin až do 20:59",
+   "expected": "vždy 1. dne v měsíci každou minutu, vždy po dobu jedné hodiny od 0:00, 5:00, 10:00, 15:00 a 20:00",
    "options": {
     "lang": "cs"
    },
@@ -4820,42 +4988,42 @@
    "pattern": "0 */5 * * *"
   },
   {
-   "expected": "denně v 0:00, 0:25 a 0:50 a tak dále každých 5 hodin až do 20:50, pokaždé po dobu jedné minuty každou sekundu",
+   "expected": "denně v 0:00, 5:00, 10:00, 15:00 a 20:00 a vždy 25 a 50 minut po nich, pokaždé po dobu jedné minuty každou sekundu",
    "options": {
     "lang": "cs"
    },
    "pattern": "* */25 */5 * * *"
   },
   {
-   "expected": "denně v 0:00, 0:25 a 0:50 a tak dále každých 5 hodin až do 20:50, pokaždé 5 a 30 sekund po začátku minuty",
+   "expected": "denně v 0:00, 5:00, 10:00, 15:00 a 20:00 a vždy 25 a 50 minut po nich, pokaždé 5 a 30 sekund po začátku minuty",
    "options": {
     "lang": "cs"
    },
    "pattern": "5,30 */25 */5 * * *"
   },
   {
-   "expected": "denně v 0:00:30, 0:25:30 a 0:50:30 a tak dále každých 5 hodin až do 20:50:30",
+   "expected": "denně v 0:00, 5:00, 10:00, 15:00 a 20:00 a vždy 25 a 50 minut po nich, pokaždé 30 sekund po začátku minuty",
    "options": {
     "lang": "cs"
    },
    "pattern": "30 */25 */5 * * *"
   },
   {
-   "expected": "denně 5 a 30 sekund po začátku každé minuty, od 0:00 do 0:59, od 5:00 do 5:59 a tak dále každých 5 hodin až do 20:59",
+   "expected": "denně každou minutu, vždy po dobu jedné hodiny od 0:00, 5:00, 10:00, 15:00 a 20:00, pokaždé 5 a 30 sekund po začátku minuty",
    "options": {
     "lang": "cs"
    },
    "pattern": "5,30 * */5 * * *"
   },
   {
-   "expected": "denně ve 2:00, 2:25, 2:50, 8:00, 8:25, 8:50, 14:00, 14:25, 14:50, 20:00, 20:25 a 20:50, pokaždé po dobu jedné minuty každou sekundu",
+   "expected": "denně ve 2:00, 8:00, 14:00 a 20:00 a vždy 25 a 50 minut po nich, pokaždé po dobu jedné minuty každou sekundu",
    "options": {
     "lang": "cs"
    },
    "pattern": "* */25 2/6 * * *"
   },
   {
-   "expected": "denně ve 2:00, 2:25, 2:50, 8:00, 8:25, 8:50, 14:00, 14:25, 14:50, 20:00, 20:25 a 20:50, pokaždé na začátku minuty a 15, 30 a 45 sekund po něm",
+   "expected": "denně ve 2:00, 8:00, 14:00 a 20:00 a vždy 25 a 50 minut po nich, pokaždé na začátku minuty a 15, 30 a 45 sekund po něm",
    "options": {
     "lang": "cs"
    },
@@ -4883,7 +5051,7 @@
    "pattern": "5,30 */25 9 * * *"
   },
   {
-   "expected": "denně ve 2:00:30, 2:25:30, 2:50:30, 8:00:30, 8:25:30, 8:50:30, 14:00:30, 14:25:30, 14:50:30, 20:00:30, 20:25:30 a 20:50:30",
+   "expected": "denně ve 2:00, 8:00, 14:00 a 20:00 a vždy 25 a 50 minut po nich, pokaždé 30 sekund po začátku minuty",
    "options": {
     "lang": "cs"
    },
