@@ -103,9 +103,11 @@ const rows = [
   ['*/15 9,17 * * 1-5',
     'montags bis freitags von 9:00 bis 9:45 und von 17:00 bis 17:45 Uhr ' +
     'alle 15 Minuten'],
+  // Three hours are named once, and the minutes said once for all of
+  // them (2026-11-20; until then a window for each hour).
   ['*/15 8,12,18 * * 1-5',
-    'montags bis freitags von 8:00 bis 8:45, von 12:00 bis 12:45 und von ' +
-    '18:00 bis 18:45 Uhr alle 15 Minuten'],
+    'montags bis freitags um 8, 12 und 18 Uhr, jeweils eine Stunde lang ' +
+    'alle 15 Minuten'],
   ['*/15 */2 * * 1-5',
     'montags bis freitags in den geraden Stunden alle 15 Minuten'],
   ['*/15 */6 * * 1-5',
@@ -266,9 +268,9 @@ const rows = [
 
   // open / hour
   ['* 12 * * *', 'täglich von 12:00 bis 12:59 Uhr jede Minute'],
+  // Three hours named once (2026-11-20; until then a window each).
   ['* 8,12,18 * * *',
-    'täglich von 8:00 bis 8:59, von 12:00 bis 12:59 und von 18:00 bis ' +
-    '18:59 Uhr jede Minute'],
+    'täglich um 8, 12 und 18 Uhr, jeweils eine Stunde lang jede Minute'],
   ['* 9-17 * * *', 'täglich von 9:00 bis 17:59 Uhr jede Minute'],
   ['* */2 * * *', 'in den geraden Stunden jede Minute'],
   ['* */6 * * *', 'alle 6 Stunden eine Stunde lang jede Minute'],
