@@ -1,5 +1,24 @@
 # Chinese (Simplified): answers to the language questionnaire
 
+**Amended 2026-11-20, second** (Claude Opus 5.5): **the same minutes in
+several separate hours are said once, after the hours named once,
+whatever the minutes are** (4.1). Two or more separate hours (a list, a
+stepped range such as `6-18/3`, an offset step such as `1/3`) are named
+with 点 and the minutes follow 的: 每天1点、4点、9点、14点、18点的5分、35
+分; 的0分、15分、30分、45分; 的10分至20分，每分钟一次; 的10分至40分，每2分
+钟一次; 的0分至55分，每5分钟一次; 的每一分钟. Stray minutes after a run
+follow 以及其中每小时的. The one exception is a list small enough that its
+clock times name no more than the hours and minutes said once: one hour,
+one minute, or two hours of two minutes (9:05、9:35、17:05、17:35). Until
+this date a run, a stepped run or a cadence of more than eight minutes
+was a window of clock times in each hour however many hours there were
+(每天6:10至6:20、9:10至9:20、12:10至12:20、15:10至15:20、18:10至18:20，每
+分钟一次: five windows that differ only in their hour), while a list or
+every minute under the same hours followed the hours named; and two
+hours were clock times or windows under every kind of minutes, up to
+eight clock times. The passages changed are marked "(2026-11-20,
+second)".
+
 **Amended 2026-11-20** (Claude Opus 5.5): every third or fourth hour
 holds any minutes after its step (3.7). A window, a stepped window and a
 cadence said by its ends follow 每3小时的 as they follow 每小时的: 每3小
@@ -171,9 +190,11 @@ set of seconds.
   that are runs and cadences together are said as those (3.8, 5.8), so
   that no list of them passes what the field holds in a day, an hour or a
   minute. And what is bounded is a list made by multiplying two lists:
-  separate hours are a window of minutes each only while there are two,
-  and hours each with several minutes are clock times only while there
-  are two (4.1; 2026-11-19, it was four); clock times or minutes each with
+  separate hours are never a window of minutes each, and hours each with
+  several minutes are clock times only where those name no more than the
+  hours and the minutes said once, two hours of two minutes at most (4.1;
+  2026-11-20, second: it was two hours under any minutes; 2026-11-19, it
+  was four); clock times or minutes each with
   their seconds are written out only while that names six things or
   fewer, a window counting two (4.2).
 * **A cadence of minutes or seconds that tiles from 0 is 每N分钟一次 / 每N
@@ -500,7 +521,7 @@ A run of minutes that wraps inside one hour is two windows: 9:00至9:10、
   | --- | --- |
   | 2 | the even hours hold them, by their idiom (5.5): 每天偶数小时内，每15分钟一次; 每天偶数小时的0分至29分，每分钟一次 |
   | 3 or 4, more hours than a glance takes in (2026-11-20) | the step holds them as every hour does (4.1): a run, a stepped run or a cadence by its ends after 的, 每3小时的10分至20分，每分钟一次, 每3小时的0分至29分，每分钟一次，以及45分, 每4小时的10分至50分，每4分钟一次; every minute or a cadence that fills the hour inside the first hour, 每3小时的首个小时内，每分钟一次, 每4小时的首个小时内，每5分钟一次, 每3小时的首个小时内，每分钟的30秒; excepted minutes are positions, （每小时的29分除外）; excepted hours, as for the even hours, 每3小时的首个小时内，每分钟一次（12:00至12:59除外） |
-  | 6, 8, 12, four hours or fewer | the hours named (4.1): 每天0点、6点、12点、18点的每一分钟; a window for each, 每天0:10至0:20、6:10至6:20、12:10至12:20、18:10至18:20，每分钟一次 |
+  | 6, 8, 12, four hours or fewer | the hours named (4.1), whatever the minutes: 每天0点、6点、12点、18点的每一分钟; 每天0点、6点、12点、18点的10分至20分，每分钟一次 (2026-11-20, second: it was a window for each) |
 
   Why (2026-11-20). Every third hour is a rhythm whatever its minutes
   are: the hour field begins on the day's first hour, so it is said by
@@ -831,7 +852,7 @@ Exceptions in the time part close the time, in full-width brackets with
   often 15:00 (the schedule reader).
 * To the minutes: 每分钟一次（每小时的29分除外）; where the excepted clock
   times are eight or fewer they are listed, 每天9:00至9:59，每分钟一次（9:29
-  除外）; 每天9:00至9:59、17:00至17:59，每分钟一次（9:29、17:29除外）.
+  除外）; 每天9点、17点的每一分钟（9:29、17:29除外）.
 * To the seconds: 每秒一次（每分钟的29秒除外）; inside one named minute,
   （9:00:29除外）.
 * A whole minute under 每秒一次 is a window to the second: 每秒一次（每小时
@@ -915,18 +936,24 @@ are eight or fewer (2026-11-19, said once so that the kind has one
 form): `*/15 */12 * * *` is 每12小时的0分、15分、30分、45分; `15 0 */12
 * * *` is 每12小时的0分15秒. Otherwise, **eight exact times or fewer, not a run of five
 or more consecutive hours or minutes, and either at one minute or in no
-more than two hours, are listed as clock times**: 9:00、17:00; 9:05、
-9:20、9:45; 9:00、9:15、9:30、9:45; 9:00、9:30、17:00、17:30; 9:00、9:15、
-9:30、9:45、17:00、17:15、17:30、17:45; 9:30、13:30、17:30; 3:00、6:00、
-9:00、12:00、15:00、18:00、21:00. **Three hours or more, each with
-several minutes, are not multiplied out** (2026-11-19): separate hours
+more than two hours, naming no more than the hours and the minutes said
+once, are listed as clock times**: 9:00、17:00; 9:05、9:20、9:45; 9:00、
+9:15、9:30、9:45; 9:00、9:30、17:00、17:30; 9:30、13:30、17:30; 3:00、
+6:00、9:00、12:00、15:00、18:00、21:00. That is one hour, one minute, or
+two hours of two minutes (2026-11-20, second: two hours of three or four
+minutes were six or eight clock times, 9:00、9:15、9:30、9:45、17:00、17:15、
+17:30、17:45, each minute said twice; now 9点、17点的0分、15分、30分、45分,
+six things said once). **Two hours or more, each with several minutes,
+are not multiplied out** (2026-11-19 for three, 2026-11-20 for two):
+separate hours
 are named once and the minutes once, 每天8点、12点、18点的15分、45分; 每
 天8点、12点、16点、20点的0分、30分; consecutive hours are a stretch, 每天
 9:00至11:30，每30分钟一次; 每天9:15至11:45，每小时的15分、45分. (From the
 comparison: the sister says 每天8、12、16、20時的00、30分 where this
 language listed 每天8:00、8:30、12:00、12:30、16:00、16:30、20:00、20:30:
 eight things, each hour said twice, against six things said once. Two
-hours are left as clock times: four are quickly read.) Otherwise:
+hours of two minutes are left as clock times: four are quickly read, and
+the frame would name four things too.) Otherwise:
 
 **M is one minute.**
 
@@ -967,8 +994,8 @@ then 每分钟一次 or 每N分钟一次.
 | one hour | 9:00至9:59，每分钟一次; 9:00至9:55，每5分钟一次 |
 | the even or odd hours of the day (5.5) | the idiom, with 内: 偶数小时内，每分钟一次; 奇数小时内，每15分钟一次 |
 | the even or odd hours between two ends, more than eight (5.5) | the stretch from the first firing to the last, a comma, the idiom with 内, the rhythm: 2:00至22:59，偶数小时内，每分钟一次; 3:00至23:45，奇数小时内，每15分钟一次 |
-| one or two separate hours, stretches of hours, or any separate hours under a cadence of more than eight minutes | each a window: 9:00至9:59、17:00至17:59，每分钟一次; 0:00至0:59、12:00至12:59，每分钟一次; 9:00至17:59、20:00至20:59、22:00至22:59，每分钟一次; 0:00至0:55、6:00至6:55、12:00至12:55、18:00至18:55，每5分钟一次 |
-| three or more separate hours, under every minute or a cadence of eight minutes or fewer | the hours by name, then 的 and the minutes as positions: 每一分钟 for every minute, 9点、13点、17点的每一分钟; 0点、6点、12点、18点的每一分钟; a cadence's minutes, 8点、12点、18点的0分、15分、30分、45分. (Where the hours are a rhythm of hours, a cadence's minutes follow the step instead, 3.7: 每6小时的0分、15分、30分、45分; and every third or fourth hour holds any minutes after its step, 每3小时的首个小时内，每分钟一次, 2026-11-20.) |
+| stretches of hours | each a window: 9:00至17:59、20:00至20:59、22:00至22:59，每分钟一次 |
+| two or more separate hours (2026-11-20, second: two hours, and any under a cadence of more than eight minutes, were a window each) | the hours by name, then 的 and the minutes as positions: 每一分钟 for every minute, 9点、17点的每一分钟; 9点、13点、17点的每一分钟; 0点、6点、12点、18点的每一分钟; a cadence of eight minutes or fewer by its minutes, 8点、12点、18点的0分、15分、30分、45分; a longer one by its ends, 0点、6点、12点、18点的0分至55分，每5分钟一次. (Where the hours are a rhythm of hours, a cadence's minutes follow the step instead, 3.7: 每6小时的0分、15分、30分、45分; and every third or fourth hour holds any minutes after its step, 每3小时的首个小时内，每分钟一次, 2026-11-20.) |
 | every hour with exceptions | 每10分钟一次（3:00至3:59除外） |
 | the even or odd hours with exceptions | the phrase, then the bracket: 偶数小时内，每分钟一次（8:00至8:59除外） |
 
@@ -989,17 +1016,18 @@ windows first. Windows for every second hour, abbreviated with ……, were
 tried next and dropped: the third judge stopped at the …… and went back.
 For every second hour the idiom of 5.5 is said.
 
-**Three or more separate hours under every minute, or under a cadence of
-eight minutes or fewer, are not a window each.** A window for each
+**Two or more separate hours are not a window each**, whatever the
+minutes (2026-11-20, second; until then three or more, under every
+minute or a cadence of eight minutes or fewer). A window for each
 hour is a list made by multiplying: every hour with the two ends of the
-minutes. It is written out for one hour or two. (2026-11-19, from the
+minutes. It is written out for one hour only. (2026-11-19, from the
 comparison: it was written out up to four windows, 每天0:00至0:59、6:00
 至6:59、12:00至12:59、18:00至18:59，每分钟一次, eight clock times in
 which the reader has to see that each pair is one whole hour; the sister
 names the hours once. Now 每天0点、6点、12点、18点的每一分钟: 17
 syllables against 47, five things against eight, nothing said twice.)
 The even or odd hours are none of these: they have the phrase above.
-Past two, the hours are named
+Past one, the hours are named
 once and the minutes once, as positions in the hour, the way anchored
 minutes are said below (8点、12点、18点的5分、20分、45分: N点的M分 is a
 clock reading, and cannot be taken for one continuous stretch, which is
@@ -1015,17 +1043,44 @@ what sank 这3个小时内 above):
   one second each minute carries it, 的0分30秒、15分30秒、30分30秒、45分30
   秒; with more, each is a round, 的0分、15分、30分、45分各一轮，每轮60次，每
   秒一次.
-* **A run of minutes, or a cadence of more than eight said by its ends,
-  stays a window for each hour, however many**: 每周一至周五9:00至9:30、
-  11:00至11:30、13:00至13:30、15:00至15:30、17:00至17:30，每分钟一次; 每天
-  0:00至0:55、5:00至5:55、10:00至10:55、15:00至15:55、20:00至20:55，每5分钟
-  一次. Named, as 9点、11点、13点、15点、17点的0分至30分，每分钟一次, a blind
-  reader took it as one stretch from 9:00 to 17:30: the 至 comes after the
-  last hour of a list, and a quick read joins them (「"至"又跟在最后，粗读很
-  容易连起来」). 每小时的0分至30分 after the hours can be every hour of the
-  day, and 这几个小时里 is what two earlier readers took for one stretch.
-  No form was found with one reading, and a long sentence with one reading
-  is better than a short one with two. These sentences are long; that is accepted.
+* **A run of minutes, a stepped run, or a cadence of more than eight
+  said by its ends, follows 的 as the other minutes do** (2026-11-20,
+  second): 每周一至周五9点、11点、13点、15点、17点的0分至30分，每分钟一次;
+  每天6点、9点、12点、15点、18点的10分至20分，每分钟一次; 的10分至40分，每2
+  分钟一次; 每天0点、5点、10点、15点、20点的0分至55分，每5分钟一次. It
+  is said as under every hour (每小时的10分至20分，每分钟一次), with the
+  hours in place of 每小时.
+
+  Until this date each was a window of clock times in each hour, however
+  many hours: 每天6:10至6:20、9:10至9:20、12:10至12:20、15:10至15:20、18:10
+  至18:20，每分钟一次, while 5分、35分 or 每一分钟 under the same hours
+  followed them named. That said the same two minutes five times, ten
+  clock times the reader had to see were alike, about 75 syllables
+  against about 30 for the frame (five hours, two ends and the step:
+  eight things against eleven, and nothing said twice); and editing only
+  the minutes changed how the hours were said. The reason recorded for
+  the windows was one blind reader, who took 9点、11点、13点、15点、17点的0
+  分至30分 as one stretch from 9:00 to 17:30 (「"至"又跟在最后，粗读很容易
+  连起来」). Tested again on 2026-11-20 with
+  `tooling/scripts/reading/run.mjs`: 25 sentences of the new form (five
+  irregular hours, `6-18/3`, `1/3`, `9-17/2`, `*/6`, two hours; under two
+  minutes, a cadence, every minute, runs, stepped runs, runs with strays,
+  an exception, seconds), 222 questions, three Sonnet 5.5 and three Opus
+  5.5 readers briefed only in Chinese. Every reader was asked about a
+  moment between two named hours (10:15 for 9点、11点……17点的0分至30分,
+  7:45 for 6点、9点……18点的10分至20分), the very misreading recorded, and
+  every answer was right; of 1332 answers one was wrong (a single reader
+  took 9:16 as outside 10分至20分), so none needed a recheck. N点的M分 is
+  a clock reading, and so is N点的M分至M分: the 至 joins two minutes of
+  the same hour. The traditional sister says the same, 6、9、12、15、18時
+  的10分至20分內每分鐘一次.
+
+  Evidence. Web searches for the fragments (点的10分至20分, 每天8点、12点、
+  18点 with 分, 点和17点的 with 分) found no Chinese text in the frame and
+  none against it: the engine available returns cron documentation and
+  unrelated pages for quoted Chinese (as recorded at 3.7). The call
+  rests on the usage notes' 每小时的15分 and N点M分 as the clock reading,
+  on the cost comparison above, and on the readers.
 
 The first form tried here was 的0分至59分，每分钟一次 for every minute,
 and the reader gave it a second reading: 0分至59分 looks like nothing
@@ -1037,40 +1092,37 @@ times, 0:00至0:45、5:00至5:45……20:00至20:45, and beside a long day part
 ran past a hundred characters.) Stretches of hours stay windows however
 many: a stretch cannot be named as one hour before 的.
 
-**M is a single run of minutes.** Under separate hours, however many, a
-window of clock times for each, as above: 9:00至9:29，每分钟一次; 9:00至
-9:29、17:00至17:29，每分钟一次; 9:00至9:30、11:00至11:30、13:00至13:30、
-15:00至15:30、17:00至17:30，每分钟一次. (Left open on 2026-11-19: the
-sister names the hours, 9、11、13、15、17時的00分至30分, which is the form
-a blind reader of this language took for one stretch from 9:00 to
-17:30, above. No form with one reading was found that is shorter.)
+**M is a single run of minutes.** Under one hour, a window of clock
+times: 9:00至9:29，每分钟一次. Under two or more separate hours, the hours
+named and the run after 的, as above: 9点、17点的0分至29分，每分钟一次; 9
+点、11点、13点、15点、17点的0分至30分，每分钟一次. (2026-11-20, second:
+the question left open on 2026-11-19, when the sister already named the
+hours, is closed by the readers above.)
 
 **Inside one named hour every minute phrase is clock times**, whatever
 the minutes are: a run with a stray minute, 9:00至9:29，每分钟一次，以及
 9:45; two runs, 9:00至9:09、9:20至9:29，每分钟一次; a cadence that names its
-ends, 9:03至9:58，每5分钟一次. Under several separate hours one window
-(a run, or a cadence that names its ends) is clock times too, with its
-stray minutes or without: anything more would multiply (two runs under
-two hours are four windows), so it is anchored, below.
+ends, 9:03至9:58，每5分钟一次. Under several separate hours the hours
+are named, whatever the minutes (above; 2026-11-20, second: one window
+was clock times in each hour).
 
 **Stray minutes after a window of minutes carry their hours.** After the
 window's rhythm they follow a comma and 以及, and there a bare 45分 has no
 hour of its own:
 
-* Under separate hours, one window: the window in each hour, then the
-  strays as clock times, 每天9:00至9:29、17:00至17:29，每分钟一次，以及
-  9:45、17:45; 9:00至9:58、17:00至17:58，每2分钟一次，以及9:45、17:45;
-  under five or more hours the same, 9:00至9:29、11:00至11:29、13:00至
-  13:29、15:00至15:29、17:00至17:29，每分钟一次，以及9:45、11:45、13:45、
-  15:45、17:45. Where the clock
-  times would name more things than the hours and the minutes together
-  (three hours and two strays: six against five), the hours are said
-  again before the strays: 9:00至9:09、13:00至13:09、17:00至17:09，每分钟一
-  次，以及9点、13点、17点的20分、40分.
-* Under separate hours named before 的 (two windows or more), and under
-  the even or odd hours, the hours are said again before the strays: 9
-  点、17点的0分至20分、30分至50分，每分钟一次，以及9点、17点的25分; 每天偶
-  数小时的0分至29分，每分钟一次，以及偶数小时的45分. Between two ends only
+* Under separate hours, named before 的, 其中每小时的, as under windows
+  of hours below: 每天9点、17点的0分至29分，每分钟一次，以及其中每小时的45
+  分; 9点、11点、13点、15点、17点的0分至29分，每分钟一次，以及其中每小时的
+  45分; 9点、17点的0分至20分、30分至50分，每分钟一次，以及其中每小时的25
+  分. (2026-11-20, second. One window under separate hours was a window
+  in each hour and the strays clock times, ten windows' ends and five
+  times under five hours; where the hours were named, they were named
+  again before the strays, 以及9点、17点的25分, which under five hours says
+  five hours twice. 其中 points back to the hours as it does to windows;
+  the readers above answered every question on 以及其中每小时的45分 after
+  named hours rightly, including 6:52 and 18:44.)
+* Under the even or odd hours, the idiom is said again before the
+  strays: 每天偶数小时的0分至29分，每分钟一次，以及偶数小时的45分. Between two ends only
   the idiom is said again, inside the stretch that opens the time: 每天
   2:00至22:45，偶数小时的0分至29分，每分钟一次，以及偶数小时的45分.
   (Checked 2026-11-14 with two readers: both found that a bare 以
@@ -1100,7 +1152,8 @@ of the day), and 以及8点至10点、14点的45分 (both: 8点至10点 can end 
 read one way too, but they grow with every hour of the windows, where
 其中每小时的 does not.
 
-**Otherwise M is anchored**: a list, a run under a stretch of hours,
+**Otherwise M is anchored**: a list, a run under a stretch of hours or
+under separate hours,
 pieces, an exception, or a cadence that names its ends. The hours come
 first, then the minute phrase of section 3.
 
@@ -1166,13 +1219,14 @@ and a window two, for the two times it names; or where there is a single
 clock time or a single minute to carry them, which is then a plain list
 or its windows however long. Past that, each clock time or each minute
 is a round, 各一轮 follows the list, and the round is said by its count
-as in case 6: 每天9:05、9:20、9:45、17:05、17:20、17:45各一轮，每轮2次，在所
-在分钟的15秒、45秒; 每小时的5分、20分、35分、50分、55分各一轮，每轮2次，在所
+as in case 6: 每小时的5分、20分、35分、50分、55分各一轮，每轮2次，在所
 在分钟的15秒、45秒; 每天9:05、9:20、17:05、17:20各一轮，每轮2次，在所在分钟
 的15秒、45秒; 每天0:00、5:00、10:00、15:00各一轮，每轮60次，每秒一次; 每天
 9:00至17:45，每小时的0分、45分各一轮，每轮4次，间隔15秒.
 Six are still written out: 每小时的5分15秒、5分45秒、20分15秒、20分45秒、50
-分15秒、50分45秒; 每天8:00:00至8:00:59、12:00:00至12:00:59、18:00:00至
+分15秒、50分45秒; after hours named once the same, 每天9点、17点的5分15秒、5分
+45秒、20分15秒、20分45秒、45分15秒、45分45秒 (2026-11-20, second: it was six
+clock times each a round); 每天8:00:00至8:00:59、12:00:00至12:00:59、18:00:00至
 18:00:59，每秒一次. (The audit found six clock times with eight seconds
 each written out as 48 times, and a list of 24 windows, and bounded them
 at eight. Eight was still too many: eight minutes
