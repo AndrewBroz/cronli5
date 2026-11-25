@@ -4,6 +4,15 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). This project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.3]
+
+### Changed
+
+- **Releases are published from CI.** A pushed version tag publishes the
+  package through npm Trusted Publishing, so each version on npm carries
+  a provenance record that names the commit and workflow that built it.
+  The library itself is unchanged.
+
 ## [1.3.2]
 
 ### Changed
