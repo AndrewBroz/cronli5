@@ -18,8 +18,6 @@ cronli5('30 9 * * MON-FRI', {lang: 'id'}); // 'setiap Senin sampai Jumat pukul 0
 
 ## Status
 
-**Beta.**
-
 Built from usage notes written in Indonesian by a writer told nothing of
 cron ([usage.md](../../src/lang/id/usage.md)), from written answers to the
 language questionnaire ([answers.md](../../src/lang/id/answers.md)) and

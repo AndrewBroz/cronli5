@@ -10,8 +10,8 @@ mind" and "How quality is judged" are the centre of the project.
   commit on `main`; merging to `main`, the version bump and publishing are
   the maintainer's call.
 - Fifteen languages ship: en, cs, de, es, fr, id, it, ja, ko, pl, pt, ru, uk, zh, zh-Hant
-  (id, ko, pl, ru and zh-Hant at beta, registered 2026-11-19). The gate (`npm run verify`) is
-  green.
+  (the last five registered 2026-11-19). zh-Hant is beta; the rest are
+  stable. The gate (`npm run verify`) is green.
 - Branch `length-gate-work` (pushed) holds the withdrawn length-gate work
   of 2026-11-13; its history and a before/after audit are in
   `tooling/experiments/renderer-process/2026-11-13/`. Its genuine fixes
@@ -29,7 +29,10 @@ mind" and "How quality is judged" are the centre of the project.
 ## 2026-11-19: five languages added
 
 Korean, Polish, Indonesian, Russian and Traditional Chinese are on
-`develop` at beta. What was done, what is thin and what is open is in
+`develop`. The first four are stable since 2026-11-25. Traditional
+Chinese is beta: one question is still misread by most readers of both
+models (`docs/language-status.md`). What was done, what is thin and what
+is open is in
 `tooling/experiments/renderer-process/2026-11-19/STATE.md`; the lessons
 are in the `add-language` skill.
 
@@ -49,8 +52,8 @@ time.
    and context-isolated as `CLAUDE.md` says, with no leading questions.
 3. **A blind old-versus-new comparison** as a standard step for any change
    to wording.
-4. **A bar for calling a language finished:** every kind of sentence it
-   produces passes the probes with several independent readers.
+4. **A bar for calling a language finished.** Done 2026-11-25: the test
+   for a stable language is in `docs/language-status.md`.
 
 ## Known defects, still in (a reader can get the schedule wrong)
 

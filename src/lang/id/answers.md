@@ -876,8 +876,7 @@ the readers above. The 38 rows changed or added for it were then read
 as rendered (same prompt and probes as `tooling/scripts/reading/run.mjs`,
 two readers each of two models, 1352 answers): none was answered
 wrongly, so there was nothing for `recheck.mjs` to ask again. [least
-sure: «mulai pukul» before a list of hours; a native reader should
-confirm]
+sure: «mulai pukul» before a list of hours]
 
 *Rejected.* «pada jam 1, 4, 9, 14, dan 18, …» on the model of «pada jam
 genap»: «jam 9» is also nine o'clock, and it breaks «pukul» with two
@@ -1366,7 +1365,7 @@ saat sistem dinyalakan.» Unrecognised: «pola cron yang tidak dikenali».
 - **«jam genap», «jam ganjil»** have no corpus support for hours (3.7).
   They are kept because the alternative for `*/15 */2` is four series of
   clock times or a doubled rhythm, and the words cannot be read another
-  way on a 24-hour clock; a native reader should confirm. [audit]
+  way on a 24-hour clock. [audit]
 - **«menit pertama»** (the minute that begins at xx.00, a thing that
   lasts) stands beside **«menit ke-1»** (the point xx.01). Inside one
   sentence each has one reading, but a reader who meets both may take

@@ -59,7 +59,8 @@ the working briefs (usage notes, author, reader, builder, revise, fix).
 - A concern carries between languages, never a device; each language realizes
   it natively.
 - Review is tracked in `status.json`, including every form no one has read.
-  Never claim more than beta without a fluent human's review.
+  A language is stable only when it meets the test in
+  `docs/language-status.md`; until then it is beta.
 - Work one file-editing agent at a time per tree.
 
 ## What five languages taught (2026-11-19: ko, pl, id, ru, zh-Hant)
