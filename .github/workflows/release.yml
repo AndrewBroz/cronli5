@@ -1,0 +1,38 @@
+name: Release
+
+# Publishes to npm when a version tag is pushed. npm trusts this workflow
+# as the package's Trusted Publisher, so there is no token: the id-token
+# permission below is the credential, and npm attaches provenance itself.
+# One-time setup on npmjs.com: cronli5 → Settings → Trusted Publisher →
+# GitHub Actions, repository AndrewBroz/cronli5, workflow release.yml.
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22.x
+          registry-url: https://registry.npmjs.org
+      # Trusted publishing needs npm 11.5.1 or later. Node 22 ships npm 10,
+      # which publishes unauthenticated and gets a 404.
+      - run: npm install -g npm@^11.5.1
+      - run: npm ci
+      # `npm publish` runs the gates and the build first (prepublishOnly).
+      # A version already on the registry is skipped, so a tag pushed after
+      # a manual publish does not fail the run.
+      - run: |
+          VERSION="$(npm pkg get version | tr -d '"')"
+          if npm view "cronli5@$VERSION" version > /dev/null 2>&1; then
+            echo "cronli5@$VERSION is already published; skipping"
+          else
+            npm publish
+          fi
