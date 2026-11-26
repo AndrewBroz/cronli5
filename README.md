@@ -291,7 +291,7 @@ review.
 | Russian | stable |
 | Ukrainian | stable |
 | Chinese (Simplified) | stable |
-| Chinese (Traditional) | beta |
+| Chinese (Traditional) | stable |
 <!-- END GENERATED: language-status -->
 
 For the review evidence behind each status, see

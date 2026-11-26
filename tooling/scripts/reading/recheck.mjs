@@ -21,6 +21,9 @@ import {join} from 'node:path';
 import {firesAt, hasSeconds} from './oracle.mjs';
 import {answersFrom, messageFor, prompts} from './prompts.mjs';
 
+// How many times one reader is asked before its question is left unanswered.
+const ASKS = 3;
+
 function flag(args, name, fallback) {
   const at = args.indexOf(`--${name}`);
 
@@ -80,6 +83,22 @@ function read(message, system, model, sandbox) {
   });
 }
 
+// One reader's yes or no, or null. A reply with no yes or no in it is not a
+// reading, so the reader is asked again rather than scored as wrong; some
+// replies answer stray context the CLI adds instead of the question.
+async function answerOf(code, message, model, sandbox) {
+  for (let tries = 0; tries < ASKS; tries += 1) {
+    const {A1} = answersFrom(code, await read(message, prompts[code].system,
+      model, sandbox));
+
+    if (typeof A1 === 'boolean') {
+      return A1;
+    }
+  }
+
+  return null;
+}
+
 async function pooled(jobs, limit) {
   const results = [];
   let next = 0;
@@ -115,24 +134,23 @@ async function recheck(code, settings) {
       Array.from({length: settings.readers}, () => async function job() {
         const message = messageFor(code,
           [{...question, moments: [question.moment]}]);
-        const said = await read(message, prompts[code].system, model,
-          sandbox);
+        const answer = await answerOf(code, message, model, sandbox);
 
-        return {answer: answersFrom(code, said).A1, model, number};
+        return {answer, model, number};
       })));
   const results = await pooled(jobs, settings.limit);
   const lines = questions.map(function line(question, number) {
-    const counts = settings.models.map(function wrong(model) {
+    // Each model's wrong answers out of the answers it gave.
+    const tallies = settings.models.map(function tally(model) {
       const answers = results.filter((result) => result.number === number &&
-        result.model === model);
+        result.model === model && typeof result.answer === 'boolean');
       const missed = answers.filter((result) => result.answer !==
         question.fires).length;
 
-      return `${missed}/${answers.length}`;
+      return {answered: answers.length, missed};
     });
-    const still = settings.models.every((model) => results.filter(
-      (result) => result.number === number && result.model === model &&
-        result.answer !== question.fires).length > settings.readers / 2);
+    const counts = tallies.map(({answered, missed}) => `${missed}/${answered}`);
+    const still = tallies.every(({answered, missed}) => missed > answered / 2);
 
     return `| ${still ? 'yes' : 'no'} | ${counts.join(' | ')} | ` +
       `${question.first} | \`${question.pattern}\` | ${question.text} | ` +
@@ -144,8 +162,9 @@ async function recheck(code, settings) {
     `# Recheck: ${code}`,
     '',
     `Each misread question asked again alone, ${settings.readers} readers ` +
-      `of each model (${settings.models.join(', ')}). "Still" means most ` +
-      'readers of every model answered it wrongly.',
+      `of each model (${settings.models.join(', ')}), each wrong count out ` +
+      'of the readers who answered. "Still" means most readers of every ' +
+      'model answered it wrongly.',
     '',
     `| still | ${settings.models.join(' | ')} | first | pattern | ` +
       'description | moment | truth |',
