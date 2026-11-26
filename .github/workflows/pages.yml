@@ -1,0 +1,46 @@
+name: Pages
+
+# Publishes the playground (site/) to GitHub Pages. It runs on the same
+# version tags as the npm release, so the page always shows the cronli5
+# version that npm serves. It can also be run by hand from the Actions tab.
+# One-time setup: Settings → Pages → Source: GitHub Actions.
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+# Only one deployment at a time; a newer release waits for the one before.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22.x
+          cache: npm
+      - run: npm ci
+      - run: npm run site
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: site/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
