@@ -761,7 +761,9 @@ function theHours(hours: number[], opts: EnglishOptions): string {
  * hour" stands and listed hours are named as hours: "the 9 a.m. and 5
  * p.m. hours". A cadence of hours is never a noun phrase: what came
  * before is counted against "the hour", and after a comma the cadence is
- * said as it is for moments: "the hour, every 4 hours". After minutes in
+ * said as it is for moments: "the hour, every 4 hours", a named end on
+ * the last firing, as a range's: "the hour, every 2 hours from 12 a.m.
+ * through 8:20 p.m.". After minutes in
  * pieces (`pieced`), whose first numbers have no unit beside them, listed
  * hours are "the hour during" the hours: "every minute from 5 through 10
  * and at 20 minutes past the hour during the 9 a.m. and 1 p.m. hours";
@@ -785,7 +787,12 @@ function hoursAsNouns(
     cadence: {
       ...moments.cadence,
       say(cadence, ends) {
-        return `${theHour}, ${moments.cadence.say(cadence, ends)}`;
+        const [from, to] = ends;
+
+        return `${theHour}, ` + (typeof to === 'number' ?
+          join(`${every} ${cadence.interval} ${units.hour.many}`,
+            stretches.range(from, to)) :
+          moments.cadence.say(cadence, ends));
       }
     },
     exception(removed, base) {

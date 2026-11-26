@@ -127,8 +127,10 @@ const rows = [
   // Complex patterns, where several fields are restricted at once. Each
   // was read against the most widely used library's wording and the
   // renderer this one replaced, and is the easiest of the three to parse.
+  // A step of hours with both ends named ends on its last firing, as a
+  // run of hours does: "through 8 p.m." was heard as stopping at 8:00.
   ['23 0-20/2 * * *',
-    'at 23 minutes past the hour, every 2 hours from 12 a.m. through 8 ' +
+    'at 23 minutes past the hour, every 2 hours from 12 a.m. through 8:23 ' +
     'p.m. every day'],
   ['15,45 */4 * * *', 'at 15 and 45 minutes past the hour, every 4 hours'],
   ['5,20 */2 * * *', 'at 5 and 20 minutes past the hour, every 2 hours'],
@@ -534,6 +536,37 @@ const rows = [
   ['5,20,45 0-2 * * *',
     'at 5, 20, and 45 minutes past the hour from 12 a.m. through 2:45 ' +
     'a.m. every day'],
+  // A step of hours with both ends named, after a comma, ends on its last
+  // firing too: the last hour at its last minute, to the second where the
+  // seconds run through a run of minutes. "Every 2 hours from 12 a.m.
+  // through 8 p.m." was heard as stopping at 8:00, though 8:20 fires.
+  ['5,20 0-20/2 * * *',
+    'at 5 and 20 minutes past the hour, every 2 hours from 12 a.m. through ' +
+    '8:20 p.m. every day'],
+  ['5,20 1-19/2 * * 1-5',
+    'at 5 and 20 minutes past the hour, every 2 hours from 1 a.m. through ' +
+    '7:20 p.m. on weekdays'],
+  ['0-29 0-20/2 * * *',
+    'every minute for the first 30 minutes of the hour, every 2 hours from ' +
+    '12 a.m. through 8:29 p.m. every day'],
+  ['* 5,20 0-20/2 * * *',
+    'every second for one minute at 5 and 20 minutes past the hour, every ' +
+    '2 hours from 12 a.m. through 8:20 p.m. every day'],
+  ['* 0-29 0-20/2 * * *',
+    'every second for the first 30 minutes of the hour, every 2 hours ' +
+    'from 12 a.m. through 8:29:59 p.m. every day'],
+  // Seconds counted past the hour leave the end on the hour (3.4).
+  ['15,45 0 0-20/2 * * *',
+    'at 15 and 45 seconds past the hour, every 2 hours from 12 a.m. ' +
+    'through 8 p.m. every day'],
+  // A step that ends at noon, or starts late, has few enough hours to be
+  // listed, and names no stretch; one cannot end at midnight.
+  ['5,20 0-12/2 * * *',
+    'at 5 and 20 minutes past midnight, 2 a.m., 4 a.m., 6 a.m., 8 a.m., ' +
+    '10 a.m., and noon every day'],
+  ['5,20 1-21/4 * * *',
+    'at 5 and 20 minutes past 1 a.m., 5 a.m., 9 a.m., 1 p.m., 5 p.m., and ' +
+    '9 p.m. every day'],
   // Seconds that run through each minute of a run end the stretch on the
   // run's last second, as "every second from 9 a.m. through 9:29:59 a.m."
   // does; seconds counted past the minute leave it on the minute.
