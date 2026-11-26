@@ -191,14 +191,14 @@
    "pattern": "0,30 9-17 * * 1-5"
   },
   {
-   "expected": "every minute from 0 through 29 and at 45 minutes past the hour from 9 a.m. through 5 p.m. on weekdays",
+   "expected": "every minute from 0 through 29 and at 45 minutes past the hour from 9 a.m. through 5:45 p.m. on weekdays",
    "options": {
     "lang": "en"
    },
    "pattern": "0-29,45 9-17 * * 1-5"
   },
   {
-   "expected": "at 0, 15, and 45 minutes past the hour from 9 a.m. through 5 p.m. on weekdays",
+   "expected": "at 0, 15, and 45 minutes past the hour from 9 a.m. through 5:45 p.m. on weekdays",
    "options": {
     "lang": "en"
    },
@@ -919,7 +919,7 @@
    "pattern": "30 9-17 * * 1-5"
   },
   {
-   "expected": "at 5, 20, and 45 minutes past the hour from 9 a.m. through 5 p.m. on weekdays",
+   "expected": "at 5, 20, and 45 minutes past the hour from 9 a.m. through 5:45 p.m. on weekdays",
    "options": {
     "lang": "en"
    },
@@ -933,21 +933,21 @@
    "pattern": "0-29 9-17 * * 1-5"
   },
   {
-   "expected": "every 7 minutes from 0 through 56 minutes past the hour from 9 a.m. through 5 p.m. on weekdays",
+   "expected": "every 7 minutes from 0 through 56 minutes past the hour from 9 a.m. through 5:56 p.m. on weekdays",
    "options": {
     "lang": "en"
    },
    "pattern": "*/7 9-17 * * 1-5"
   },
   {
-   "expected": "at 5, 20, 35, and 50 minutes past the hour from 9 a.m. through 5 p.m. on weekdays",
+   "expected": "at 5, 20, 35, and 50 minutes past the hour from 9 a.m. through 5:50 p.m. on weekdays",
    "options": {
     "lang": "en"
    },
    "pattern": "5/15 9-17 * * 1-5"
   },
   {
-   "expected": "at 10, 20, 30, and 40 minutes past the hour from 9 a.m. through 5 p.m. on weekdays",
+   "expected": "at 10, 20, 30, and 40 minutes past the hour from 9 a.m. through 5:40 p.m. on weekdays",
    "options": {
     "lang": "en"
    },
@@ -1899,7 +1899,7 @@
    "pattern": "*/30 0-17 * * 2"
   },
   {
-   "expected": "at 5, 29, and 39 minutes past the hour from 3 a.m. through 5 a.m. every day in May",
+   "expected": "at 5, 29, and 39 minutes past the hour from 3 a.m. through 5:39 a.m. every day in May",
    "options": {
     "lang": "en"
    },
@@ -2165,7 +2165,7 @@
    "pattern": "* * 9-17 * * *"
   },
   {
-   "expected": "at 23 minutes past the hour, every 2 hours from 12 a.m. through 8 p.m. every day",
+   "expected": "at 23 minutes past the hour, every 2 hours from 12 a.m. through 8:23 p.m. every day",
    "options": {
     "lang": "en"
    },
@@ -2397,7 +2397,7 @@
    "pattern": "0,5,10,15,20,25,35,40,45,50,55 9-17 * * *"
   },
   {
-   "expected": "at 0, 10, 20, 40, and 50 minutes past the hour from 9 a.m. through 5 p.m. every day",
+   "expected": "at 0, 10, 20, 40, and 50 minutes past the hour from 9 a.m. through 5:50 p.m. every day",
    "options": {
     "lang": "en"
    },
@@ -2860,7 +2860,7 @@
    "pattern": "0 0,6 * * 3-4 6 2033/2"
   },
   {
-   "expected": "every second for one minute at 30 and 42 minutes past the hour from 3 a.m. through 10 a.m. on Mondays, Wednesdays, Thursdays, and Fridays in July, September, October, and December",
+   "expected": "every second for one minute at 30 and 42 minutes past the hour from 3 a.m. through 10:42 a.m. on Mondays, Wednesdays, Thursdays, and Fridays in July, September, October, and December",
    "options": {
     "lang": "en"
    },
@@ -3199,7 +3199,7 @@
    "pattern": "50-10 * * * *"
   },
   {
-   "expected": "every minute from 0 through 10 and every minute from 50 through 59 minutes past the hour from 9 a.m. through 5 p.m. every day",
+   "expected": "every minute from 0 through 10 and every minute from 50 through 59 minutes past the hour from 9 a.m. through 5:59 p.m. every day",
    "options": {
     "lang": "en"
    },
@@ -3256,32 +3256,137 @@
    "pattern": "0 22-2 * * * 2030"
   },
   {
-   "expected": "at 5, 20, and 45 minutes past the hour from 9 a.m. through 5 p.m. and during the 10 p.m. hour every day",
+   "expected": "at 5, 20, and 45 minutes past the hour from 9 a.m. through 5:45 p.m. and during the 10 p.m. hour every day",
    "options": {
     "lang": "en"
    },
    "pattern": "5,20,45 9-17,22 * * *"
   },
   {
-   "expected": "at 5, 20, and 45 minutes past the hour during the 1 a.m. hour and from 9 a.m. through 5 p.m. every day",
+   "expected": "at 5, 20, and 45 minutes past the hour during the 1 a.m. hour and from 9 a.m. through 5:45 p.m. every day",
    "options": {
     "lang": "en"
    },
    "pattern": "5,20,45 1,9-17 * * *"
   },
   {
-   "expected": "at 5, 20, and 45 minutes past the hour from 12 a.m. through 2 a.m. and during the 10 p.m. and 11 p.m. hours on Mondays",
+   "expected": "at 5, 20, and 45 minutes past the hour from 12 a.m. through 2:45 a.m. and during the 10 p.m. and 11 p.m. hours on Mondays",
    "options": {
     "lang": "en"
    },
    "pattern": "5,20,45 22-2 * * 1"
   },
   {
-   "expected": "at 5, 20, and 45 minutes past the hour from 9 a.m. through 5 p.m. except during the noon hour, every day",
+   "expected": "at 5, 20, and 45 minutes past the hour from 9 a.m. through 5:45 p.m. except during the noon hour, every day",
    "options": {
     "lang": "en"
    },
    "pattern": "5,20,45 9-11,13-17 * * *"
+  },
+  {
+   "expected": "at 0 and 45 minutes past the hour from 9 a.m. through 5:45 p.m. on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/45 9-17 * * 1-5"
+  },
+  {
+   "expected": "at 5, 20, and 45 minutes past the hour from 9 a.m. through 12:45 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "5,20,45 9-12 * * *"
+  },
+  {
+   "expected": "at 5 and 35 minutes past the hour from 10 p.m. through 12:35 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "5,35 22-0 * * *"
+  },
+  {
+   "expected": "at 5, 20, and 45 minutes past the hour from 12 a.m. through 2:45 a.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "5,20,45 0-2 * * *"
+  },
+  {
+   "expected": "at 5 and 20 minutes past the hour, every 2 hours from 12 a.m. through 8:20 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "5,20 0-20/2 * * *"
+  },
+  {
+   "expected": "at 5 and 20 minutes past the hour, every 2 hours from 1 a.m. through 7:20 p.m. on weekdays",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "5,20 1-19/2 * * 1-5"
+  },
+  {
+   "expected": "every minute for the first 30 minutes of the hour, every 2 hours from 12 a.m. through 8:29 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "0-29 0-20/2 * * *"
+  },
+  {
+   "expected": "every second for one minute at 5 and 20 minutes past the hour, every 2 hours from 12 a.m. through 8:20 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* 5,20 0-20/2 * * *"
+  },
+  {
+   "expected": "every second for the first 30 minutes of the hour, every 2 hours from 12 a.m. through 8:29:59 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* 0-29 0-20/2 * * *"
+  },
+  {
+   "expected": "at 15 and 45 seconds past the hour, every 2 hours from 12 a.m. through 8 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "15,45 0 0-20/2 * * *"
+  },
+  {
+   "expected": "at 5 and 20 minutes past midnight, 2 a.m., 4 a.m., 6 a.m., 8 a.m., 10 a.m., and noon every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "5,20 0-12/2 * * *"
+  },
+  {
+   "expected": "at 5 and 20 minutes past 1 a.m., 5 a.m., 9 a.m., 1 p.m., 5 p.m., and 9 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "5,20 1-21/4 * * *"
+  },
+  {
+   "expected": "every second from 10 through 40 minutes past the hour from 9 a.m. through 5:40:59 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "* 10-40 9-17 * * *"
+  },
+  {
+   "expected": "every 10 seconds from 10 through 40 minutes past the hour from 9 a.m. through 5:40:50 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "*/10 10-40 9-17 * * *"
+  },
+  {
+   "expected": "at 30 seconds past every minute from 10 through 40 minutes past the hour from 9 a.m. through 5:40 p.m. every day",
+   "options": {
+    "lang": "en"
+   },
+   "pattern": "30 10-40 9-17 * * *"
   },
   {
    "expected": "every minute for the first 30 minutes of every hour from 9 a.m. through 5 p.m. except during the noon hour, every day",
@@ -4835,6 +4940,27 @@
     "lang": "en-GB"
    },
    "pattern": "*/15 9-17 * * 1-5"
+  },
+  {
+   "expected": "at 0 and 45 minutes past the hour from 9am to 5.45pm on weekdays",
+   "options": {
+    "lang": "en-GB"
+   },
+   "pattern": "*/45 9-17 * * 1-5"
+  },
+  {
+   "expected": "at 5, 20 and 45 minutes past the hour from 9am to 12.45pm every day",
+   "options": {
+    "lang": "en-GB"
+   },
+   "pattern": "5,20,45 9-12 * * *"
+  },
+  {
+   "expected": "at 5 and 20 minutes past the hour, every 2 hours from 12am to 8.20pm every day",
+   "options": {
+    "lang": "en-GB"
+   },
+   "pattern": "5,20 0-20/2 * * *"
   },
   {
    "expected": "at 9am on Mondays, Wednesdays and Fridays",

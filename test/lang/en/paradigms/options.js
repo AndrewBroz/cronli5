@@ -8,6 +8,9 @@
 
 const defaultParts = {
   '*/15 9-17 * * 1-5': ['15 minutes', '9 a.m.', '5:45 p.m.', 'weekdays'],
+  '5,20 0-20/2 * * *': ['5 and 20 minutes', '2 hours', '12 a.m.', '8:20 p.m.'],
+  '*/45 9-17 * * 1-5': ['0 and 45 minutes', '9 a.m.', '5:45 p.m.', 'weekdays'],
+  '5,20,45 9-12 * * *': ['5, 20, and 45 minutes', '9 a.m.', '12:45 p.m.'],
   '0 0 * * *': ['midnight'],
   '0 0 1 6 *': ['12 a.m.', 'June 1'],
   '0 0 1-7 6 *': ['12 a.m.', 'June 1', '7'],
@@ -133,6 +136,26 @@ const sets = [
         expected: 'every 15 minutes from 9am to 5.45pm on weekdays',
         parts: ['15 minutes', '9am', '5.45pm', 'weekdays'],
         pattern: '*/15 9-17 * * 1-5'
+      },
+      // After "past the hour" the stretch ends on its last firing, as a
+      // window does: "to 5pm" was heard as ending at 5 o'clock.
+      {
+        expected: 'at 0 and 45 minutes past the hour from 9am to 5.45pm ' +
+          'on weekdays',
+        parts: ['0 and 45 minutes', '9am', '5.45pm', 'weekdays'],
+        pattern: '*/45 9-17 * * 1-5'
+      },
+      {
+        expected: 'at 5, 20 and 45 minutes past the hour from 9am to ' +
+          '12.45pm every day',
+        parts: ['5, 20 and 45 minutes', '9am', '12.45pm'],
+        pattern: '5,20,45 9-12 * * *'
+      },
+      {
+        expected: 'at 5 and 20 minutes past the hour, every 2 hours from ' +
+          '12am to 8.20pm every day',
+        parts: ['5 and 20 minutes', '2 hours', '12am', '8.20pm'],
+        pattern: '5,20 0-20/2 * * *'
       },
       {
         expected: 'at 9am on Mondays, Wednesdays and Fridays',

@@ -64,11 +64,13 @@ const rows = [
   ['* 9-17 * * 1-5', 'every minute from 9 a.m. through 5:59 p.m. on weekdays'],
   ['0,30 9-17 * * 1-5',
     'every 30 minutes from 9 a.m. through 5:30 p.m. on weekdays'],
+  // After "past the hour" the stretch ends on its last firing, the last
+  // hour at its last minute: "through 5 p.m." was heard as ending at 5:00.
   ['0-29,45 9-17 * * 1-5',
     'every minute from 0 through 29 and at 45 minutes past the hour ' +
-    'from 9 a.m. through 5 p.m. on weekdays'],
+    'from 9 a.m. through 5:45 p.m. on weekdays'],
   ['0,15,45 9-17 * * 1-5',
-    'at 0, 15, and 45 minutes past the hour from 9 a.m. through 5 p.m. ' +
+    'at 0, 15, and 45 minutes past the hour from 9 a.m. through 5:45 p.m. ' +
     'on weekdays'],
 
   // window / hour

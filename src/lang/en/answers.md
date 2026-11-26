@@ -850,13 +850,39 @@ hour set said as points, each point carrying the minute.
 | pieces | "every hour from 9 a.m. through 5 p.m. and at 10 p.m." | "every hour from 9:30 a.m. through 5:30 p.m. and at 10:30 p.m." |
 | tiling cadence | "every 2 hours" | "at 30 minutes past the hour, every 2 hours" |
 | tiling, off the beat | "every 2 hours from 1 a.m." | "at 30 minutes past the hour, every 2 hours from 1 a.m." |
-| other cadence, of more than eight hours | "every 2 hours from 12 a.m. through 8 p.m." | "at 30 minutes past the hour, every 2 hours from 12 a.m. through 8 p.m." |
+| other cadence, of more than eight hours | "every 2 hours from 12 a.m. through 8 p.m." | "at 30 minutes past the hour, every 2 hours from 12 a.m. through 8:30 p.m." |
 | a cadence with exceptions | "every 2 hours except at 8 a.m." | "at 30 minutes past the hour, every 2 hours except at 8 a.m." |
 
 Under any cadence of hours a minute other than 0 is anchored, exactly as a
 list of minutes is in the last table of this answer. The cadence is said
-as it is at minute 0, so moving the minute never changes how the hours are
-said.
+as it is at minute 0, so moving the minute changes how the hours are said
+only where a named end must name the last firing.
+
+**A cadence of hours with both ends named, after a comma, ends on its
+last firing** (2026-11-26). It was said as at minute 0: `5,20 0-20/2 * *
+*` was "at 5 and 20 minutes past the hour, every 2 hours from 12 a.m.
+through 8 p.m.", though 8:20 p.m. fires. A person hears "through 8 p.m."
+as stopping at 8:00, as was already found of hours as stretches below
+("for one hour every 2 hours from 2 a.m. through 10 p.m." was misheard as
+stopping at 10), and, the same day, of a run of hours after "past the
+hour". So the end is the last firing, by the rule a run of hours
+follows: the last hour at the last minute the minutes give, to the second
+where the seconds run through every minute of a run of minutes, and on the
+minute where the seconds are counted past it (3.4):
+
+* "at 5 and 20 minutes past the hour, every 2 hours from 12 a.m. through
+  8:20 p.m." (British "from 12am to 8.20pm");
+* "every minute for the first 30 minutes of the hour, every 2 hours from
+  12 a.m. through 8:29 p.m."; with every second, "…through 8:29:59 p.m.";
+* "at 15 and 45 seconds past the hour, every 2 hours from 12 a.m. through
+  8 p.m." is unchanged.
+
+The start stays on the hour. Only a cadence of more than eight hours
+takes this form; fewer are listed ("at 5 and 20 minutes past 1 a.m., 5
+a.m., …"), so a cadence ending at noon is always a list, and one cannot
+end at midnight, since a cadence of hours does not wrap. Moving the minute
+now changes the end's minutes, as it already did under a run of hours;
+the end is one clock time either way.
 
 **M is continuous** (every minute, or a tiling cadence starting at 0). The
 lead is "every minute" or "every N minutes", followed by H as a
@@ -930,12 +956,54 @@ minute 59 uses "of" in place of "minutes past", per 3.4):
 | --- | --- |
 | every hour | "the hour" |
 | values | "9 a.m."; "9 a.m. and 5 p.m." |
-| range | "the hour from 9 a.m. through 5 p.m." |
-| pieces | "the hour from 9 a.m. through 5 p.m. and during the 10 p.m. hour"; a stray hour first, "the hour during the 1 a.m. hour and from 9 a.m. through 5 p.m." |
-| any cadence | not a noun phrase. The minute phrase ends "past the hour" (or "of the hour"), then a comma and the cadence as it is said for points: "at 15 and 45 minutes past the hour, every 4 hours"; "at 5 and 20 minutes past the hour, every 2 hours from 1 a.m."; "…past the hour, every 2 hours from 12 a.m. through 8 p.m." |
-| except | "every hour except 3 a.m." (the one place "every hour" follows "past"); out of a range, "the hour from 9 a.m. through 5 p.m. except during the noon hour" |
+| range | "the hour from 9 a.m. through 5:45 p.m.": the stretch ends on its last firing, the last hour at its last minute |
+| pieces | "the hour from 9 a.m. through 5:45 p.m. and during the 10 p.m. hour"; a stray hour first, "the hour during the 1 a.m. hour and from 9 a.m. through 5:45 p.m." |
+| any cadence | not a noun phrase. The minute phrase ends "past the hour" (or "of the hour"), then a comma and the cadence as it is said for points: "at 15 and 45 minutes past the hour, every 4 hours"; "at 5 and 20 minutes past the hour, every 2 hours from 1 a.m."; "…past the hour, every 2 hours from 12 a.m. through 8:20 p.m.", the end on the last firing |
+| except | "every hour except 3 a.m." (the one place "every hour" follows "past"); out of a range, "the hour from 9 a.m. through 5:45 p.m. except during the noon hour" |
 
-So `5,20,45 9-17 * * *` is "at 5, 20, and 45 minutes past the hour from 9 a.m. through 5 p.m."
+So `5,20,45 9-17 * * *` is "at 5, 20, and 45 minutes past the hour from 9 a.m. through 5:45 p.m."
+
+**A range of hours after "past the hour" ends on its last firing**
+(2026-11-26). The form was "the hour from 9 a.m. through 5 p.m.", the
+hours 9 to 17 named by their first and last hour. A person reading once
+hears "from 9 a.m. through 5 p.m." as a stretch of time that ends at
+5:00, so `*/45 9-17 * * 1-5`, said "at 0 and 45 minutes past the hour
+from 9 a.m. through 5 p.m. on weekdays", seemed not to fire at 5:45 p.m.;
+British "from 9am to 5pm" is firmer still. The maintainer, a native
+speaker, reported it as wrong. It also contradicted 3.4, where every
+window closes on its last firing; the 2026-11-14 rewrite of that rule
+missed this phrase. Now the stretch ends on the last firing: the last
+hour at the last minute the minutes give, and to the second where seconds
+run through each minute of a run of minutes, as 3.4 has it:
+
+* "at 0 and 45 minutes past the hour from 9 a.m. through 5:45 p.m."
+  (British "from 9am to 5.45pm");
+* "every 7 minutes from 0 through 56 minutes past the hour from 9 a.m.
+  through 5:56 p.m.";
+* "at 5, 20, and 45 minutes past the hour from 9 a.m. through 12:45
+  p.m."; "…from 10 p.m. through 12:35 a.m.";
+* "every second from 10 through 40 minutes past the hour from 9 a.m.
+  through 5:40:59 p.m."; seconds counted past the minute leave it on the
+  minute: "at 30 seconds past every minute from 10 through 40 minutes
+  past the hour from 9 a.m. through 5:40 p.m.";
+* minutes that each run for one minute close on the last one's minute,
+  as under a cadence of minutes ("every second for one minute every 15
+  minutes from 9 a.m. through 5:45 p.m."): "every second for one minute
+  at 30 and 42 minutes past the hour from 3 a.m. through 10:42 a.m."
+
+The start stays on the hour ("from 9 a.m."), as every window's does: a
+reader who knows the minutes knows where the first hour begins. The new
+end costs a syllable or two ("5:45" against "5") and adds nothing to
+hold: it is still one clock time, read off. After "for the first 30
+minutes of" the hours are named as hours ("of every hour from 9 a.m.
+through 5 p.m."), each a whole to take a part of, and keep that form.
+
+Model readers scored against the true schedule had passed the old rows.
+Shown the sentence and free to read it again, they parsed "the hour from
+9 a.m. through 5 p.m." as these notes intended, as the set of hours 9 to
+17, and counted 5:45 in. A person reading once at the pace of speech
+hears the familiar stretch "from 9 to 5" with its everyday meaning and
+keeps it: the model's reading is a reading by logic, not the first one.
 
 **Minutes in pieces before hours named one by one** (2026-11-19) count
 past "the hour", and the hours follow as hours: `5-10,20 9-17/2 * * *` is
@@ -1020,9 +1088,10 @@ word is said only where no day is restricted; empty, 0:00 is "12 a.m."
 everywhere.
 
 After "past", every hour is "the hour", and a range of hours follows it
-directly: "at 30 minutes past the hour"; "at 5, 20, and 45 minutes past
-the hour from 9 a.m. through 5 p.m."; with pieces, "…past the hour from 7
-a.m. through 1 p.m. and during the 11 p.m. hour". An hour beside a range,
+directly, ending on its last firing: "at 30 minutes past the hour"; "at
+5, 20, and 45 minutes past the hour from 9 a.m. through 5:45 p.m."; with
+pieces, "…past the hour from 7 a.m. through 1:45 p.m. and during the 11
+p.m. hour". An hour beside a range,
 or taken out of one, is named as an hour: "and at 11 p.m." was read as
 one more firing at 11:00, and "except at noon" as sparing only 12:00
 itself. Listed hours are still named ("past 9
@@ -1124,7 +1193,7 @@ minutes past the hour and for one minute at 45 minutes past the hour";
 the hour". A run from minute 0 is "for the first N minutes of every hour",
 as it is alone. Under a run of hours the hours follow once, after the last
 piece ("…and for one minute at 45 minutes past the hour from 9 a.m. through
-5 p.m."). Under hours named one by one, each piece is said as it is alone
+5:45 p.m."). Under hours named one by one, each piece is said as it is alone
 under those hours, since "every hour" would be false: "every second for the
 first 30 minutes of the 9 a.m. and 5 p.m. hours and for one minute at 9:45
 a.m. and 5:45 p.m." (With the unit said once at the end, a blind reader took

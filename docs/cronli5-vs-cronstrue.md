@@ -126,7 +126,7 @@ everyday cadence, a specific schedule, or an advanced operator.
 | --- | --- | --- |
 | `0 0 1,15 * 3` | At 12:00 AM on the 1st and 15th of the month as well as on Wednesdays | At 12:00 AM, on day 1 and 15 of the month, and on Wednesday |
 | `0 0 9-17/2 * *` | At 12:00 AM on the 9th, 11th, 13th, 15th, and 17th of every month | At 12:00 AM, every 2 days in a month, between day 9 and 17 of the month |
-| `23 0-20/2 * * *` | At 23 minutes past the hour, every 2 hours from 12:00 AM through 08:00 PM every day | At 23 minutes past the hour, every 2 hours, between 12:00 AM and 08:59 PM |
+| `23 0-20/2 * * *` | At 23 minutes past the hour, every 2 hours from 12:00 AM through 08:23 PM every day | At 23 minutes past the hour, every 2 hours, between 12:00 AM and 08:59 PM |
 | `0 0 * * 5L` | At 12:00 AM on the last Friday of the month | At 12:00 AM, on the last Friday of the month |
 | `5,10 30 9 * * MON` | At 09:30:05 AM and 09:30:10 AM on Mondays | At 5 and 10 seconds past the minute, at 30 minutes past the hour, at 09:00 AM, only on Monday |
 | `59 23 31 12 5` | At 11:59 PM on December 31 as well as on Fridays in December | At 11:59 PM, on day 31 of the month, and on Friday, only in December |

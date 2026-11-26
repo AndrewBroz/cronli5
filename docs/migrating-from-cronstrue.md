@@ -35,7 +35,7 @@ links to it rather than duplicating its tables.
 
   // A window under a step: cRonstrue says "between 12:00 AM and 08:59 PM"
   cronli5('23 0-20/2 * * *');
-  // 'at 23 minutes past the hour, every 2 hours from 12 a.m. through 8 p.m. every day'
+  // 'at 23 minutes past the hour, every 2 hours from 12 a.m. through 8:23 p.m. every day'
 
   // A day of the month or a weekday: cRonstrue says "on day 1 and 15 of
   // the month, and on Wednesday", which reads as days that are both

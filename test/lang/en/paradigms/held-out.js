@@ -85,21 +85,23 @@ const rows = [
   ['0 9-17 * * 1-5', 'every hour from 9 a.m. through 5 p.m. on weekdays'],
   ['30 9-17 * * 1-5',
     'every hour from 9:30 a.m. through 5:30 p.m. on weekdays'],
+  // After "past the hour" the stretch ends on its last firing, the last
+  // hour at its last minute: "through 5 p.m." was heard as ending at 5:00.
   ['5,20,45 9-17 * * 1-5',
-    'at 5, 20, and 45 minutes past the hour from 9 a.m. through 5 p.m. ' +
+    'at 5, 20, and 45 minutes past the hour from 9 a.m. through 5:45 p.m. ' +
     'on weekdays'],
   ['0-29 9-17 * * 1-5',
     'every minute for the first 30 minutes of every hour from 9 a.m. ' +
     'through 5 p.m. on weekdays'],
   ['*/7 9-17 * * 1-5',
     'every 7 minutes from 0 through 56 minutes past the hour from 9 ' +
-    'a.m. through 5 p.m. on weekdays'],
+    'a.m. through 5:56 p.m. on weekdays'],
   ['5/15 9-17 * * 1-5',
-    'at 5, 20, 35, and 50 minutes past the hour from 9 a.m. through 5 ' +
-    'p.m. on weekdays'],
+    'at 5, 20, 35, and 50 minutes past the hour from 9 a.m. through ' +
+    '5:50 p.m. on weekdays'],
   ['10-40/10 9-17 * * 1-5',
-    'at 10, 20, 30, and 40 minutes past the hour from 9 a.m. through 5 ' +
-    'p.m. on weekdays'],
+    'at 10, 20, 30, and 40 minutes past the hour from 9 a.m. through ' +
+    '5:40 p.m. on weekdays'],
 
   // window / hour
   ['*/15 0 * * 1-5', 'every 15 minutes during the 12 a.m. hour on weekdays'],

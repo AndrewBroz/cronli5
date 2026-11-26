@@ -4,6 +4,20 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). This project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.4]
+
+### Fixed
+
+- **English ends a stretch of hours on its last firing.** Minutes past
+  the hour under a run of hours said the run's last hour, which a reader
+  hears as stopping on the hour: `*/45 9-17 * * 1-5` was "at 0 and 45
+  minutes past the hour from 9 a.m. through 5 p.m. on weekdays" (British
+  "from 9am to 5pm"), and 5:45 p.m. fires. It is now "… from 9 a.m.
+  through 5:45 p.m. …" ("from 9am to 5.45pm"). A step of hours with both
+  ends named is fixed the same way: `5,20 0-20/2 * * *` is "… every 2
+  hours from 12 a.m. through 8:20 p.m.". Every other language already
+  ended on the last firing.
+
 ## [1.4.3]
 
 ### Added
