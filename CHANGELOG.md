@@ -4,6 +4,15 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). This project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.3]
+
+### Added
+
+- **The playground shows every option.** A fold under the form sets the
+  options every language shares, and each language's style, one
+  language at a time. The README links the playground at the top. The
+  package is unchanged.
+
 ## [1.4.2]
 
 ### Added

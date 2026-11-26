@@ -181,18 +181,86 @@
     cursor: pointer;
   }
 
+  .advanced {
+    margin: 1.75rem 0 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .advanced summary {
+    padding: 0.75rem 0;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .advanced summary:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  label code,
+  legend code {
+    margin-left: 0.3rem;
+    color: var(--muted);
+    font: 0.8em var(--mono);
+  }
+
+  .common {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    gap: 0.6rem 2rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .option,
+  .choice {
+    display: block;
+  }
+
+  .choice legend { float: none; color: var(--ink); }
+
+  select,
+  input[type="text"] {
+    margin-left: 0.4rem;
+    padding: 0.15rem 0.3rem;
+    border: 1px solid var(--rule);
+    border-radius: 0.25rem;
+    background: var(--page);
+    color: var(--ink);
+    font: inherit;
+  }
+
+  input[type="text"] { width: 5.5rem; }
+
+  .styles {
+    padding: 1.25rem 0 1.5rem;
+  }
+
+  .style {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    gap: 0.6rem 2rem;
+    margin-top: 0.9rem;
+  }
+
+  .style[hidden] { display: none; }
+
+  .said.error { color: var(--danger); font-size: 1rem; }
+
   #languages {
     margin: 2.75rem 0 0;
     padding: 0;
     list-style: none;
   }
 
-  /* A language's name sits in a gutter; cronli5's sentence is the reading
-     line, and cRonstrue's is quieter beneath it. */
+  /* A language's name sits in a gutter, in ink: its English name, then
+     its own name, lighter. Grey belongs to cRonstrue alone, set off by a
+     rule and its name, so the two libraries never read as one column. */
   .language {
     display: grid;
-    grid-template-columns: 9.5rem 1fr;
-    gap: 0.15rem 1.5rem;
+    grid-template-columns: 11rem 1fr;
+    gap: 0 1.5rem;
     padding: 1.1rem 0;
     border-top: 1px solid var(--rule);
   }
@@ -200,11 +268,14 @@
   .name {
     grid-row: span 2;
     font-weight: 600;
+    line-height: 1.3;
+    padding-top: 0.25rem;
   }
 
   .own {
     display: block;
-    color: var(--muted);
+    margin-top: 0.15rem;
+    font-size: 0.9375rem;
     font-weight: 400;
   }
 
@@ -215,13 +286,19 @@
   }
 
   .theirs {
-    margin: 0;
+    margin: 0.5rem 0 0;
+    padding-left: 0.75rem;
+    border-left: 2px solid var(--rule);
     color: var(--muted);
+    font-size: 0.9375rem;
+    line-height: 1.45;
   }
 
   .theirs::before {
-    content: "cRonstrue: ";
+    content: "cRonstrue ";
+    color: var(--ink);
     font-style: normal;
+    font-weight: 600;
   }
 
   .theirs.quiet { font-style: italic; }
@@ -235,6 +312,7 @@
   @media (max-width: 40rem) {
     .language { grid-template-columns: 1fr; }
     .name { grid-row: auto; }
+    .name { padding: 0 0 0.2rem; }
     .own { display: inline; margin-left: 0.5rem; }
   }
 </style>
@@ -249,8 +327,9 @@
       <a href="https://github.com/AndrewBroz/cronli5/blob/main/docs/cronli5-vs-cronstrue.md">Comparison</a>
     </nav>
   </header>
-  <p class="intro">Type a cron pattern. Each language shows how cronli5
-  describes it, with cRonstrue's description of the same pattern beneath.</p>
+  <p class="intro">Type a cron pattern. Each language shows cronli5's
+  description, with cRonstrue's description of the same pattern beneath for
+  comparison.</p>
 
   <div class="pattern">
     <label for="pattern" hidden>Cron pattern</label>
@@ -278,6 +357,42 @@
       <label><input type="radio" name="form" value="sentence"> sentence</label>
     </fieldset>
   </div>
+
+  <details class="advanced">
+    <summary>Advanced options</summary>
+    <div class="common">
+      <fieldset class="choice">
+        <legend>Cron dialect <code>cron</code></legend>
+        <label><input type="radio" name="cron" value="standard" checked> Standard</label>
+        <label><input type="radio" name="cron" value="quartz"> Quartz</label>
+      </fieldset>
+      <label class="option"><input type="checkbox" id="seconds">
+        Six fields start with seconds <code>seconds</code></label>
+      <label class="option"><input type="checkbox" id="years">
+        Six fields end with a year <code>years</code></label>
+      <label class="option">Number for Sunday
+        <select id="weekdaysFrom">
+          <option value="">Default</option>
+          <option value="0">0</option>
+          <option value="1">1</option>
+        </select> <code>weekdaysFrom</code></label>
+      <label class="option">Question mark in day fields
+        <select id="questionMark">
+          <option value="">Default</option>
+          <option value="reject">Not allowed</option>
+          <option value="allow">Allowed</option>
+          <option value="require">Required</option>
+        </select> <code>questionMark</code></label>
+      <label class="option"><input type="checkbox" id="lenient">
+        Describe invalid patterns instead of showing an error
+        <code>lenient</code></label>
+    </div>
+    <div class="styles">
+      <label class="option">Style for
+        <select id="styleLanguage"></select> <code>style</code></label>
+      <div id="styles"></div>
+    </div>
+  </details>
 
   <ul id="languages"></ul>
 

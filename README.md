@@ -1,5 +1,9 @@
 # Cron Like I'm Five: Cron Patterns in Plain Language
 
+**[Try it in the playground →](https://andrewbroz.github.io/cronli5/)**
+Type a cron pattern and read it in all fifteen languages, beside
+cRonstrue's description of the same pattern.
+
 [![CI](https://github.com/andrewbroz/cronli5/actions/workflows/ci.yml/badge.svg)](https://github.com/andrewbroz/cronli5/actions/workflows/ci.yml)
 [![npm version](https://img.shields.io/npm/v/cronli5.svg)](https://www.npmjs.com/package/cronli5)
 [![types included](https://img.shields.io/npm/types/cronli5.svg)](./src/types.ts)
