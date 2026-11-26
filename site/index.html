@@ -254,12 +254,13 @@
     list-style: none;
   }
 
-  /* A language's name sits in a gutter; cronli5's sentence is the reading
-     line, and cRonstrue's is quieter beneath it. */
+  /* A language's name sits in a gutter, in ink: its English name, then
+     its own name, lighter. Grey belongs to cRonstrue alone, set off by a
+     rule and its name, so the two libraries never read as one column. */
   .language {
     display: grid;
-    grid-template-columns: 9.5rem 1fr;
-    gap: 0.15rem 1.5rem;
+    grid-template-columns: 11rem 1fr;
+    gap: 0 1.5rem;
     padding: 1.1rem 0;
     border-top: 1px solid var(--rule);
   }
@@ -267,11 +268,14 @@
   .name {
     grid-row: span 2;
     font-weight: 600;
+    line-height: 1.3;
+    padding-top: 0.25rem;
   }
 
   .own {
     display: block;
-    color: var(--muted);
+    margin-top: 0.15rem;
+    font-size: 0.9375rem;
     font-weight: 400;
   }
 
@@ -282,13 +286,19 @@
   }
 
   .theirs {
-    margin: 0;
+    margin: 0.5rem 0 0;
+    padding-left: 0.75rem;
+    border-left: 2px solid var(--rule);
     color: var(--muted);
+    font-size: 0.9375rem;
+    line-height: 1.45;
   }
 
   .theirs::before {
-    content: "cRonstrue: ";
+    content: "cRonstrue ";
+    color: var(--ink);
     font-style: normal;
+    font-weight: 600;
   }
 
   .theirs.quiet { font-style: italic; }
@@ -302,6 +312,7 @@
   @media (max-width: 40rem) {
     .language { grid-template-columns: 1fr; }
     .name { grid-row: auto; }
+    .name { padding: 0 0 0.2rem; }
     .own { display: inline; margin-left: 0.5rem; }
   }
 </style>
@@ -316,8 +327,9 @@
       <a href="https://github.com/AndrewBroz/cronli5/blob/main/docs/cronli5-vs-cronstrue.md">Comparison</a>
     </nav>
   </header>
-  <p class="intro">Type a cron pattern. Each language shows how cronli5
-  describes it, with cRonstrue's description of the same pattern beneath.</p>
+  <p class="intro">Type a cron pattern. Each language shows cronli5's
+  description, with cRonstrue's description of the same pattern beneath for
+  comparison.</p>
 
   <div class="pattern">
     <label for="pattern" hidden>Cron pattern</label>
