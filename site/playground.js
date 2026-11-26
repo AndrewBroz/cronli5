@@ -43,15 +43,21 @@ const fieldNames = {
 // The space, in pixels, kept between two field names on one line.
 const labelGap = 8;
 
-const english = new Intl.DisplayNames(['en'], {type: 'language'});
+// cronli5's zh is written in simplified characters. Naming it by that
+// script sets it beside Traditional Chinese, in the list and in its name.
+const namedAs = {zh: 'zh-Hans'};
 
-// English first, as the default; the rest by their English names.
+function nameOf(code, inLanguage) {
+  return new Intl.DisplayNames([inLanguage], {
+    languageDisplay: 'standard',
+    type: 'language'
+  }).of(namedAs[code] ?? code);
+}
+
+// English first, as the default; the rest by their English names, which
+// keeps the two Chinese scripts together.
 const languages = shipped.map(function named(code) {
-  return {
-    code,
-    name: english.of(code),
-    own: new Intl.DisplayNames([code], {type: 'language'}).of(code)
-  };
+  return {code, name: nameOf(code, 'en'), own: nameOf(code, code)};
 }).sort(function byName(a, b) {
   return Number(b.code === 'en') - Number(a.code === 'en') ||
     a.name.localeCompare(b.name, 'en');
