@@ -181,6 +181,82 @@
     cursor: pointer;
   }
 
+  .advanced {
+    margin: 1.75rem 0 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .advanced summary {
+    padding: 0.75rem 0;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .advanced summary:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .hint {
+    max-width: 38rem;
+    margin: 0 0 1rem;
+    color: var(--muted);
+  }
+
+  code {
+    font: 0.9em var(--mono);
+  }
+
+  .common {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    gap: 0.6rem 2rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .option,
+  .choice {
+    display: block;
+  }
+
+  .choice legend { float: none; color: var(--ink); }
+
+  select,
+  .style input[type="text"] {
+    margin-left: 0.4rem;
+    padding: 0.15rem 0.3rem;
+    border: 1px solid var(--rule);
+    border-radius: 0.25rem;
+    background: var(--page);
+    color: var(--ink);
+    font: inherit;
+  }
+
+  .style input[type="text"] { width: 5.5rem; }
+
+  #styles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    gap: 1.5rem 2rem;
+    padding: 1.25rem 0 1.5rem;
+  }
+
+  .style legend {
+    float: none;
+    margin-bottom: 0.4rem;
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .style label {
+    display: block;
+    margin: 0 0 0.3rem;
+  }
+
+  .said.error { color: var(--danger); font-size: 1rem; }
+
   #languages {
     margin: 2.75rem 0 0;
     padding: 0;
@@ -278,6 +354,40 @@
       <label><input type="radio" name="form" value="sentence"> sentence</label>
     </fieldset>
   </div>
+
+  <details class="advanced">
+    <summary>Advanced options</summary>
+    <p class="hint">These are cronli5's options, by the names you pass
+    them. The ones above the line apply to every language; each language
+    then has its own style.</p>
+    <div class="common">
+      <fieldset class="choice">
+        <legend><code>cron</code></legend>
+        <label><input type="radio" name="cron" value="standard" checked> standard</label>
+        <label><input type="radio" name="cron" value="quartz"> quartz</label>
+      </fieldset>
+      <label class="option"><input type="checkbox" id="seconds">
+        <code>seconds</code> a six-field pattern starts with seconds</label>
+      <label class="option"><input type="checkbox" id="years">
+        <code>years</code> a six-field pattern ends with a year</label>
+      <label class="option"><input type="checkbox" id="lenient">
+        <code>lenient</code> describe a bad pattern instead of refusing it</label>
+      <label class="option"><code>weekdaysFrom</code>
+        <select id="weekdaysFrom">
+          <option value="">as the flavour says</option>
+          <option value="0">0 is Sunday</option>
+          <option value="1">1 is Sunday</option>
+        </select></label>
+      <label class="option"><code>questionMark</code>
+        <select id="questionMark">
+          <option value="">as the flavour says</option>
+          <option value="reject">reject</option>
+          <option value="allow">allow</option>
+          <option value="require">require</option>
+        </select></label>
+    </div>
+    <div id="styles"></div>
+  </details>
 
   <ul id="languages"></ul>
 
