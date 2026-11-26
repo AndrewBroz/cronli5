@@ -82,6 +82,8 @@ const paramTailOrder = {
 };
 
 export default [
+  // The playground's build output: bundled, minified, and not ours to lint.
+  {ignores: ['site/dist/']},
   ...compat.config({
     extends: legacy.extends,
     rules: supportedRules
