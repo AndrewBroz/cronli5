@@ -63,6 +63,7 @@ const problem = document.querySelector('#problem');
 const list = document.querySelector('#languages');
 const forms = document.querySelectorAll('input[name="form"]');
 const styles = document.querySelector('#styles');
+const styleLanguage = document.querySelector('#styleLanguage');
 
 function chosenForm() {
   return document.querySelector('input[name="form"]:checked').value;
@@ -110,20 +111,74 @@ function theirOptions(common) {
   return sundayIsOne ? {dayOfWeekStartIndexZero: false} : {};
 }
 
+// What each style field is called on the page. A language's own entry
+// wins over the shared one, where the field means something narrower.
+const fieldLabels = {
+  'am': 'Word for a.m.',
+  'closeUp': 'No space before a.m. and p.m.',
+  'dayFirst': 'Day before month',
+  'en': {short: 'Short day and month names'},
+  'era': 'Era before years',
+  'eszett': 'Write ß, not ss',
+  'feira': 'Weekdays end in -feira',
+  'firstOrdinal': 'Write the 1st of the month as 1º',
+  'hour12': '12-hour clock',
+  'jaenner': 'Jänner for January',
+  'ja': {short: 'Weekdays without the last 日'},
+  'kanjiTime': 'Times as 9時30分, not 9:30',
+  'ko': {short: 'Drop 요일 in lists of weekdays'},
+  'midday': 'Word for 12:00',
+  'midnight': 'Word for 0:00',
+  'minutes': 'Show :00 on the hour',
+  'ordinals': 'Ordinal dates, as in June 1st',
+  'padHour': 'Two-digit hours',
+  'pm': 'Word for p.m.',
+  'separator': 'Between hours and minutes',
+  'serialComma': 'Comma before the last "and"',
+  'short': 'Short day and month names',
+  'through': 'Word between the ends of a range',
+  'weekWords': 'Say "weekdays" and "weekends"',
+  'weekday': 'Word before a weekday',
+  'zh': {short: 'Short names (Chinese has none)'},
+  'zh-Hant': {short: 'Drop the weekday word at the end of a range'}
+};
+
+// What each named style is called on the page.
+const styleLabels = {
+  at: 'Austria',
+  br: 'Brazil',
+  ch: 'Switzerland',
+  de: 'Germany',
+  es: 'Spain',
+  gb: 'British',
+  hk: 'Hong Kong',
+  house: 'US with AM and PM',
+  it: 'Italy',
+  mx: 'Mexico',
+  pt: 'Portugal',
+  tw: 'Taiwan',
+  us: 'American'
+};
+
+function labelled(text, option) {
+  return [text, element('code', '', option)];
+}
+
 // A control for one field of a style table: a checkbox for a yes or no,
 // a short text box for a word.
-function styleField(field, value) {
-  const label = element('label', '');
+function styleField(code, field, value) {
+  const label = element('label', 'option');
   const control = document.createElement('input');
+  const text = fieldLabels[code]?.[field] ?? fieldLabels[field];
 
   control.type = typeof value === 'boolean' ? 'checkbox' : 'text';
   control.spellcheck = false;
   control.addEventListener('input', describe);
   if (control.type === 'checkbox') {
-    label.append(control, ' ', element('code', '', field));
+    label.append(control, ' ', ...labelled(text, field));
   }
   else {
-    label.append(element('code', '', field), control);
+    label.append(text, ' ', control, ...labelled('', field));
   }
 
   return {control, field, label};
@@ -136,24 +191,28 @@ function setStyle(controls, table) {
 }
 
 // One group of style controls per language: its named styles, then each
-// field of its style table, set from the style chosen.
+// field of its style table, set from the style chosen. One group shows at
+// a time, chosen by language.
 function styleGroup(language) {
   const module = modules[language.code];
-  const group = element('fieldset', 'style');
+  const group = element('div', 'style');
   const names = Object.keys(module.styles);
   const controls = Object.entries(module.styles[module.defaultStyle])
     .map(function field([name, value]) {
-      return styleField(name, value);
+      return styleField(language.code, name, value);
     });
 
-  group.lang = 'en';
-  group.append(element('legend', '', language.name));
+  group.hidden = language.code !== 'en';
+  styleLanguage.append(element('option', '', language.name));
+  styleLanguage.lastChild.value = language.code;
   if (names.length > 1) {
-    const label = element('label', '');
+    const label = element('label', 'option');
     const select = document.createElement('select');
 
     select.append(...names.map(function option(name) {
-      const made = element('option', '', name);
+      const made = element('option', '', styleLabels[name] ?? name);
+
+      made.value = name;
 
       made.selected = name === module.defaultStyle;
 
@@ -163,7 +222,7 @@ function styleGroup(language) {
       setStyle(controls, module.styles[select.value]);
       describe();
     });
-    label.append(element('code', '', 'styles'), select);
+    label.append('Regional style ', select, ...labelled('', 'styles'));
     group.append(label);
   }
   group.append(...controls.map(function label({label: made}) {
@@ -172,7 +231,7 @@ function styleGroup(language) {
   setStyle(controls, module.styles[module.defaultStyle]);
   styles.append(group);
 
-  return controls;
+  return {controls, group};
 }
 
 function chosenStyle(controls) {
@@ -210,7 +269,7 @@ const rows = languages.map(function row(language) {
   item.append(name, said, theirs);
   list.append(item);
 
-  return {controls: styleGroup(language), language, said, theirs};
+  return {...styleGroup(language), language, said, theirs};
 });
 
 // Labels each field under the column where it starts in the pattern.
@@ -318,6 +377,11 @@ function load(pattern) {
 input.addEventListener('input', describe);
 forms.forEach(function listen(radio) {
   radio.addEventListener('change', describe);
+});
+styleLanguage.addEventListener('change', function showStyle() {
+  rows.forEach(function show({group, language}) {
+    group.hidden = language.code !== styleLanguage.value;
+  });
 });
 document.querySelectorAll('.common input, .common select')
   .forEach(function listen(control) {
