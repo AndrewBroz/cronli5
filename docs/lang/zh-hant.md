@@ -33,7 +33,7 @@ Simplified. `zh`, `zh-Hans`, `zh-CN` and `zh-SG` are Simplified.
 
 ## Status
 
-**Beta.** Built from usage notes written in Traditional Chinese by a
+Built from usage notes written in Traditional Chinese by a
 writer told nothing of cron ([usage.md](../../src/lang/zh-hant/usage.md)),
 written answers to the language questionnaire
 ([answers.md](../../src/lang/zh-hant/answers.md)) and hand-written
@@ -43,6 +43,8 @@ schedule, and three blind readers briefed only in Traditional Chinese
 read samples for second readings and for Mainland wording, before the
 renderer was built by an agent that saw no other renderer. An independent
 audit then read the renderer's sentences beside their firing times.
+Readers briefed only in Traditional Chinese then said when every row
+fires, and no question was misread by most readers of two models.
 
 Where the evidence is thinnest:
 

@@ -254,22 +254,25 @@ function answersFrom(code, text) {
   const prompt = prompts[code];
   const answers = {};
 
+  // Most readers give one answer to a line ("A1：是"); some run several
+  // together ("A1 是, A2 否"), so each label starts an answer.
   text.split('\n').forEach(function line(raw) {
-    const found = (/^\s*\**([A-J])\s*(\d+)\**\s*[.:：]\s*(.+)$/u).exec(raw);
+    const labels = [...raw.matchAll(/\**([A-J])\s*(\d+)\**\s*[.:：]?\s*/gu)];
 
-    if (!found) {
-      return;
-    }
+    labels.forEach(function answer(label, index) {
+      const end = index + 1 < labels.length ? labels[index + 1].index
+        : raw.length;
+      const said = raw.slice(label.index + label[0].length, end).trim()
+        .toLowerCase().replace(/[,，;；.!*。]+$/u, '');
+      const key = `${label[1]}${label[2]}`;
 
-    const said = found[3].trim().toLowerCase().replace(/[.!*。]+$/u, '');
-    const key = `${found[1]}${found[2]}`;
-
-    if (prompt.yes.some((word) => said.startsWith(word))) {
-      answers[key] = true;
-    }
-    else if (prompt.no.some((word) => said.startsWith(word))) {
-      answers[key] = false;
-    }
+      if (prompt.yes.some((word) => said.startsWith(word))) {
+        answers[key] = true;
+      }
+      else if (prompt.no.some((word) => said.startsWith(word))) {
+        answers[key] = false;
+      }
+    });
   });
 
   return answers;

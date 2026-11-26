@@ -4,6 +4,18 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). This project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- **Traditional Chinese is stable.** Every language now is. Its one
+  open question, 9:37 against «09:00～09:29，每分鐘一次，另加 09:45», was
+  read again by readers of two models, and none misread it. One model's
+  earlier wrong answers did not recur. The other's were replies with no
+  yes or no in them, which the recheck had counted as wrong. The recheck
+  now asks such a reader again, and answers are read even when several
+  share a line. Its descriptions are unchanged.
+
 ## [1.4.0]
 
 ### Changed
