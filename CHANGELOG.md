@@ -4,6 +4,16 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). This project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.2]
+
+### Added
+
+- **A playground.** <https://andrewbroz.github.io/cronli5/> describes a
+  cron pattern in every language, with cRonstrue's description of the
+  same pattern beside each. It runs in the browser, and a link keeps the
+  pattern. Each release publishes it with the version it ships. The
+  package is unchanged.
+
 ## [1.4.1]
 
 ### Changed
