@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>cronli5 playground</title>
+<meta name="description" content="Type a cron pattern and read it described by cronli5 in fifteen languages, beside cRonstrue's description of the same pattern.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+  :root {
+    --page: #f3f5f9;
+    --ink: #18233f;
+    --muted: #677089;
+    --rule: #d5dae6;
+    --accent: #2f5bea;
+    --wash: #e4e9f6;
+    --danger: #a3261c;
+    --sans: "Atkinson Hyperlegible Next", system-ui, sans-serif;
+    --mono: "Atkinson Hyperlegible Mono", ui-monospace, monospace;
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --page: #121a2e;
+      --ink: #e8ecf6;
+      --muted: #8d96ae;
+      --rule: #2b3653;
+      --accent: #8fa8ff;
+      --wash: #1d2742;
+      --danger: #ff9b8f;
+      color-scheme: dark;
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--page);
+    color: var(--ink);
+    font: 1.0625rem/1.55 var(--sans);
+  }
+
+  main {
+    max-width: 52rem;
+    margin: 0 auto;
+    padding: 2.5rem 1rem 4rem;
+  }
+
+  header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+
+  nav { display: flex; gap: 1.25rem; }
+
+  a { color: var(--accent); }
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .intro {
+    max-width: 38rem;
+    margin: 0.75rem 0 2.5rem;
+    color: var(--muted);
+  }
+
+  /* The pattern is the hero: one large monospace field, with each cron
+     field named beneath the column where it starts. */
+  .pattern {
+    --size: clamp(1.75rem, 7vw, 3.5rem);
+    position: relative;
+    font: 600 var(--size)/1.2 var(--mono);
+  }
+
+  #pattern {
+    width: 100%;
+    padding: 0 0 0.15em;
+    border: 0;
+    border-bottom: 3px solid var(--ink);
+    background: transparent;
+    color: inherit;
+    font: inherit;
+  }
+
+  #pattern:focus-visible {
+    outline: 0;
+    border-bottom-color: var(--accent);
+  }
+
+  #ruler {
+    position: relative;
+    height: 2.4rem;
+    margin-top: 0.35rem;
+  }
+
+  .mark {
+    position: absolute;
+    top: 0;
+    left: calc(var(--column) * 1ch);
+  }
+
+  .mark.lower { top: 1.15rem; }
+
+  .field {
+    display: block;
+    color: var(--muted);
+    font: 400 0.875rem/1 var(--sans);
+    white-space: nowrap;
+  }
+
+  #problem {
+    margin: 0.75rem 0 0;
+    color: var(--danger);
+  }
+
+  .reason { display: block; }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 2rem;
+    align-items: baseline;
+    margin: 1.75rem 0 0;
+  }
+
+  .examples {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .example {
+    padding: 0.3rem 0.6rem;
+    border: 1px solid var(--rule);
+    border-radius: 0.3rem;
+    background: transparent;
+    color: var(--ink);
+    font: 0.9375rem/1.2 var(--mono);
+    cursor: pointer;
+  }
+
+  .example:hover { background: var(--wash); }
+
+  fieldset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  legend {
+    float: left;
+    margin-right: 0.75rem;
+    padding: 0;
+    color: var(--muted);
+  }
+
+  fieldset label {
+    display: inline-block;
+    margin-right: 0.9rem;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .advanced {
+    margin: 1.75rem 0 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .advanced summary {
+    padding: 0.75rem 0;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .advanced summary:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  label code,
+  legend code {
+    margin-left: 0.3rem;
+    color: var(--muted);
+    font: 0.8em var(--mono);
+  }
+
+  .common {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    gap: 0.6rem 2rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .option,
+  .choice {
+    display: block;
+  }
+
+  .choice legend { float: none; color: var(--ink); }
+
+  select,
+  input[type="text"] {
+    margin-left: 0.4rem;
+    padding: 0.15rem 0.3rem;
+    border: 1px solid var(--rule);
+    border-radius: 0.25rem;
+    background: var(--page);
+    color: var(--ink);
+    font: inherit;
+  }
+
+  input[type="text"] { width: 5.5rem; }
+
+  .styles {
+    padding: 1.25rem 0 1.5rem;
+  }
+
+  .style {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    gap: 0.6rem 2rem;
+    margin-top: 0.9rem;
+  }
+
+  .style[hidden] { display: none; }
+
+  .said.error { color: var(--danger); font-size: 1rem; }
+
+  #languages {
+    margin: 2.75rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* A language's name sits in a gutter, in ink: its English name, then
+     its own name, lighter. Grey belongs to cRonstrue alone, set off by a
+     rule and its name, so the two libraries never read as one column. */
+  .language {
+    display: grid;
+    grid-template-columns: 11rem 1fr;
+    gap: 0 1.5rem;
+    padding: 1.1rem 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .name {
+    grid-row: span 2;
+    font-weight: 600;
+    line-height: 1.3;
+    padding-top: 0.25rem;
+  }
+
+  .own {
+    display: block;
+    margin-top: 0.15rem;
+    font-size: 0.9375rem;
+    font-weight: 400;
+  }
+
+  .said {
+    margin: 0;
+    font-size: 1.3125rem;
+    line-height: 1.4;
+  }
+
+  .theirs {
+    margin: 0.5rem 0 0;
+    padding-left: 0.75rem;
+    border-left: 2px solid var(--rule);
+    color: var(--muted);
+    font-size: 0.9375rem;
+    line-height: 1.45;
+  }
+
+  .theirs::before {
+    content: "cRonstrue ";
+    color: var(--ink);
+    font-style: normal;
+    font-weight: 600;
+  }
+
+  .theirs.quiet { font-style: italic; }
+
+  footer {
+    margin-top: 3rem;
+    color: var(--muted);
+    font-size: 0.9375rem;
+  }
+
+  @media (max-width: 40rem) {
+    .language { grid-template-columns: 1fr; }
+    .name { grid-row: auto; }
+    .name { padding: 0 0 0.2rem; }
+    .own { display: inline; margin-left: 0.5rem; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>cronli5 playground</h1>
+    <nav>
+      <a href="https://github.com/AndrewBroz/cronli5">GitHub</a>
+      <a href="https://www.npmjs.com/package/cronli5">npm</a>
+      <a href="https://github.com/AndrewBroz/cronli5/blob/main/docs/cronli5-vs-cronstrue.md">Comparison</a>
+    </nav>
+  </header>
+  <p class="intro">Type a cron pattern. Each language shows cronli5's
+  description, with cRonstrue's description of the same pattern beneath for
+  comparison.</p>
+
+  <div class="pattern">
+    <label for="pattern" hidden>Cron pattern</label>
+    <input id="pattern" spellcheck="false" autocomplete="off" autocapitalize="off" aria-describedby="problem">
+    <div id="ruler" aria-hidden="true"></div>
+  </div>
+  <p id="problem" role="alert" hidden></p>
+
+  <div class="controls">
+    <ul class="examples" aria-label="Examples">
+      <li><button class="example" type="button">*/45 * * * *</button></li>
+      <li><button class="example" type="button">*/15 9-17 * * 1-5</button></li>
+      <li><button class="example" type="button">0 0 1,15 * 3</button></li>
+      <li><button class="example" type="button">23 0-20/2 * * *</button></li>
+      <li><button class="example" type="button">0 0 1 */3 *</button></li>
+      <li><button class="example" type="button">1 * * * *</button></li>
+      <li><button class="example" type="button">*/2 * * * *</button></li>
+      <li><button class="example" type="button">0 12 1 1 *</button></li>
+      <li><button class="example" type="button">30 4 1-7 * 1</button></li>
+    </ul>
+    <fieldset>
+      <legend>cronli5 form</legend>
+      <label><input type="radio" name="form" value="fragment"> fragment</label>
+      <label><input type="radio" name="form" value="label" checked> label</label>
+      <label><input type="radio" name="form" value="sentence"> sentence</label>
+    </fieldset>
+  </div>
+
+  <details class="advanced">
+    <summary>Advanced options</summary>
+    <div class="common">
+      <fieldset class="choice">
+        <legend>Cron dialect <code>cron</code></legend>
+        <label><input type="radio" name="cron" value="standard" checked> Standard</label>
+        <label><input type="radio" name="cron" value="quartz"> Quartz</label>
+      </fieldset>
+      <label class="option"><input type="checkbox" id="seconds">
+        Six fields start with seconds <code>seconds</code></label>
+      <label class="option"><input type="checkbox" id="years">
+        Six fields end with a year <code>years</code></label>
+      <label class="option">Number for Sunday
+        <select id="weekdaysFrom">
+          <option value="">Default</option>
+          <option value="0">0</option>
+          <option value="1">1</option>
+        </select> <code>weekdaysFrom</code></label>
+      <label class="option">Question mark in day fields
+        <select id="questionMark">
+          <option value="">Default</option>
+          <option value="reject">Not allowed</option>
+          <option value="allow">Allowed</option>
+          <option value="require">Required</option>
+        </select> <code>questionMark</code></label>
+      <label class="option"><input type="checkbox" id="lenient">
+        Describe invalid patterns instead of showing an error
+        <code>lenient</code></label>
+    </div>
+    <div class="styles">
+      <label class="option">Style for
+        <select id="styleLanguage"></select> <code>style</code></label>
+      <div id="styles"></div>
+    </div>
+  </details>
+
+  <ul id="languages"></ul>
+
+  <footer>cronli5 __CRONLI5_VERSION__ and cRonstrue __CRONSTRUE_VERSION__,
+  running in your browser.</footer>
+</main>
+<script src="playground.js"></script>
+</body>
+</html>
