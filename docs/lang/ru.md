@@ -18,7 +18,7 @@ cronli5('30 9 * * MON-FRI', {lang: 'ru'}); // 'по будням в 9:30'
 
 ## Status
 
-**Beta.** The Russian here is Russian as it is written in Ukraine (the
+The Russian here is Russian as it is written in Ukraine (the
 maintainer's ruling, 2026-11-19): where spelling or convention differs
 between Ukraine and the Russian Federation, Ukraine's is followed («в
 Украине»). The usage notes found no difference in the language of

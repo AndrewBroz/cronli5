@@ -336,7 +336,9 @@ renderer change.
 
 `src/lang/<code>/status.json` holds a language's status and, in
 `review`, a dated record of how it was built and checked and on whose
-rulings, honestly. Review is tracked; it does not gate a release.
+rulings, honestly. Review is tracked; it does not gate a release. The
+test for calling a language stable rather than beta is in
+[docs/language-status.md](docs/language-status.md).
 
 Human review is not part of the pipeline: the pipeline exists to reach
 quality without it. A maintainer's ruling is evidence and is recorded in

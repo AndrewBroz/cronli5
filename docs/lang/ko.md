@@ -18,8 +18,6 @@ cronli5('30 9 * * MON-FRI', {lang: 'ko'}); // '매주 월~금요일 오전 9시 
 
 ## Status
 
-**Beta.**
-
 Built from usage notes written in Korean by a writer told nothing of cron
 ([usage.md](../../src/lang/ko/usage.md)), from the notes on each choice
 and its evidence ([answers.md](../../src/lang/ko/answers.md)) and from

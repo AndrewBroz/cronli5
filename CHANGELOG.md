@@ -4,6 +4,17 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). This project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0]
+
+### Changed
+
+- **Korean, Polish, Indonesian and Russian are stable.** The test for a
+  stable language is now written once, in `docs/language-status.md`:
+  every row has passed the reading check in its current wording, and no
+  question is still misread by most readers of two models. These four
+  languages meet it. Traditional Chinese stays beta: one of its
+  sentences is still misread. Their descriptions are unchanged.
+
 ## [1.3.3]
 
 ### Changed

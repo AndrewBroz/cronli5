@@ -268,12 +268,11 @@ other language's code, and is judged by an automated pipeline: readers
 briefed only in that language check that each sentence has one reading,
 and a model of what a sentence costs its reader (how long it takes to say,
 how much it asks you to hold, what it makes you work out) compares
-wordings. **Stable** means every row of the language has passed those
-reads: each sentence read for when it fires, and any question most
-readers got wrong asked again alone, of readers of two models, until none
-is misread by both. **Beta** means a language ships and its sentences are
-still being read. There are no native-speaker reviewers, by design: the
-pipeline is the review.
+wordings. **Stable** means every sentence the language says has been
+read for when it fires, and none is known to mislead. **Beta** means a
+language ships and some of its sentences have not yet passed that read.
+There are no native-speaker reviewers, by design: the pipeline is the
+review.
 
 <!-- BEGIN GENERATED: language-status -->
 | Language | Status |
@@ -283,13 +282,13 @@ pipeline is the review.
 | English | stable |
 | Spanish | stable |
 | French | stable |
-| Indonesian | beta |
+| Indonesian | stable |
 | Italian | stable |
 | Japanese | stable |
-| Korean | beta |
-| Polish | beta |
+| Korean | stable |
+| Polish | stable |
 | Portuguese | stable |
-| Russian | beta |
+| Russian | stable |
 | Ukrainian | stable |
 | Chinese (Simplified) | stable |
 | Chinese (Traditional) | beta |

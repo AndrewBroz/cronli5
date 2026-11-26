@@ -17,7 +17,7 @@ cronli5('30 9 * * MON-FRI', {lang: 'pl'}); // 'od poniedziałku do piątku o 9:3
 
 ## Status
 
-**Beta.** Built from usage notes written in Polish by a writer told
+Built from usage notes written in Polish by a writer told
 nothing of cron ([usage.md](../../src/lang/pl/usage.md)), then from
 written answers to the language questionnaire
 ([answers.md](../../src/lang/pl/answers.md)) and hand-written expected
