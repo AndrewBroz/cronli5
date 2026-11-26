@@ -55,8 +55,10 @@ const rows = [
     'and 28th as well as on Wednesdays and Thursdays, in May through July'],
   ['*/30 0-17 * * 2',
     'every 30 minutes from 12 a.m. through 5:30 p.m. on Tuesdays'],
+  // After "past the hour" the stretch ends on its last firing, the last
+  // hour at its last minute: "through 5 p.m." was heard as ending at 5:00.
   ['5,29,39 3-5 * 5 *',
-    'at 5, 29, and 39 minutes past the hour from 3 a.m. through 5 a.m. ' +
+    'at 5, 29, and 39 minutes past the hour from 3 a.m. through 5:39 a.m. ' +
     'every day in May'],
   ['* 4,7 * * *', 'every minute during the 4 a.m. and 7 a.m. hours every ' +
     'day'],
@@ -215,9 +217,11 @@ const rows = [
   ['0,5,10,15,20,25,35,40,45,50,55 9-17 * * *',
     'every 5 minutes from 9 a.m. through 5:55 p.m. except at 30 minutes ' +
     'past the hour, every day'],
+  // After "past the hour" the stretch ends on its last firing, the last
+  // hour at its last minute: "through 5 p.m." was heard as ending at 5:00.
   ['0,10,20,40,50 9-17 * * *',
-    'at 0, 10, 20, 40, and 50 minutes past the hour from 9 a.m. through 5 ' +
-    'p.m. every day'],
+    'at 0, 10, 20, 40, and 50 minutes past the hour from 9 a.m. through ' +
+    '5:50 p.m. every day'],
   ['0-28,30-59 * * * *', 'every minute except at 29 minutes past the hour'],
   ['* 0-28,30-59 * * * *',
     'every second except during the minute at 29 minutes past the hour'],
@@ -358,10 +362,13 @@ const rows = [
   ['0 0,6 * * 3-4 6 2033/2',
     'at 0 and 6 minutes past the hour on Saturdays in March and April ' +
     'of every other year from 2033'],
+  // The stretch after "past the hour" ends on its last firing; under
+  // minutes each run for one minute, on the last one's minute, as under a
+  // cadence of minutes ("for one minute every 15 minutes … through 5:45").
   ['* 30,42 3-10 * 7,9,10,12 1,3,4,5',
     'every second for one minute at 30 and 42 minutes past the hour from 3 ' +
-    'a.m. through 10 a.m. on Mondays, Wednesdays, Thursdays, and Fridays ' +
-    'in July, September, October, and December'],
+    'a.m. through 10:42 a.m. on Mondays, Wednesdays, Thursdays, and ' +
+    'Fridays in July, September, October, and December'],
   ['*/30 */5 * * 1-6 *',
     'every 30 seconds for one minute every 5 minutes in January through ' +
     'June'],
@@ -469,13 +476,14 @@ const rows = [
   // Minutes, seconds and days of the month are numbers, and a run of
   // numbers that wraps reads backwards: "from 50 through 10 minutes past
   // the hour from 9 a.m. through 5 p.m." was read as starting at 9:50 and
-  // ending at 6:10, and "the 20th through the 10th" as a mistake.
+  // ending at 6:10, and "the 20th through the 10th" as a mistake. (A
+  // stretch of hours after "past the hour" now ends on its last firing.)
   ['50-10 * * * *',
     'every minute from 0 through 10 and every minute from 50 through 59 ' +
     'minutes past the hour'],
   ['50-10 9-17 * * *',
     'every minute from 0 through 10 and every minute from 50 through 59 ' +
-    'minutes past the hour from 9 a.m. through 5 p.m. every day'],
+    'minutes past the hour from 9 a.m. through 5:59 p.m. every day'],
   ['50-10 * * * 1',
     'every minute from 0 through 10 and every minute from 50 through 59 ' +
     'minutes past the hour on Mondays'],
@@ -498,19 +506,46 @@ const rows = [
 
   // After "past the hour", an hour beside a range is named as an hour:
   // "…from 9 a.m. through 5 p.m. and at 10 p.m." was read as one more
-  // firing at 10:00, and "except at noon" as sparing only 12:00.
+  // firing at 10:00, and "except at noon" as sparing only 12:00. A range
+  // ends on its last firing: "through 5 p.m." was heard as ending at 5:00.
   ['5,20,45 9-17,22 * * *',
-    'at 5, 20, and 45 minutes past the hour from 9 a.m. through 5 p.m. ' +
+    'at 5, 20, and 45 minutes past the hour from 9 a.m. through 5:45 p.m. ' +
     'and during the 10 p.m. hour every day'],
   ['5,20,45 1,9-17 * * *',
     'at 5, 20, and 45 minutes past the hour during the 1 a.m. hour and ' +
-    'from 9 a.m. through 5 p.m. every day'],
+    'from 9 a.m. through 5:45 p.m. every day'],
   ['5,20,45 22-2 * * 1',
-    'at 5, 20, and 45 minutes past the hour from 12 a.m. through 2 a.m. ' +
-    'and during the 10 p.m. and 11 p.m. hours on Mondays'],
+    'at 5, 20, and 45 minutes past the hour from 12 a.m. through 2:45 ' +
+    'a.m. and during the 10 p.m. and 11 p.m. hours on Mondays'],
   ['5,20,45 9-11,13-17 * * *',
-    'at 5, 20, and 45 minutes past the hour from 9 a.m. through 5 p.m. ' +
+    'at 5, 20, and 45 minutes past the hour from 9 a.m. through 5:45 p.m. ' +
     'except during the noon hour, every day'],
+  // The ending firing written as a time: on the noon hour, "12:45 p.m.";
+  // a range that wraps to the midnight hour ends "12:35 a.m.".
+  ['*/45 9-17 * * 1-5',
+    'at 0 and 45 minutes past the hour from 9 a.m. through 5:45 p.m. on ' +
+    'weekdays'],
+  ['5,20,45 9-12 * * *',
+    'at 5, 20, and 45 minutes past the hour from 9 a.m. through 12:45 ' +
+    'p.m. every day'],
+  ['5,35 22-0 * * *',
+    'at 5 and 35 minutes past the hour from 10 p.m. through 12:35 a.m. ' +
+    'every day'],
+  ['5,20,45 0-2 * * *',
+    'at 5, 20, and 45 minutes past the hour from 12 a.m. through 2:45 ' +
+    'a.m. every day'],
+  // Seconds that run through each minute of a run end the stretch on the
+  // run's last second, as "every second from 9 a.m. through 9:29:59 a.m."
+  // does; seconds counted past the minute leave it on the minute.
+  ['* 10-40 9-17 * * *',
+    'every second from 10 through 40 minutes past the hour from 9 a.m. ' +
+    'through 5:40:59 p.m. every day'],
+  ['*/10 10-40 9-17 * * *',
+    'every 10 seconds from 10 through 40 minutes past the hour from 9 ' +
+    'a.m. through 5:40:50 p.m. every day'],
+  ['30 10-40 9-17 * * *',
+    'at 30 seconds past every minute from 10 through 40 minutes past the ' +
+    'hour from 9 a.m. through 5:40 p.m. every day'],
   ['0-29 9-11,13-17 * * *',
     'every minute for the first 30 minutes of every hour from 9 a.m. ' +
     'through 5 p.m. except during the noon hour, every day'],

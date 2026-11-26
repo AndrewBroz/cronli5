@@ -740,9 +740,6 @@ function hoursAsMoments(
   return hoursByName(at, words.at, opts);
 }
 
-// The last minute of an hour, on which a stretch of whole hours closes.
-const lastMinute = {minute: domainOf('minute').max};
-
 // Hours named as the hours that start at them: "the 9 a.m. and 5 p.m.
 // hours", "the 12 a.m. hour".
 function theHours(hours: number[], opts: EnglishOptions): string {
@@ -753,7 +750,8 @@ function theHours(hours: number[], opts: EnglishOptions): string {
 
 /**
  * Hours as a noun phrase. After "past", a range follows "the hour"
- * directly ("past the hour from 9 a.m. through 5 p.m."), listed hours
+ * directly and ends on its last firing, which `close` gives within the
+ * last hour ("past the hour from 9 a.m. through 5:45 p.m."), listed hours
  * are named ("past 9 a.m. and 5 p.m."), and "every hour" is what an
  * exception excepts from. An hour beside a range, or taken out of one, is
  * named as an hour ("and during the 10 p.m. hour", "except during the
@@ -770,13 +768,13 @@ function theHours(hours: number[], opts: EnglishOptions): string {
  * clock times straight after "from 5 through 10" made it 5 to 10 o'clock.
  */
 function hoursAsNouns(
-  about: {asHours: boolean; pieced: boolean},
+  about: {asHours: boolean; close: Omit<Moment, 'hour'>; pieced: boolean},
   opts: EnglishOptions
 ): Voice {
   const {asHours} = about;
   const moments = hoursAsMoments({minute: 0, pair: false}, opts);
   const nouns = hoursByName({minute: 0, pair: false}, '', opts);
-  const stretches = hoursAsStretches(lastMinute, opts);
+  const stretches = hoursAsStretches(about.close, opts);
   const theHour = `${words.the} ${units.hour.one}`;
   // What an exception is said as, by what it is taken out of.
   const excepting: {[kind: string]: Voice | undefined} =
@@ -795,10 +793,6 @@ function hoursAsNouns(
     }
   };
 
-  function fromThrough(from: number, to: number): string {
-    return span(hourNames([from, to], {minute: 0}, asTime(opts)), opts);
-  }
-
   return asHours ?
     {
       ...shared,
@@ -809,9 +803,9 @@ function hoursAsNouns(
     {
       ...shared,
       inPieces:
-        {lead: theHour, range: fromThrough, values: stretches.values},
+        {lead: theHour, range: stretches.range, values: stretches.values},
       range(from, to) {
-        return `${theHour} ${fromThrough(from, to)}`;
+        return `${theHour} ${stretches.range(from, to)}`;
       },
       values(values) {
         return about.pieced ?
@@ -1075,7 +1069,7 @@ function yearsByNumber(hung: boolean, opts: EnglishOptions): Voice {
 
 export {
   choose, daysOfTheMonth, daysOfTheWeek, hoursAsMoments, hoursAsNouns,
-  hoursAsStretches, inSpokenOrder, inTieOrder, lastMinute, minutesOfOneHour,
+  hoursAsStretches, inSpokenOrder, inTieOrder, minutesOfOneHour,
   monthsAlone, monthsOfDays, opensWithEvery, say, secondsOfOneMinute,
   withinTheHour, yearsByNumber
 };

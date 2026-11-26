@@ -19,7 +19,7 @@ import {candidatesAs, daysReached} from '../../core/set-views.js';
 import {domainOf} from '../../core/specs.js';
 import {
   choose, daysOfTheMonth, daysOfTheWeek, hoursAsMoments, hoursAsNouns,
-  hoursAsStretches, inSpokenOrder, inTieOrder, lastMinute, minutesOfOneHour,
+  hoursAsStretches, inSpokenOrder, inTieOrder, minutesOfOneHour,
   monthsAlone, monthsOfDays, opensWithEvery, say, secondsOfOneMinute,
   withinTheHour, yearsByNumber
 } from './devices.js';
@@ -75,9 +75,9 @@ interface Tick {
   // 30 minutes of") and not a count past it.
   portion: boolean;
   text: string;
-  // The last run of a cadence that needs no bounds, for a window around
-  // it to close on.
-  close: {minute: number} | null;
+  // The values it fires on, in order, for a window around them to close
+  // on the last.
+  values: number[];
   // The phrase when nothing coarser is restricted: "at 30 minutes past
   // the hour", "for the first 30 minutes of every hour".
   whole: string;
@@ -374,9 +374,6 @@ function tick(
     tied(said.text, closing, {description: base, everyOne, last}, field);
 
   return {
-    close: continuous && base.kind === 'cadence' ?
-      {minute: base.last} :
-      null,
     continuous,
     description: base,
     excepted: removed,
@@ -388,6 +385,7 @@ function tick(
     pieced: Boolean(closing),
     portion: portionOf(closing, base, field),
     text,
+    values: denote(chosen.description, domainOf(field)),
     whole: chosen.description.kind === 'all' ?
       every.alone :
       join(text, article, article && unit(within[field], 1))
@@ -512,21 +510,27 @@ function minuteWindow(
 }
 
 // Continuous minutes lead and the hours confine them; any other minutes
-// are counted past the hours. A stretch of hours closes on its last
-// firing: the last run of a cadence of minutes, or else the last minute,
-// to the second when the seconds run through it.
+// are counted past the hours. Either way a stretch of hours closes on its
+// last firing, the last minute in its last hour: "from 9 a.m. through
+// 5:45 p.m." ("Through 5 p.m." was heard as ending at 5:00.) Where the
+// seconds run through every minute of a run of minutes, that is the
+// run's last second; a minute alone, or the last run of a cadence, is
+// named by its minute, the seconds filling it.
 function minutesWith(
   hours: Described,
   context: TimeContext,
   opts: EnglishOptions
 ): Phrase | null {
   const {last, lead, minute} = context;
-  const close = minute.close ||
-    {...lastMinute, ...typeof last === 'number' && {second: last}};
+  const {values} = minute;
+  const final = values[values.length - 1];
+  const close = {minute: final,
+    ...typeof last === 'number' && values.includes(final - 1) &&
+      {second: last}};
   const rest = say(hours,
     minute.continuous ?
       hoursAsStretches(close, opts) :
-      hoursAsNouns({asHours: minute.portion,
+      hoursAsNouns({asHours: minute.portion, close,
         pieced: minute.description.kind === 'pieces'}, opts),
     opts);
 
@@ -716,9 +720,7 @@ function timesWith(
   riding);
   const context = {
     halves, lead, minute,
-    ...second.continuous && {
-      last: second.close ? second.close.minute : domainOf('second').max
-    },
+    ...second.continuous && {last: second.values[second.values.length - 1]},
     piece(part: Described) {
       return withSecond(tick([part], 'minute',
         {alone: lead.everyAlone, one: lead.every, stray: lead.within}, opts),
