@@ -1,14 +1,16 @@
 # Cron Like I'm Five: Cron Patterns in Plain Language
 
-**[Try it in the playground →](https://andrewbroz.github.io/cronli5/)**
-Type a cron pattern and read it in all fifteen languages, beside
-cRonstrue's description of the same pattern.
-
 [![CI](https://github.com/andrewbroz/cronli5/actions/workflows/ci.yml/badge.svg)](https://github.com/andrewbroz/cronli5/actions/workflows/ci.yml)
 [![npm version](https://img.shields.io/npm/v/cronli5.svg)](https://www.npmjs.com/package/cronli5)
 [![types included](https://img.shields.io/npm/types/cronli5.svg)](./src/types.ts)
 [![minzipped size](https://img.shields.io/bundlephobia/minzip/cronli5)](https://bundlephobia.com/package/cronli5)
 [![license](https://img.shields.io/github/license/andrewbroz/cronli5.svg)](./LICENSE.md)
+
+
+> [!tip]
+> **[Try cronli5 live in the playground →](https://andrewbroz.github.io/cronli5/)**
+> Type a cron pattern and read the output in all fifteen languages, beside
+> cRonstrue's description of the same pattern, and explore the settings.
 
 ## Overview
 
