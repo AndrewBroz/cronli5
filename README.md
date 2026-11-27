@@ -14,7 +14,7 @@
 
 ## Overview
 
-Cron Like I'm Five (`cronli5`) generates plain-language, idiomatically
+**Cron Like I'm Five** (`cronli5`) generates plain-language, idiomatically
 rendered descriptions of schedules from cron patterns.
 
 - **Zero runtime dependencies.** Safe to drop into any project.
